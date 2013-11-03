@@ -1,19 +1,14 @@
 package kuleuven.group2.asm;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.security.MessageDigest;
+import java.util.Formatter;
 
-import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.util.Printer;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  * Adapted from: Pretty printing a method in ASM Bytecode - Stack Overflow
@@ -22,12 +17,27 @@ import org.objectweb.asm.util.TraceClassVisitor;
  */
 public class ASMExperiment {
 
-	public static void main(String[] args) throws IOException {
-		System.out.println(getMethod("kuleuven.group2.HelloWorld", "a"));
+	public static void main(String[] args) throws Exception {
+		// Get the method bytecode
+		byte[] methodBytes= getMethod("kuleuven.group2.HelloWorld", "a");
+		// Create a SHA-1 hash
+		MessageDigest md= MessageDigest.getInstance("SHA-1");
+		String methodHash= formatHex(md.digest(methodBytes));
+		System.out.println("Hash: " + methodHash);
+	}
+
+	private static String formatHex(final byte[] hash) {
+		Formatter formatter= new Formatter();
+		for (byte b : hash) {
+			formatter.format("%02x", b);
+		}
+		String result= formatter.toString();
+		formatter.close();
+		return result;
 	}
 
 	/**
-	 * Gets us the bytecode method body of a given method.
+	 * Gets the bytecode method body of a given method.
 	 * 
 	 * @param className
 	 *            The class name to search for.
@@ -38,22 +48,18 @@ public class ASMExperiment {
 	 *            the first method with the given name.
 	 * @throws IOException
 	 */
-	public static String getMethod(String className, String methodName,
+	public static byte[] getMethod(String className, String methodName,
 			String methodDescriptor) throws IOException {
 		ClassReader classReader= new ClassReader(className);
-		StringWriter stringWriter= new StringWriter();
-		PrintWriter printWriter= new PrintWriter(stringWriter);
-		TraceClassVisitor traceClassVisitor= new TraceClassVisitor(null,
-				new SourceCodeTextifier(), printWriter);
+		ClassWriter classWriter= new ClassWriter(0);
 		MethodSelectorVisitor methodSelectorVisitor= new MethodSelectorVisitor(
-				traceClassVisitor, methodName, methodDescriptor);
+				classWriter, methodName, methodDescriptor);
 		classReader.accept(methodSelectorVisitor, ClassReader.SKIP_DEBUG);
-
-		return stringWriter.toString();
+		return classWriter.toByteArray();
 	}
 
 	/**
-	 * Gets us the bytecode method body of a given method.
+	 * Gets the bytecode method body of a given method.
 	 * 
 	 * @param className
 	 *            The class name to search for.
@@ -61,12 +67,16 @@ public class ASMExperiment {
 	 *            The method name.
 	 * @throws IOException
 	 */
-	public static String getMethod(String className, String methodName)
+	public static byte[] getMethod(String className, String methodName)
 			throws IOException {
 		return getMethod(className, methodName, null);
 	}
 
+	/**
+	 * Class visitor which only visits the given method.
+	 */
 	private static class MethodSelectorVisitor extends ClassVisitor {
+
 		private final String methodName;
 
 		private final String methodDescriptor;
@@ -94,216 +104,7 @@ public class ASMExperiment {
 
 			return null;
 		}
-	}
 
-	private static class SourceCodeTextifier extends Printer {
-		public SourceCodeTextifier() {
-			this(Opcodes.ASM4);
-		}
-
-		protected SourceCodeTextifier(final int api) {
-			super(api);
-		}
-
-		@Override
-		public void visit(final int version, final int access,
-				final String name, final String signature,
-				final String superName, final String[] interfaces) {
-		}
-
-		@Override
-		public void visitSource(final String file, final String debug) {
-		}
-
-		@Override
-		public void visitOuterClass(final String owner, final String name,
-				final String desc) {
-		}
-
-		@Override
-		public Textifier visitClassAnnotation(final String desc,
-				final boolean visible) {
-			return new Textifier();
-		}
-
-		@Override
-		public void visitClassAttribute(final Attribute attr) {
-		}
-
-		@Override
-		public void visitInnerClass(final String name, final String outerName,
-				final String innerName, final int access) {
-		}
-
-		@Override
-		public Textifier visitField(final int access, final String name,
-				final String desc, final String signature, final Object value) {
-			return new Textifier();
-		}
-
-		@Override
-		public Textifier visitMethod(final int access, final String name,
-				final String desc, final String signature,
-				final String[] exceptions) {
-			Textifier t= new Textifier();
-			text.add(t.getText());
-			return t;
-		}
-
-		@Override
-		public void visitClassEnd() {
-		}
-
-		@Override
-		public void visit(final String name, final Object value) {
-		}
-
-		@Override
-		public void visitEnum(final String name, final String desc,
-				final String value) {
-		}
-
-		@Override
-		public Textifier visitAnnotation(final String name, final String desc) {
-			return new Textifier();
-		}
-
-		@Override
-		public Textifier visitArray(final String name) {
-			return new Textifier();
-		}
-
-		@Override
-		public void visitAnnotationEnd() {
-		}
-
-		@Override
-		public Textifier visitFieldAnnotation(final String desc,
-				final boolean visible) {
-			return new Textifier();
-		}
-
-		@Override
-		public void visitFieldAttribute(final Attribute attr) {
-		}
-
-		@Override
-		public void visitFieldEnd() {
-		}
-
-		@Override
-		public Textifier visitAnnotationDefault() {
-			return new Textifier();
-		}
-
-		@Override
-		public Textifier visitMethodAnnotation(final String desc,
-				final boolean visible) {
-			return new Textifier();
-		}
-
-		@Override
-		public Textifier visitParameterAnnotation(final int parameter,
-				final String desc, final boolean visible) {
-			return new Textifier();
-		}
-
-		@Override
-		public void visitMethodAttribute(final Attribute attr) {
-		}
-
-		@Override
-		public void visitCode() {
-		}
-
-		@Override
-		public void visitFrame(final int type, final int nLocal,
-				final Object[] local, final int nStack, final Object[] stack) {
-		}
-
-		@Override
-		public void visitInsn(final int opcode) {
-		}
-
-		@Override
-		public void visitIntInsn(final int opcode, final int operand) {
-		}
-
-		@Override
-		public void visitVarInsn(final int opcode, final int var) {
-		}
-
-		@Override
-		public void visitTypeInsn(final int opcode, final String type) {
-		}
-
-		@Override
-		public void visitFieldInsn(final int opcode, final String owner,
-				final String name, final String desc) {
-		}
-
-		@Override
-		public void visitMethodInsn(final int opcode, final String owner,
-				final String name, final String desc) {
-		}
-
-		@Override
-		public void visitInvokeDynamicInsn(String name, String desc,
-				Handle bsm, Object... bsmArgs) {
-		}
-
-		@Override
-		public void visitJumpInsn(final int opcode, final Label label) {
-		}
-
-		@Override
-		public void visitLabel(final Label label) {
-		}
-
-		@Override
-		public void visitLdcInsn(final Object cst) {
-		}
-
-		@Override
-		public void visitIincInsn(final int var, final int increment) {
-		}
-
-		@Override
-		public void visitTableSwitchInsn(final int min, final int max,
-				final Label dflt, final Label... labels) {
-		}
-
-		@Override
-		public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
-				final Label[] labels) {
-		}
-
-		@Override
-		public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		}
-
-		@Override
-		public void visitTryCatchBlock(final Label start, final Label end,
-				final Label handler, final String type) {
-		}
-
-		@Override
-		public void visitLocalVariable(final String name, final String desc,
-				final String signature, final Label start, final Label end,
-				final int index) {
-		}
-
-		@Override
-		public void visitLineNumber(final int line, final Label start) {
-		}
-
-		@Override
-		public void visitMaxs(final int maxStack, final int maxLocals) {
-		}
-
-		@Override
-		public void visitMethodEnd() {
-		}
 	}
 
 }
