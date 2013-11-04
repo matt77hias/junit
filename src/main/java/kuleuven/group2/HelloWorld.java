@@ -10,4 +10,12 @@ public class HelloWorld {
 		System.out.println("Hallo " + foo);
 	}
 
+	public static class Inner {
+
+		public String c(Object o) throws Exception {
+			return o.toString();
+		}
+
+	}
+
 }

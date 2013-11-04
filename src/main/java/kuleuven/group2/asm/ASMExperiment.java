@@ -21,7 +21,9 @@ public class ASMExperiment {
 
 	public static void main(String[] args) throws Exception {
 		// Get the method bytecodes
-		Map<String, byte[]> methods= getMethods("kuleuven.group2.HelloWorld");
+		String className= "kuleuven.group2.HelloWorld";
+		// String className= "kuleuven.group2.HelloWorld$Inner";
+		Map<String, byte[]> methods= getMethods(className);
 		// Create SHA-1 hashes
 		MessageDigest md= MessageDigest.getInstance("SHA-1");
 		for (Map.Entry<String, byte[]> entry : methods.entrySet()) {
@@ -57,8 +59,9 @@ public class ASMExperiment {
 	 */
 	public static Map<String, byte[]> getMethods(String className)
 			throws IOException {
+		String classDir= className.replaceAll("\\.", "/");
 		ClassReader classReader= new ClassReader(className);
-		MethodBytecodeCollector collector= new MethodBytecodeCollector();
+		MethodBytecodeCollector collector= new MethodBytecodeCollector(classDir);
 		classReader.accept(collector, ClassReader.SKIP_DEBUG);
 		return collector.getCollected();
 	}
@@ -69,10 +72,13 @@ public class ASMExperiment {
 	private static abstract class MethodCollector<T extends ClassVisitor, V>
 			extends ClassVisitor {
 
+		private final String classDir;
+
 		private final Map<String, T> writers= new HashMap<String, T>();
 
-		public MethodCollector() {
+		public MethodCollector(String classDir) {
 			super(Opcodes.ASM4, null);
+			this.classDir= classDir;
 		}
 
 		public Map<String, V> getCollected() {
@@ -86,8 +92,11 @@ public class ASMExperiment {
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc,
 				String signature, String[] exceptions) {
+			// Get full method name
+			String methodName= classDir + "." + name + desc;
+			// Visit single method
 			T visitor= createVisitor();
-			writers.put(name, visitor);
+			writers.put(methodName, visitor);
 			return visitor.visitMethod(access, name, desc, signature,
 					exceptions);
 		}
@@ -103,6 +112,10 @@ public class ASMExperiment {
 	 */
 	private static class MethodBytecodeCollector extends
 			MethodCollector<ClassWriter, byte[]> {
+
+		public MethodBytecodeCollector(String classDir) {
+			super(classDir);
+		}
 
 		@Override
 		protected ClassWriter createVisitor() {
