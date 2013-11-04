@@ -3,6 +3,8 @@ package kuleuven.group2.asm;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -18,12 +20,17 @@ import org.objectweb.asm.Opcodes;
 public class ASMExperiment {
 
 	public static void main(String[] args) throws Exception {
-		// Get the method bytecode
-		byte[] methodBytes= getMethod("kuleuven.group2.HelloWorld", "a");
-		// Create a SHA-1 hash
+		// Get the method bytecodes
+		Map<String, byte[]> methods= getMethods("kuleuven.group2.HelloWorld");
+		// Create SHA-1 hashes
 		MessageDigest md= MessageDigest.getInstance("SHA-1");
-		String methodHash= formatHex(md.digest(methodBytes));
-		System.out.println("Hash: " + methodHash);
+		for (Map.Entry<String, byte[]> entry : methods.entrySet()) {
+			String methodName= entry.getKey();
+			byte[] methodBytes= entry.getValue();
+			String methodHash= formatHex(md.digest(methodBytes));
+			System.out.println("Method: " + methodName);
+			System.out.println("Hash: " + methodHash);
+		}
 	}
 
 	private static String formatHex(final byte[] hash) {
@@ -37,7 +44,7 @@ public class ASMExperiment {
 	}
 
 	/**
-	 * Gets the bytecode method body of a given method.
+	 * Gets the bytecode of all methods in a class.
 	 * 
 	 * @param className
 	 *            The class name to search for.
@@ -48,61 +55,63 @@ public class ASMExperiment {
 	 *            the first method with the given name.
 	 * @throws IOException
 	 */
-	public static byte[] getMethod(String className, String methodName,
-			String methodDescriptor) throws IOException {
-		ClassReader classReader= new ClassReader(className);
-		ClassWriter classWriter= new ClassWriter(0);
-		MethodSelectorVisitor methodSelectorVisitor= new MethodSelectorVisitor(
-				classWriter, methodName, methodDescriptor);
-		classReader.accept(methodSelectorVisitor, ClassReader.SKIP_DEBUG);
-		return classWriter.toByteArray();
-	}
-
-	/**
-	 * Gets the bytecode method body of a given method.
-	 * 
-	 * @param className
-	 *            The class name to search for.
-	 * @param methodName
-	 *            The method name.
-	 * @throws IOException
-	 */
-	public static byte[] getMethod(String className, String methodName)
+	public static Map<String, byte[]> getMethods(String className)
 			throws IOException {
-		return getMethod(className, methodName, null);
+		ClassReader classReader= new ClassReader(className);
+		MethodBytecodeCollector collector= new MethodBytecodeCollector();
+		classReader.accept(collector, ClassReader.SKIP_DEBUG);
+		return collector.getCollected();
 	}
 
 	/**
-	 * Class visitor which only visits the given method.
+	 * Visits each method with a different class visitor.
 	 */
-	private static class MethodSelectorVisitor extends ClassVisitor {
+	private static abstract class MethodCollector<T extends ClassVisitor, V>
+			extends ClassVisitor {
 
-		private final String methodName;
+		private final Map<String, T> writers= new HashMap<String, T>();
 
-		private final String methodDescriptor;
+		public MethodCollector() {
+			super(Opcodes.ASM4, null);
+		}
 
-		public MethodSelectorVisitor(ClassVisitor cv, String methodName,
-				String methodDescriptor) {
-			super(Opcodes.ASM4, cv);
-			this.methodName= methodName;
-			this.methodDescriptor= methodDescriptor;
+		public Map<String, V> getCollected() {
+			Map<String, V> values= new HashMap<String, V>();
+			for (Map.Entry<String, T> entry : writers.entrySet()) {
+				values.put(entry.getKey(), getValue(entry.getValue()));
+			}
+			return values;
 		}
 
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc,
 				String signature, String[] exceptions) {
+			T visitor= createVisitor();
+			writers.put(name, visitor);
+			return visitor.visitMethod(access, name, desc, signature,
+					exceptions);
+		}
 
-			if (methodName.equals(name)) {
-				if (methodDescriptor == null)
-					return super.visitMethod(access, name, desc, signature,
-							exceptions);
+		protected abstract T createVisitor();
 
-				if (methodDescriptor.equals(desc))
-					return super.visitMethod(access, name, desc, signature,
-							exceptions);
-			}
+		protected abstract V getValue(T visitor);
 
-			return null;
+	}
+
+	/**
+	 * Collects bytecode of each class method.
+	 */
+	private static class MethodBytecodeCollector extends
+			MethodCollector<ClassWriter, byte[]> {
+
+		@Override
+		protected ClassWriter createVisitor() {
+			return new ClassWriter(0);
+		}
+
+		@Override
+		protected byte[] getValue(ClassWriter classWriter) {
+			return classWriter.toByteArray();
 		}
 
 	}
