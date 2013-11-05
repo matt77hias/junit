@@ -1,4 +1,4 @@
-package kuleuven.group2;
+package kuleuven.group2.filewatch;
 
 import static org.junit.Assert.*;
 
@@ -91,7 +91,6 @@ public class FolderWatcherTest {
 	public void createFileTest() throws IOException, InterruptedException {
 		// Setup
 		FolderWatcher folderWatcher = new FolderWatcher("D:\\filewatchertest");
-		//System.out.println(folderWatcher.toString());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -118,7 +117,6 @@ public class FolderWatcherTest {
 		Files.createFile(filePath);
 		
 		FolderWatcher folderWatcher = new FolderWatcher("D:\\filewatchertest");
-		//System.out.println(folderWatcher.toString());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -149,7 +147,6 @@ public class FolderWatcherTest {
 		Files.createFile(filePath);
 		
 		FolderWatcher folderWatcher = new FolderWatcher("D:\\filewatchertest");
-		//System.out.println(folderWatcher.toString());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);

@@ -1,4 +1,4 @@
-package kuleuven.group2;
+package kuleuven.group2.filewatch;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -136,14 +136,13 @@ public class FolderWatcher {
 		    @SuppressWarnings("unchecked")
 			WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
 
-		    // Context for directory entry event is the file name of entry;
-		    Path name = pathEvent.context();
-		    Path fullName = directoryPath.resolve(name);
+		    Path entryFileName = pathEvent.context();
+		    Path entryFullName = directoryPath.resolve(entryFileName);
 		    
-		    notifySubscribers(pathEvent, fullName);
+		    notifySubscribers(pathEvent, entryFullName);
 
 		    if (isCreateEvent(event) && recursiveWatching) {
-		    	registerSubDirectories(fullName);
+		    	registerSubDirectories(entryFullName);
 		    }
 		}
 	}

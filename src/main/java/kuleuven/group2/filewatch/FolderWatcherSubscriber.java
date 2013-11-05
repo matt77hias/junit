@@ -1,4 +1,4 @@
-package kuleuven.group2;
+package kuleuven.group2.filewatch;
 
 import java.nio.file.Path;
 
