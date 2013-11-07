@@ -4,7 +4,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 
-
+/**
+ * The SourceWatcher class notifies its subscribers of changed method lists in edited .java files.
+ * 
+ * @author Ruben
+ *
+ */
 public class SourceWatcher implements FolderWatcherSubscriber {
 	
 	protected Collection<SourceWatcherSubscriber> subscriberList = new HashSet<SourceWatcherSubscriber>();

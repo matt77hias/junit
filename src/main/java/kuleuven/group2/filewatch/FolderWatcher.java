@@ -23,6 +23,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * The FolderWatcher class notifies its subscribers of the file system events create, modify and delete.
+ * 
+ * @author Ruben
+ *
+ */
 public class FolderWatcher {
 
     private final WatchService watchService;
