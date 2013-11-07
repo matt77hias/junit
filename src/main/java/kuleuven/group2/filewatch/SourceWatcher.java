@@ -29,10 +29,15 @@ public class SourceWatcher implements FolderWatcherSubscriber {
     }
     
 	public void createEvent(Path filePath) {
-		
+		if (! interestedInFile(filePath)) {
+			return;
+		}
 	}
 
 	public void modifyEvent(Path filePath) {
+		if (! interestedInFile(filePath)) {
+			return;
+		}
 		
 	}
 	
@@ -52,7 +57,14 @@ public class SourceWatcher implements FolderWatcherSubscriber {
 	}
 
 	public void deleteEvent(Path filePath) {
+		if (! interestedInFile(filePath)) {
+			return;
+		}
 		
+	}
+	
+	private boolean interestedInFile(Path filePath) {
+		return filePath.endsWith(".java");
 	}
 
 
