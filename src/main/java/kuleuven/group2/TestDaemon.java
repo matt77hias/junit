@@ -2,16 +2,26 @@ package kuleuven.group2;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunListener;
 
 /**
- * A class of test daemons for running tests periodically.
+ * A class of test daemons for running tests. If the test daemon is notified of
+ * changes in its test suite, which it guards, it will schedule an execution of this
+ * test suite. If an execution is scheduled and not yet started, the scheduled time
+ * is delayed when a new change is notified. Once the execution is started, it cannot
+ * be canceled anymore unless the user forces the test daemon to stop immediately.
+ * 
+ * @author	Group 2
+ * @version 9 November 2013
  */
 public class TestDaemon {
 	
@@ -31,19 +41,15 @@ public class TestDaemon {
 	private final ScheduledExecutorService scheduler;
 	
 	/**
-	 * The default initial delay for delaying the first execution. [sec]
+	 * The default delay for delaying the execution
+	 * (initially & in case of a new change notification).
 	 */
-	public static final long DEFAULT_INITIAL_DELAY = 30l;
+	public static final long DEFAULT_DELAY = 30l;
 	
 	/**
-	 * The default period between successive executions. [sec]
+	 * The default time unit used for delaying the execution.
 	 */
-	public static final long DEFAULT_PERIOD = 30l;
-	
-	/**
-	 * The run task of this test deamon.
-	 */
-	private RunTask runTask;
+	public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
 	
 	/**
 	 * The JUnitCore facade used for building a test runner
@@ -58,33 +64,180 @@ public class TestDaemon {
 	private Class<?> testSuite; 
 	
 	/**
-	 * Creates a new test daemon with default initial delay
-	 * and default period.
+	 * Creates a new test daemon with default delay time unit.
 	 */
 	public TestDaemon() {
-		this(DEFAULT_INITIAL_DELAY, DEFAULT_PERIOD);
+		this(DEFAULT_DELAY, DEFAULT_TIME_UNIT);
 	}
 	
 	/**
-	 * Creates a new test daemon with given initial delay
-	 * and given period.
+	 * Creates a new test daemon with given delay and given time unit
+	 * for the execution of this test deamon's test suite.
 	 * 
-	 * @param	initialDelay
-	 * 			The initial delay for this new test daemon.
-	 * @param	period
-	 * 			The period for this new test daemon.
-	 * @throws	RejectedExecutionException
-	 * 			If the run task cannot be scheduled for execution.
-	 * @throws	IllegalArgumentException
-	 * 			if the given period less than or equal to zero.
+	 * @param	delay
+	 * 			The delay for the execution of this new test daemon's test suite.
+	 * @param	timeUnit
+	 * 			The time unit for the delay of the execution
+	 * 			of this new test daemon's test suite.
 	 */
-	public TestDaemon(long initialDelay, long period) 
-		throws RejectedExecutionException, IllegalArgumentException{
+	public TestDaemon(long delay, TimeUnit timeUnit) {
 		this.jUnitCore = new JUnitCore();
-		this.runTask = new RunTask();
+		setScheduleParameters(delay, timeUnit);
 		this.scheduler = Executors.newScheduledThreadPool(1);
-		this.scheduler.scheduleAtFixedRate(this.runTask, initialDelay, period, TimeUnit.SECONDS);
 	}
+	
+	/*
+	 * Pool management
+	 */
+	
+	/**
+	 * The delay for delaying the execution of this test daemon.
+	 * (initially & in case of a new change notification).
+	 */
+	private long delay;
+	
+	/**
+	 * The time unit used for delaying the execution of this test daemon.
+	 */
+	private TimeUnit timeUnit;
+	
+	/**
+	 * Sets the initial delay and time unit for the execution of this
+	 * test daemon.
+	 * 
+	 * @param	delay
+	 * 			The delay for the execution of this test daemon's test suite.
+	 * @param	timeUnit
+	 * 			The time unit for the delay of the execution
+	 * 			of this test daemon's test suite.
+	 */
+	private void setScheduleParameters(long delay, TimeUnit timeUnit) {
+		this.delay = delay;
+		this.timeUnit = timeUnit;
+	}
+	
+	/**
+	 * Returns the delay for the execution of this test daemon's test suite.
+	 * 
+	 * @return	The delay for the execution of this test daemon's test suite.
+	 */
+	public long getDelay() {
+		return this.delay;
+	}
+	
+	/**
+	 * Returns the time unit for the delay of the execution 
+	 * of this test daemon's test suite.
+	 * 
+	 * @return	The time unit for the delay of the execution
+	 * 			of this test daemon's test suite.
+	 */
+	public TimeUnit getTimeUnit() {
+		return this.timeUnit;
+	}
+	
+	/**
+	 * The run task of this test deamon.
+	 */
+	private RunTask runTask;
+	
+	/**
+	 * Requests an execution of the test suite of this test daemon.
+	 * 
+	 * If an execution is scheduled and not yet started, the scheduled time
+	 * will be delayed. Once the execution is started, it cannot be canceled
+	 * anymore unless the user forces the test daemon to stop immediately.
+	 */
+	public void start() {
+		if (currentRunTaskFinished()) {
+			createRunTask();
+			scheduleRunTask();
+		} else {
+			delay();
+			// TODO in case of running? forget call?
+		}
+	}
+	
+	/**
+	 * Checks if the current run task is finished.
+	 * 
+	 * @return	True if and only if the current run task is finished.
+	 */
+	public boolean currentRunTaskFinished() {
+		if (this.scheduledFuture == null) {
+			return true;
+		} else {
+			try {
+				boolean notFinished = (this.scheduledFuture.get() != null);
+				return notFinished;
+			} catch (CancellationException e) {
+				return true;
+			} catch (InterruptedException e) {
+				return true;
+			} catch (ExecutionException e) {
+				return true;
+			}
+		}
+	}
+	
+	/**
+	 * Delays the scheduled execution if the current run task is not yet running.
+	 */
+	public void delay() {
+		if (this.scheduledFuture != null) {
+			boolean cancelled = this.scheduledFuture.cancel(false);
+			if (cancelled) {
+				scheduleRunTask();
+			}
+		}
+	}
+	
+	/**
+	 * Stops the execution of tests even if the currenr run task is running.
+	 */
+	public void stop() {
+		if (this.scheduledFuture != null) {
+			this.scheduledFuture.cancel(true);
+		}
+	}
+	
+	/**
+	 * Creates a new run task for this test daemon.
+	 */
+	private void createRunTask() {
+		this.runTask = new RunTask();
+	}
+	
+	/**
+	 * Returns the run task of this test daemon.
+	 * 
+	 * @return	The run task of this test daemon.
+	 */
+	private RunTask getRunTask() {
+		return this.runTask;
+	}
+	
+	/**
+	 * The scheduled future of the run task of this test daemon.
+	 */
+	private ScheduledFuture<?> scheduledFuture;
+	
+	/**
+	 * Schedules the run task of this test daemon.
+	 * 
+	 * @pre		May not be called when no run task is created.
+	 */
+	private void scheduleRunTask() {
+		try {
+			this.scheduledFuture = this.scheduler.schedule(getRunTask(), getDelay(), getTimeUnit());
+		} catch (RejectedExecutionException e){
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	/*
+	 * Test suite and listeners management
+	 */
 	
 	/**
 	 * Sets the class with the test suite of this test daemon
@@ -94,7 +247,7 @@ public class TestDaemon {
 	 * 			The class with the test suite.
 	 */
 	public void setTestSuite(Class<?> testSuite) {
-		if (!this.runTask.isRunning) {
+		if (!this.runTask.isRunning) { // TODO: Needs to be atomic
 			this.testSuite = testSuite;
 		} else {
 			this.notYetAcceptedClass = testSuite;
@@ -111,7 +264,7 @@ public class TestDaemon {
 	 * of this test daemon.
 	 */
 	private void classSetUp() {
-		if (this.notYetAcceptedClass != null) { // TODO: Needs to be atomic
+		if (this.notYetAcceptedClass != null) {
 			this.testSuite = this.notYetAcceptedClass;
 		}
 	}
@@ -152,12 +305,7 @@ public class TestDaemon {
 		for (RunListener listener : notYetAcceptedListeners) {
 			addListener(listener);
 		}
-		notYetAcceptedListeners = new HashSet<RunListener>();
-	}
-	
-	private void setUp() {
-		classSetUp();
-		listenerSetUp();
+		this.notYetAcceptedListeners = new HashSet<RunListener>();
 	}
     
 	/**
@@ -166,9 +314,22 @@ public class TestDaemon {
     private class RunTask implements Runnable {
     	
     	/**
-    	 * Is this run task running.
+    	 * Is this run task started running.
     	 */
-    	private boolean isRunning;
+    	private volatile boolean isStarted;
+    	
+    	/**
+    	 * Is this run task running the test suite.
+    	 */
+    	private volatile boolean isRunning;
+    	
+    	/**
+    	 * Sets the not yet accepted test suite and listeners up.
+    	 */
+    	private void setUp() {
+    		classSetUp();
+    		listenerSetUp();
+    	}
     	
     	/**
     	 * Creates a new run task.
@@ -181,16 +342,18 @@ public class TestDaemon {
     	 * Runs this run task.
     	 */
 		public void run() {
-			
-			this.isRunning = true;
+			this.isStarted = true;
 			
 			setUp();
+			
+			this.isRunning = true;
 			
 			if (getTestSuite() != null) {
 				jUnitCore.run(getTestSuite());
 			}
 			
 			this.isRunning = false;
+			this.isStarted = false;
 		}
     }
 }
