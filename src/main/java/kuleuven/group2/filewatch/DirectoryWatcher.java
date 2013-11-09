@@ -23,21 +23,21 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * The FolderWatcher class notifies its subscribers of the file system events create, modify and delete.
+ * The DirectoryWatcher class notifies its listeners of the file system events create, modify and delete.
  * 
  * @author Ruben
  *
  */
-public class FolderWatcher {
+public class DirectoryWatcher {
 
     private final WatchService watchService;
     private final Map<WatchKey,Path> keys;
     private static final boolean recursiveWatching = true;
     
-    protected Collection<FolderWatcherSubscriber> subscriberList = new HashSet<FolderWatcherSubscriber>();
+    protected final Collection<DirectoryWatchListener> listeners = new HashSet<DirectoryWatchListener>();
 	protected Path watchedFolderPath;
 	
-	public FolderWatcher(Path folderPath) throws IOException {
+	public DirectoryWatcher(Path folderPath) throws IOException {
         this.watchService = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
 
@@ -61,22 +61,12 @@ public class FolderWatcher {
         keys.put(key, directoryPath);
     }
     
-    public void registerSubscriber(FolderWatcherSubscriber subscriber) {
-    	subscriberList.add(subscriber);
+    public void addWatchListener(DirectoryWatchListener listener) {
+    	listeners.add(listener);
     }
     
-    public boolean isRegisteredAsSubscriber(FolderWatcherSubscriber subscriber) {
-    	return subscriberList.contains(subscriber);
-    }
-    
-    public void unregisterSubscriber(FolderWatcherSubscriber subscriber) {
-    	if (isRegisteredAsSubscriber(subscriber)) {
-    		subscriberList.remove(subscriber);
-    	}
-    }
-    
-    public int numberOfSubscribers() {
-    	return subscriberList.size();
+    public void removeWatchListener(DirectoryWatchListener listener) {
+    	listeners.remove(listener);
     }
 
     public void processEvents() {
@@ -143,7 +133,7 @@ public class FolderWatcher {
 		    Path entryFileName = pathEvent.context();
 		    Path entryFullName = directoryPath.resolve(entryFileName);
 		    
-		    notifySubscribers(pathEvent, entryFullName);
+		    notifyListeners(pathEvent, entryFullName);
 
 		    if (isCreateEvent(event) && recursiveWatching) {
 		    	registerSubDirectories(entryFullName);
@@ -151,14 +141,14 @@ public class FolderWatcher {
 		}
 	}
     
-    private void notifySubscribers(WatchEvent<?> event, Path filePath) {
-    	for (FolderWatcherSubscriber subscriber : subscriberList) {
+    private void notifyListeners(WatchEvent<?> event, Path filePath) {
+    	for (DirectoryWatchListener listener : listeners) {
 	        if (isCreateEvent(event)) {
-	        	subscriber.createEvent(filePath);
+	        	listener.fileCreated(filePath);
 	        } else if (isModifyEvent(event)) {
-	        	subscriber.modifyEvent(filePath);
+	        	listener.fileModified(filePath);
 	        } else if (isDeleteEvent(event)) {
-	        	subscriber.deleteEvent(filePath);
+	        	listener.fileDeleted(filePath);
 	        }
 	    }
     }

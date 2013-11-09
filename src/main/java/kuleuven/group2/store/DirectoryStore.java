@@ -9,15 +9,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.filewatch.FolderWatcher;
-import kuleuven.group2.filewatch.FolderWatcherSubscriber;
+import kuleuven.group2.filewatch.DirectoryWatcher;
+import kuleuven.group2.filewatch.DirectoryWatchListener;
 import org.apache.commons.io.IOUtils;
 
-public class DirectoryStore implements Store, FolderWatcherSubscriber {
+public class DirectoryStore implements Store, DirectoryWatchListener {
 
 	protected final Path root;
 
-	protected final FolderWatcher watcher;
+	protected final DirectoryWatcher watcher;
 
 	protected final List<StoreListener> listeners= new ArrayList<StoreListener>();
 
@@ -34,7 +34,7 @@ public class DirectoryStore implements Store, FolderWatcherSubscriber {
 			Files.createDirectory(root);
 		}
 		this.root= root;
-		this.watcher= new FolderWatcher(root);
+		this.watcher= new DirectoryWatcher(root);
 	}
 
 	public DirectoryStore(String root) throws IllegalArgumentException,
@@ -91,21 +91,21 @@ public class DirectoryStore implements Store, FolderWatcherSubscriber {
 		listeners.remove(listener);
 	}
 
-	public void createEvent(Path filePath) {
+	public void fileCreated(Path filePath) {
 		String resourceName= getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceAdded(resourceName);
 		}
 	}
 
-	public void modifyEvent(Path filePath) {
+	public void fileModified(Path filePath) {
 		String resourceName= getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceChanged(resourceName);
 		}
 	}
 
-	public void deleteEvent(Path filePath) {
+	public void fileDeleted(Path filePath) {
 		String resourceName= getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceRemoved(resourceName);

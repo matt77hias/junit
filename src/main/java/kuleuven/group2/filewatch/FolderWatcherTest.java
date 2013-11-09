@@ -71,13 +71,13 @@ public class FolderWatcherTest {
 
 	public class TestFolderWatcherThread extends Thread {
 		private boolean stopped = false;
-		private FolderWatcher folderWatcher;
+		private DirectoryWatcher folderWatcher;
 		
 		public void stopFolderWatcher() {
 			stopped = true;
 		}
 		
-		public TestFolderWatcherThread(FolderWatcher folderWatcher) {
+		public TestFolderWatcherThread(DirectoryWatcher folderWatcher) {
 			this.folderWatcher = folderWatcher;
 		}
 		
@@ -89,19 +89,19 @@ public class FolderWatcherTest {
 		}
 	}
 	
-	public class TestFolderWatcherSubscriber implements FolderWatcherSubscriber {
+	public class TestFolderWatchListener implements DirectoryWatchListener {
 
-		public void modifyEvent(Path filePath) {
+		public void fileModified(Path filePath) {
 			registeredChangeList.get("modify").add(filePath);
 			System.out.println("modify " + filePath);
 		}
 		
-		public void deleteEvent(Path filePath) {
+		public void fileDeleted(Path filePath) {
 			registeredChangeList.get("delete").add(filePath);
 			System.out.println("delete " + filePath);
 		}
 		
-		public void createEvent(Path filePath) {
+		public void fileCreated(Path filePath) {
 			registeredChangeList.get("create").add(filePath);
 			System.out.println("create " + filePath);
 		}
@@ -110,9 +110,9 @@ public class FolderWatcherTest {
 	@Test
 	public void createFileTest() throws IOException, InterruptedException {
 		// Setup
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		Path filePath = MAIN_TEST_FILE.toPath();
 		
@@ -124,7 +124,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		correctChangesRegisteredCreateModifyDelete(1, 0, 0);
@@ -136,9 +136,9 @@ public class FolderWatcherTest {
 		Path filePath = MAIN_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		
 		// Action
@@ -154,7 +154,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		assertTrue(atleastOneModifyChangeRegistered());
@@ -166,9 +166,9 @@ public class FolderWatcherTest {
 		Path filePath = MAIN_TEST_FILE.toPath();
 		Files.createFile(filePath);
 
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		
 		// Action
@@ -179,7 +179,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		correctChangesRegisteredCreateModifyDelete(0, 0, 1);
@@ -191,9 +191,9 @@ public class FolderWatcherTest {
 		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
 		Files.createDirectory(folderPath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		
 		// Action
@@ -205,7 +205,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		
@@ -225,9 +225,9 @@ public class FolderWatcherTest {
 		Path filePath = RECURSIVE_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		
 		// Action
@@ -243,7 +243,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		correctChangesRegisteredCreateModifyDelete(0, 2, 0);
@@ -258,9 +258,9 @@ public class FolderWatcherTest {
 		Path filePath = RECURSIVE_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
-		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
-		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatchListener watchListener = new TestFolderWatchListener();
+		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 		
 		// Action
@@ -271,7 +271,7 @@ public class FolderWatcherTest {
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 		
 		folderWatcherThread.stopFolderWatcher();
-		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		folderWatcher.removeWatchListener(watchListener);
 		
 		// Test
 		correctChangesRegisteredCreateModifyDelete(0, 0, 1);

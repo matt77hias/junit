@@ -1,7 +1,7 @@
 package kuleuven.group2.filewatch;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import kuleuven.group2.store.StoreListener;
 
@@ -13,25 +13,15 @@ import kuleuven.group2.store.StoreListener;
  */
 public class SourceWatcher implements StoreListener {
 	
-	protected Collection<SourceWatcherSubscriber> subscriberList = new HashSet<SourceWatcherSubscriber>();
+	protected final List<SourceWatchListener> listeners = new ArrayList<SourceWatchListener>();
 
     
-    public void registerSubscriber(SourceWatcherSubscriber subscriber) {
-    	subscriberList.add(subscriber);
+    public void registerSubscriber(SourceWatchListener listener) {
+    	listeners.add(listener);
     }
     
-    public boolean isRegisteredAsSubscriber(SourceWatcherSubscriber subscriber) {
-    	return subscriberList.contains(subscriber);
-    }
-    
-    public void unregisterSubscriber(SourceWatcherSubscriber subscriber) {
-    	if (isRegisteredAsSubscriber(subscriber)) {
-    		subscriberList.remove(subscriber);
-    	}
-    }
-    
-    public int numberOfSubscribers() {
-    	return subscriberList.size();
+    public void unregisterSubscriber(SourceWatchListener listener) {
+    	listeners.remove(listener);
     }
 
 	public void resourceAdded(String resourceName) {
@@ -57,8 +47,8 @@ public class SourceWatcher implements StoreListener {
 	}
 	
 	private void notifyChangedMethod() {
-    	for (SourceWatcherSubscriber subscriber : subscriberList) {
-    		subscriber.reportChangedMethod();
+    	for (SourceWatchListener listener : listeners) {
+    		listener.reportChangedMethod();
     	}
 	}
 
