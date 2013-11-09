@@ -110,7 +110,7 @@ public class FolderWatcherTest {
 	@Test
 	public void createFileTest() throws IOException, InterruptedException {
 		// Setup
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -136,7 +136,7 @@ public class FolderWatcherTest {
 		Path filePath = MAIN_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -166,7 +166,7 @@ public class FolderWatcherTest {
 		Path filePath = MAIN_TEST_FILE.toPath();
 		Files.createFile(filePath);
 
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -191,7 +191,7 @@ public class FolderWatcherTest {
 		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
 		Files.createDirectory(folderPath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -225,7 +225,7 @@ public class FolderWatcherTest {
 		Path filePath = RECURSIVE_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -258,7 +258,7 @@ public class FolderWatcherTest {
 		Path filePath = RECURSIVE_TEST_FILE.toPath();
 		Files.createFile(filePath);
 		
-		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toPath());
 		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
 		folderWatcher.registerSubscriber(folderWatcherSubscriber);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);

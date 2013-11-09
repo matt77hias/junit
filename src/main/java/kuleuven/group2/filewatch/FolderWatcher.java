@@ -11,7 +11,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
@@ -38,8 +37,7 @@ public class FolderWatcher {
     protected Collection<FolderWatcherSubscriber> subscriberList = new HashSet<FolderWatcherSubscriber>();
 	protected Path watchedFolderPath;
 	
-	public FolderWatcher(String folderPathName) throws IOException {
-		this.watchedFolderPath = Paths.get(folderPathName);
+	public FolderWatcher(Path folderPath) throws IOException {
         this.watchService = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();
 

@@ -6,12 +6,20 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import kuleuven.group2.filewatch.FolderWatcher;
+import kuleuven.group2.filewatch.FolderWatcherSubscriber;
 import org.apache.commons.io.IOUtils;
 
-public class DirectoryStore implements Store {
+public class DirectoryStore implements Store, FolderWatcherSubscriber {
 
 	protected final Path root;
+
+	protected final FolderWatcher watcher;
+
+	protected final List<StoreListener> listeners= new ArrayList<StoreListener>();
 
 	public DirectoryStore(Path root) throws IllegalArgumentException,
 			IOException {
@@ -26,15 +34,12 @@ public class DirectoryStore implements Store {
 			Files.createDirectory(root);
 		}
 		this.root= root;
+		this.watcher= new FolderWatcher(root);
 	}
 
 	public DirectoryStore(String root) throws IllegalArgumentException,
 			IOException {
 		this(Paths.get(root));
-	}
-
-	protected Path getPath(String resourceName) {
-		return root.resolve(resourceName);
 	}
 
 	public boolean contains(String resourceName) {
@@ -68,6 +73,51 @@ public class DirectoryStore implements Store {
 			// Close output stream
 			IOUtils.closeQuietly(os);
 		}
+	}
+
+	public void remove(String resourceName) {
+		try {
+			Files.delete(getPath(resourceName));
+		} catch (IOException e) {
+			// File not writable
+		}
+	}
+
+	public void addStoreListener(StoreListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeStoreListener(StoreListener listener) {
+		listeners.remove(listener);
+	}
+
+	public void createEvent(Path filePath) {
+		String resourceName= getResourceName(filePath);
+		for (StoreListener listener : listeners) {
+			listener.resourceAdded(resourceName);
+		}
+	}
+
+	public void modifyEvent(Path filePath) {
+		String resourceName= getResourceName(filePath);
+		for (StoreListener listener : listeners) {
+			listener.resourceChanged(resourceName);
+		}
+	}
+
+	public void deleteEvent(Path filePath) {
+		String resourceName= getResourceName(filePath);
+		for (StoreListener listener : listeners) {
+			listener.resourceRemoved(resourceName);
+		}
+	}
+
+	protected Path getPath(String resourceName) {
+		return root.resolve(resourceName);
+	}
+
+	protected String getResourceName(Path filePath) {
+		return root.relativize(filePath).toString();
 	}
 
 }
