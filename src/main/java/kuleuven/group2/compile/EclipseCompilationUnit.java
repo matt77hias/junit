@@ -1,11 +1,8 @@
 package kuleuven.group2.compile;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.StringTokenizer;
+import java.util.Arrays;
 
 import kuleuven.group2.store.Store;
-import org.apache.commons.jci.utils.ConversionUtils;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 
 public class EclipseCompilationUnit implements ICompilationUnit {
@@ -23,11 +20,11 @@ public class EclipseCompilationUnit implements ICompilationUnit {
 	public EclipseCompilationUnit(final Store store, final String sourceName) {
 		this.store= store;
 		this.sourceName= sourceName;
-		className= ConversionUtils.convertResourceToClassName(sourceName);
+		this.className= NameUtils.toClassName(sourceName);
 
-		Deque<char[]> classParts= getClassNameParts(className);
-		typeName= classParts.removeLast();
-		packageName= classParts.toArray(new char[0][]);
+		char[][] compoundName= NameUtils.getCompoundName(className);
+		this.typeName= compoundName[compoundName.length - 1];
+		this.packageName= Arrays.copyOf(compoundName, compoundName.length - 1);
 	}
 
 	public char[] getFileName() {
@@ -52,16 +49,6 @@ public class EclipseCompilationUnit implements ICompilationUnit {
 
 	public boolean ignoreOptionalProblems() {
 		return false;
-	}
-
-	protected static Deque<char[]> getClassNameParts(String className) {
-		// Split on dots
-		final StringTokenizer tokenizer= new StringTokenizer(className, ".");
-		LinkedList<char[]> parts= new LinkedList<char[]>();
-		while (tokenizer.hasMoreTokens()) {
-			parts.add(tokenizer.nextToken().toCharArray());
-		}
-		return parts;
 	}
 
 }
