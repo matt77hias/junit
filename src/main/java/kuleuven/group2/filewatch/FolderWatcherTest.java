@@ -23,7 +23,7 @@ public class FolderWatcherTest {
 	
 	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
 
-	private static final int FILEWATCHER_TIMEOUT = 20;
+	private static final int FILEWATCHER_TIMEOUT = 30;
 	private static final File MAIN_TEST_FOLDER = new File("D:\\filewatchertest");
 	private static final File MAIN_TEST_FILE = new File("D:\\filewatchertest\\helloworld.txt");
 	private static final File RECURSIVE_TEST_FOLDER = new File("D:\\filewatchertest\\testfolder");
@@ -54,6 +54,7 @@ public class FolderWatcherTest {
 	@After
 	public void tearDown() throws Exception {
 		deleteFolder(MAIN_TEST_FOLDER);
+		Thread.sleep(FILEWATCHER_TIMEOUT);
 	}
 	
 	private static void deleteFolder(File directory) throws IOException {
@@ -209,7 +210,71 @@ public class FolderWatcherTest {
 		// Test
 		
 		// a modify entry is received on the recursive folder as well
+		// -> when a file is created the folder is considered modified
+		// this behavior is not present on the not recursive case because
+		// in the not recursive case we are not watching the folder above the test folder
 		correctChangesRegisteredCreateModifyDelete(1, 1, 0);
+	}
+	
+	@Test
+	public void recursiveModifyTest() throws IOException, InterruptedException {
+		// Setup
+		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
+		Files.createDirectory(folderPath);
+		
+		Path filePath = RECURSIVE_TEST_FILE.toPath();
+		Files.createFile(filePath);
+		
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
+		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
+		
+		// Action
+		folderWatcherThread.start();
+		
+		FileWriter writer = new FileWriter(new File(filePath.toUri()));;
+		try {
+			writer.append("hello world");
+		} finally {
+			writer.close();
+		}
+		
+		Thread.sleep(FILEWATCHER_TIMEOUT);
+		
+		folderWatcherThread.stopFolderWatcher();
+		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		
+		// Test
+		correctChangesRegisteredCreateModifyDelete(0, 2, 0);
+	}
+	
+	@Test
+	public void recursiveDeleteTest() throws IOException, InterruptedException {
+		// Setup
+		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
+		Files.createDirectory(folderPath);
+		
+		Path filePath = RECURSIVE_TEST_FILE.toPath();
+		Files.createFile(filePath);
+		
+		FolderWatcher folderWatcher = new FolderWatcher(MAIN_TEST_FOLDER.toString());
+		FolderWatcherSubscriber folderWatcherSubscriber = new TestFolderWatcherSubscriber();
+		folderWatcher.registerSubscriber(folderWatcherSubscriber);
+		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
+		
+		// Action
+		folderWatcherThread.start();
+		
+		Files.delete(filePath);
+		
+		Thread.sleep(FILEWATCHER_TIMEOUT);
+		
+		folderWatcherThread.stopFolderWatcher();
+		folderWatcher.unregisterSubscriber(folderWatcherSubscriber);
+		
+		// Test
+		correctChangesRegisteredCreateModifyDelete(0, 0, 1);
 	}
 	
 	private void correctChangesRegisteredCreateModifyDelete(int amountOfCreates, int amountOfModifies, int amountOfDeletes) {
