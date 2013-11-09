@@ -37,6 +37,7 @@ public class EclipseCompiler implements JavaCompiler {
 
 	public CompilationResult compile(final Collection<String> sourceNames,
 			final ClassLoader classLoader) {
+		final List<String> compiled= new ArrayList<String>();
 		final List<CompilationProblem> problems= new ArrayList<CompilationProblem>();
 
 		// Collect compilation units
@@ -64,7 +65,7 @@ public class EclipseCompiler implements JavaCompiler {
 				Locale.getDefault());
 		final INameEnvironment nameEnvironment= new NameEnvironment(classLoader);
 		final ICompilerRequestor compilerRequestor= new CompilerRequestor(
-				problems);
+				problems, compiled);
 
 		// Compile
 		final Compiler compiler= new Compiler(nameEnvironment, policy,
@@ -72,7 +73,7 @@ public class EclipseCompiler implements JavaCompiler {
 		compiler.compile(compilationUnits.toArray(new ICompilationUnit[0]));
 
 		// Return result
-		return new CompilationResult(problems);
+		return new CompilationResult(problems, compiled);
 	}
 
 	/**
@@ -186,8 +187,12 @@ public class EclipseCompiler implements JavaCompiler {
 
 		protected final List<CompilationProblem> problems;
 
-		public CompilerRequestor(List<CompilationProblem> problems) {
+		protected final List<String> compiled;
+
+		public CompilerRequestor(List<CompilationProblem> problems,
+				List<String> compiled) {
 			this.problems= problems;
+			this.compiled= compiled;
 		}
 
 		public void acceptResult(
@@ -199,13 +204,15 @@ public class EclipseCompiler implements JavaCompiler {
 				}
 			}
 			if (!result.hasErrors()) {
-				// Write class files to store
 				final ClassFile[] classFiles= result.getClassFiles();
 				for (ClassFile classFile : classFiles) {
+					// Write class file to store
 					String className= NameUtils.getClassName(classFile
 							.getCompoundName());
 					String resourceName= NameUtils.toBinaryName(className);
 					binaryStore.write(resourceName, classFile.getBytes());
+					// Add to compiled resources list
+					compiled.add(resourceName);
 				}
 			}
 		}
