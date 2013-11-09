@@ -1,8 +1,9 @@
 package kuleuven.group2.filewatch;
 
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
+
+import kuleuven.group2.store.StoreListener;
 
 /**
  * The SourceWatcher class notifies its subscribers of changed method lists in edited .java files.
@@ -10,7 +11,7 @@ import java.util.HashSet;
  * @author Ruben
  *
  */
-public class SourceWatcher implements FolderWatcherSubscriber {
+public class SourceWatcher implements StoreListener {
 	
 	protected Collection<SourceWatcherSubscriber> subscriberList = new HashSet<SourceWatcherSubscriber>();
 
@@ -32,26 +33,26 @@ public class SourceWatcher implements FolderWatcherSubscriber {
     public int numberOfSubscribers() {
     	return subscriberList.size();
     }
-    
-	public void createEvent(Path filePath) {
-		if (! interestedInFile(filePath)) {
+
+	public void resourceAdded(String resourceName) {
+		if (! interestedInResource(resourceName)) {
 			return;
 		}
 	}
 
-	public void modifyEvent(Path filePath) {
-		if (! interestedInFile(filePath)) {
+	public void resourceChanged(String resourceName) {
+		if (! interestedInResource(resourceName)) {
 			return;
 		}
 		
 	}
 	
-	private void onModifiedFile(Path filePath) {
-		getChangedMethodListForFile(filePath);
+	private void onModifiedResource(String resourceName) {
+		getChangedMethodListForResource(resourceName);
 		
 	}
 	
-	private void getChangedMethodListForFile(Path filePath) {
+	private void getChangedMethodListForResource(String resourceName) {
 		
 	}
 	
@@ -61,15 +62,15 @@ public class SourceWatcher implements FolderWatcherSubscriber {
     	}
 	}
 
-	public void deleteEvent(Path filePath) {
-		if (! interestedInFile(filePath)) {
+	public void resourceRemoved(String resourceName) {
+		if (! interestedInResource(resourceName)) {
 			return;
 		}
 		
 	}
 	
-	private boolean interestedInFile(Path filePath) {
-		return filePath.endsWith(".java");
+	private boolean interestedInResource(String resourceName) {
+		return resourceName.endsWith(".java");
 	}
 
 
