@@ -6,21 +6,16 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import kuleuven.group2.filewatch.DirectoryWatchListener;
 import kuleuven.group2.filewatch.DirectoryWatcher;
 
 import org.apache.commons.io.IOUtils;
 
-public class DirectoryStore implements Store, DirectoryWatchListener {
+public class DirectoryStore extends AbstractStore implements DirectoryWatchListener {
 
 	protected final Path root;
-
 	protected final DirectoryWatcher watcher;
-
-	protected final List<StoreListener> listeners = new ArrayList<StoreListener>();
 
 	public DirectoryStore(Path root) throws IllegalArgumentException, IOException {
 		if (root == null) {
@@ -35,6 +30,7 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 		}
 		this.root = root;
 		this.watcher = new DirectoryWatcher(root);
+		watcher.addWatchListener(this);
 	}
 
 	public DirectoryStore(String root) throws IllegalArgumentException, IOException {
@@ -82,41 +78,27 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 		}
 	}
 
-	public void addStoreListener(StoreListener listener) {
-		listeners.add(listener);
-	}
-
-	public void removeStoreListener(StoreListener listener) {
-		listeners.remove(listener);
-	}
-
-	public void fileCreated(Path filePath) {
-		String resourceName = getResourceName(filePath);
-		for (StoreListener listener : listeners) {
-			listener.resourceAdded(resourceName);
-		}
-	}
-
-	public void fileModified(Path filePath) {
-		String resourceName = getResourceName(filePath);
-		for (StoreListener listener : listeners) {
-			listener.resourceChanged(resourceName);
-		}
-	}
-
-	public void fileDeleted(Path filePath) {
-		String resourceName = getResourceName(filePath);
-		for (StoreListener listener : listeners) {
-			listener.resourceRemoved(resourceName);
-		}
-	}
-
 	protected Path getPath(String resourceName) {
 		return root.resolve(resourceName);
 	}
 
 	protected String getResourceName(Path filePath) {
 		return root.relativize(filePath).toString();
+	}
+
+	@Override
+	public void fileCreated(Path filePath) {
+		fireAdded(getResourceName(filePath));
+	}
+
+	@Override
+	public void fileModified(Path filePath) {
+		fireChanged(getResourceName(filePath));
+	}
+
+	@Override
+	public void fileDeleted(Path filePath) {
+		fireRemoved(getResourceName(filePath));
 	}
 
 }
