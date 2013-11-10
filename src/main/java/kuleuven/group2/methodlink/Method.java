@@ -1,4 +1,4 @@
-package kuleuven.group2.testtomethodlink;
+package kuleuven.group2.methodlink;
 
 import java.util.ArrayList;
 import java.util.List;
