@@ -1,4 +1,4 @@
-package kuleuven.group2.testtomethodlink;
+package kuleuven.group2.methodlink;
 
 import static org.junit.Assert.*;
 
@@ -36,19 +36,19 @@ public class MethodLinkerTest {
 	@After
 	public void tearDown() throws Exception {
 		methodLinker.unregisterMonitor(monitor);
-		System.out.println(methodLinkRegistry.testToMethodLinks);
+		System.out.println(methodLinkRegistry.methodToTestLinks);
 	}
 	
 	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {
 		
-		protected kuleuven.group2.testtomethodlink.Test currentTest; 
+		protected kuleuven.group2.methodlink.Test currentTest; 
 		
 		public TestCurrentRunningTestHolder(String testClassName, String testMethodName) {
 			this.currentTest = new
-					kuleuven.group2.testtomethodlink.Test(testClassName, testMethodName);
+					kuleuven.group2.methodlink.Test(testClassName, testMethodName);
 		}
 
-		public kuleuven.group2.testtomethodlink.Test getCurrentRunningTest() {
+		public kuleuven.group2.methodlink.Test getCurrentRunningTest() {
 			return currentTest;
 		}
 	}
