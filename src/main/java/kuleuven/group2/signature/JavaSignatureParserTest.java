@@ -29,6 +29,12 @@ public class JavaSignatureParserTest {
 				+ testMethod2Arg_Arg2 + ";"
 				+ ")"
 				+ testMethod2Arg_ReturnType;
+	
+	private final static String testMethod0Arg
+	= testMethod2Arg_Package
+			+ testMethod2Arg_MethodName + "("
+			+ ")"
+			+ testMethod2Arg_ReturnType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -81,6 +87,16 @@ public class JavaSignatureParserTest {
 		
 		assertTrue(arguments.contains(testMethod2Arg_Arg1));
 		assertTrue(arguments.contains(testMethod2Arg_Arg2));
+		assertEquals(arguments.size(), 2);
+	}
+
+	@Test
+	public void testMethod0ArgArguments() {
+		JavaSignatureParser parser = new JavaSignatureParser(testMethod0Arg);
+		
+		List<String> arguments = parser.parseArguments();
+		
+		assertTrue(arguments.isEmpty());
 	}
 
 }

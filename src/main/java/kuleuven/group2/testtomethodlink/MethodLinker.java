@@ -11,9 +11,9 @@ import com.sun.tools.attach.VirtualMachine;
 
 public class MethodLinker {
 	
-	MethodLinker instance;
+	private static MethodLinker instance;
 	
-	public MethodLinker getInstance() {
+	public static MethodLinker getInstance() {
 		if (instance == null) {
 			instance = new MethodLinker();
 		}

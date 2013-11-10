@@ -1,10 +1,5 @@
 package kuleuven.group2.testtomethodlink;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import kuleuven.group2.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
