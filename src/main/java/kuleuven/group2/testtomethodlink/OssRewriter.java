@@ -1,4 +1,4 @@
-package kuleuven.group2;
+package kuleuven.group2.testtomethodlink;
 
 import java.lang.management.ManagementFactory;
 
