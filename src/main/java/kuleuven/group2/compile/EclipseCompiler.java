@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import kuleuven.group2.store.Store;
+import kuleuven.group2.store.StoreFilter;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.ClassFile;
 import org.eclipse.jdt.internal.compiler.Compiler;
@@ -25,6 +25,8 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
+import com.google.common.io.ByteStreams;
+
 public class EclipseCompiler implements JavaCompiler {
 
 	protected final Store sourceStore;
@@ -35,6 +37,20 @@ public class EclipseCompiler implements JavaCompiler {
 		this.binaryStore = binaryStore;
 	}
 
+	public Store getSourceStore() {
+		return sourceStore;
+	}
+
+	public Store getBinaryStore() {
+		return binaryStore;
+	}
+
+	@Override
+	public CompilationResult compile(ClassLoader classLoader) {
+		return compile(getSourceStore().getFiltered(StoreFilter.SOURCE), classLoader);
+	}
+
+	@Override
 	public CompilationResult compile(final Collection<String> sourceNames, final ClassLoader classLoader) {
 		final List<String> compiled = new ArrayList<String>();
 		final List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
@@ -42,8 +58,8 @@ public class EclipseCompiler implements JavaCompiler {
 		// Collect compilation units
 		final List<ICompilationUnit> compilationUnits = new ArrayList<ICompilationUnit>(sourceNames.size());
 		for (String sourceName : sourceNames) {
-			if (sourceStore.contains(sourceName)) {
-				compilationUnits.add(new EclipseCompilationUnit(sourceStore, sourceName));
+			if (getSourceStore().contains(sourceName)) {
+				compilationUnits.add(new EclipseCompilationUnit(getSourceStore(), sourceName));
 			} else {
 				// Source not found, error
 				problems.add(new SourceNotFoundProblem(sourceName));
@@ -97,26 +113,21 @@ public class EclipseCompiler implements JavaCompiler {
 			String classResourceName = NameUtils.toBinaryName(className);
 
 			// Find in binary store
-			byte[] classBytes = binaryStore.read(classResourceName);
+			byte[] classBytes = getBinaryStore().read(classResourceName);
 			if (classBytes != null) {
 				// Found, produce answer
 				return createFindTypeAnswer(className, classBytes);
 			}
 
 			// Find in class loader
-			final InputStream is = classLoader.getResourceAsStream(classResourceName);
-			if (is != null) {
-				try {
+			try (InputStream is = classLoader.getResourceAsStream(classResourceName)) {
+				if (is != null) {
 					// Found, produce answer
-					return createFindTypeAnswer(className, IOUtils.toByteArray(is));
-				} catch (IOException e) {
-					// Could not read class
-					return null;
-				} finally {
-					IOUtils.closeQuietly(is);
+					return createFindTypeAnswer(className, ByteStreams.toByteArray(is));
 				}
+			} catch (IOException e) {
+				// Ignore
 			}
-			// Class not found
 			return null;
 		}
 
@@ -143,16 +154,18 @@ public class EclipseCompiler implements JavaCompiler {
 
 			// Check for loaded class
 			String classResourceName = NameUtils.toBinaryName(className);
-			final InputStream is = classLoader.getResourceAsStream(classResourceName);
-			if (is != null) {
-				// Class found, not a package
-				IOUtils.closeQuietly(is);
-				return false;
+			try (InputStream is = classLoader.getResourceAsStream(classResourceName)) {
+				if (is != null) {
+					// Class found, not a package
+					return false;
+				}
+			} catch (IOException e) {
+				// Ignore
 			}
 
 			// Check for source resource
 			String sourceResourceName = NameUtils.toSourceName(className);
-			if (sourceStore.contains(sourceResourceName)) {
+			if (getSourceStore().contains(sourceResourceName)) {
 				// Source found, not a package
 				return false;
 			}
@@ -173,7 +186,6 @@ public class EclipseCompiler implements JavaCompiler {
 	protected class CompilerRequestor implements ICompilerRequestor {
 
 		protected final List<CompilationProblem> problems;
-
 		protected final List<String> compiled;
 
 		public CompilerRequestor(List<CompilationProblem> problems, List<String> compiled) {
@@ -194,7 +206,7 @@ public class EclipseCompiler implements JavaCompiler {
 					// Write class file to store
 					String className = NameUtils.getClassName(classFile.getCompoundName());
 					String resourceName = NameUtils.toBinaryName(className);
-					binaryStore.write(resourceName, classFile.getBytes());
+					getBinaryStore().write(resourceName, classFile.getBytes());
 					// Add to compiled resources list
 					compiled.add(resourceName);
 				}

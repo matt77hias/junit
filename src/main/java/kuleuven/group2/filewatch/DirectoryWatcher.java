@@ -41,6 +41,7 @@ public class DirectoryWatcher {
 	public DirectoryWatcher(Path folderPath) throws IOException {
 		this.watchService = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
+		this.watchedFolderPath = folderPath;
 
 		registerAllDirectoriesInPath(watchedFolderPath);
 	}

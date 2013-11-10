@@ -1,6 +1,10 @@
 package kuleuven.group2.compile;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
+import java.util.ListIterator;
+
+import com.google.common.base.Splitter;
+import com.google.common.io.Files;
 
 public class NameUtils {
 
@@ -16,36 +20,54 @@ public class NameUtils {
 	}
 
 	public static String toClassName(String resourceName) {
-		return stripExtension(resourceName).replace('/', '.');
+		return Files.getNameWithoutExtension(resourceName).replace('/', '.');
 	}
 
 	public static String getClassName(char[][] compoundName) {
-		return StringUtils.join(compoundName, '.');
+		return join(compoundName).toString();
 	}
 
 	public static String getClassName(char[] typeName, char[][] packageName) {
-		return StringUtils.join(packageName, '.') + '.' + new String(typeName);
+		return joinPrefix(packageName).append(typeName).toString();
 	}
 
 	public static String getPackageName(char[][] parentPackageName, char[] packageName) {
-		return StringUtils.join(parentPackageName, '.') + '.' + new String(packageName);
+		return joinPrefix(parentPackageName).append(packageName).toString();
 	}
 
 	public static char[][] getCompoundName(String className) {
-		return toCharArrays(StringUtils.split(className, '.'));
+		return toCharArrays(Splitter.on('.').splitToList(className));
 	}
 
-	protected static char[][] toCharArrays(String... strings) {
-		char[][] charArrays = new char[strings.length][];
-		for (int i = 0; i < strings.length; i++) {
-			charArrays[i] = strings[i].toCharArray();
+	protected static char[][] toCharArrays(List<String> strings) {
+		char[][] charArrays = new char[strings.size()][];
+		for (ListIterator<String> it = strings.listIterator(); it.hasNext();) {
+			int index = it.nextIndex();
+			charArrays[index] = it.next().toCharArray();
 		}
 		return charArrays;
 	}
 
-	protected static String stripExtension(String name) {
-		int i = name.lastIndexOf('.');
-		return (i < 0) ? name : name.substring(0, i);
+	protected static StringBuilder join(char[][] parts) {
+		StringBuilder joined = new StringBuilder();
+		if (parts != null) {
+			for (int i = 0; i < parts.length; i++) {
+				if (i != 0) joined.append('.');
+				joined.append(parts[i]);
+			}
+		}
+		return joined;
+	}
+
+	protected static StringBuilder joinPrefix(char[][] parts) {
+		StringBuilder joined = new StringBuilder();
+		if (parts != null) {
+			for (int i = 0; i < parts.length; i++) {
+				joined.append(parts[i]);
+				joined.append('.');
+			}
+		}
+		return joined;
 	}
 
 }

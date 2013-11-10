@@ -5,6 +5,15 @@ import java.util.Collection;
 public interface JavaCompiler {
 
 	/**
+	 * Compile all sources.
+	 * 
+	 * @param classLoader
+	 *            Class loader to lookup existing classes.
+	 * @return The compilation result.
+	 */
+	public abstract CompilationResult compile(ClassLoader classLoader);
+
+	/**
 	 * Compile the given sources.
 	 * 
 	 * @param sourceNames

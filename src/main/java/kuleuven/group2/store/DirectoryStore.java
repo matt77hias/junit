@@ -1,16 +1,20 @@
 package kuleuven.group2.store;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import kuleuven.group2.filewatch.DirectoryWatchListener;
 import kuleuven.group2.filewatch.DirectoryWatcher;
-
-import org.apache.commons.io.IOUtils;
+import kuleuven.group2.util.FileUtils;
 
 public class DirectoryStore extends AbstractStore implements DirectoryWatchListener {
 
@@ -26,7 +30,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		}
 		// Make the root directory if it doesn't exit
 		if (!Files.exists(root)) {
-			Files.createDirectory(root);
+			Files.createDirectories(root);
 		}
 		this.root = root;
 		this.watcher = new DirectoryWatcher(root);
@@ -37,39 +41,61 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		this(Paths.get(root));
 	}
 
+	@Override
 	public boolean contains(String resourceName) {
 		return Files.exists(getPath(resourceName));
 	}
 
+	@Override
+	public Collection<String> getAll() {
+		return getFiltered(StoreFilter.ALL);
+	}
+
+	@Override
+	public Collection<String> getFiltered(final StoreFilter filter) {
+		try {
+			final List<String> resourceNames = new ArrayList<String>();
+			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+					if (isResource(path)) {
+						String resourceName = getResourceName(path);
+						if (filter == null || filter.accept(resourceName)) {
+							resourceNames.add(resourceName);
+						}
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+			return resourceNames;
+		} catch (IOException e) {
+			// Ignore
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
 	public byte[] read(String resourceName) {
-		InputStream is = null;
 		try {
 			// Read file as byte array
-			is = Files.newInputStream(getPath(resourceName));
-			return IOUtils.toByteArray(is);
+			return Files.readAllBytes(getPath(resourceName));
 		} catch (IOException e) {
 			// File not found or not readable
 			return null;
-		} finally {
-			// Close input stream
-			IOUtils.closeQuietly(is);
 		}
 	}
 
+	@Override
 	public void write(String resourceName, byte[] contents) {
-		OutputStream os = null;
 		try {
-			// Read file as byte array
-			os = Files.newOutputStream(getPath(resourceName));
-			IOUtils.write(contents, os);
+			// Write byte array to file
+			Files.write(getPath(resourceName), contents);
 		} catch (IOException e) {
-			// File not found or not writable
-		} finally {
-			// Close output stream
-			IOUtils.closeQuietly(os);
+			// File not writable
 		}
 	}
 
+	@Override
 	public void remove(String resourceName) {
 		try {
 			Files.delete(getPath(resourceName));
@@ -78,27 +104,44 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		}
 	}
 
+	@Override
+	public void clear() {
+		try {
+			/*
+			 * TODO This also deletes the root directory. Can the watcher deal
+			 * with that?
+			 */
+			FileUtils.deleteRecursively(root);
+		} catch (IOException e) {
+			// Ignore
+		}
+	}
+
+	protected boolean isResource(Path filePath) {
+		return Files.isRegularFile(filePath);
+	}
+
 	protected Path getPath(String resourceName) {
 		return root.resolve(resourceName);
 	}
 
-	protected String getResourceName(Path filePath) {
-		return root.relativize(filePath).toString();
+	protected String getResourceName(Path path) {
+		return root.relativize(path).toString();
 	}
 
 	@Override
-	public void fileCreated(Path filePath) {
-		fireAdded(getResourceName(filePath));
+	public void fileCreated(Path path) {
+		if (isResource(path)) fireAdded(getResourceName(path));
 	}
 
 	@Override
-	public void fileModified(Path filePath) {
-		fireChanged(getResourceName(filePath));
+	public void fileModified(Path path) {
+		if (isResource(path)) fireChanged(getResourceName(path));
 	}
 
 	@Override
-	public void fileDeleted(Path filePath) {
-		fireRemoved(getResourceName(filePath));
+	public void fileDeleted(Path path) {
+		if (isResource(path)) fireRemoved(getResourceName(path));
 	}
 
 }
