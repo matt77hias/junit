@@ -3,6 +3,7 @@ package kuleuven.group2.compile;
 import java.util.Arrays;
 
 import kuleuven.group2.store.Store;
+
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 
 public class EclipseCompilationUnit implements ICompilationUnit {
@@ -18,13 +19,13 @@ public class EclipseCompilationUnit implements ICompilationUnit {
 	private final Store store;
 
 	public EclipseCompilationUnit(final Store store, final String sourceName) {
-		this.store= store;
-		this.sourceName= sourceName;
-		this.className= NameUtils.toClassName(sourceName);
+		this.store = store;
+		this.sourceName = sourceName;
+		this.className = NameUtils.toClassName(sourceName);
 
-		char[][] compoundName= NameUtils.getCompoundName(className);
-		this.typeName= compoundName[compoundName.length - 1];
-		this.packageName= Arrays.copyOf(compoundName, compoundName.length - 1);
+		char[][] compoundName = NameUtils.getCompoundName(className);
+		this.typeName = compoundName[compoundName.length - 1];
+		this.packageName = Arrays.copyOf(compoundName, compoundName.length - 1);
 	}
 
 	public char[] getFileName() {
@@ -32,7 +33,7 @@ public class EclipseCompilationUnit implements ICompilationUnit {
 	}
 
 	public char[] getContents() {
-		final byte[] content= store.read(sourceName);
+		final byte[] content = store.read(sourceName);
 		if (content == null) {
 			return null;
 		}

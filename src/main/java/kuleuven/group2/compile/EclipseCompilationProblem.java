@@ -7,7 +7,7 @@ public class EclipseCompilationProblem implements CompilationProblem {
 	protected final IProblem problem;
 
 	public EclipseCompilationProblem(final IProblem problem) {
-		this.problem= problem;
+		this.problem = problem;
 	}
 
 	public boolean isError() {
@@ -40,7 +40,7 @@ public class EclipseCompilationProblem implements CompilationProblem {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb= new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append(getResourceName()).append(" (");
 		sb.append(getStartLine());
 		sb.append(":");

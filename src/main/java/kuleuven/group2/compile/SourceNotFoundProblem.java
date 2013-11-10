@@ -5,7 +5,7 @@ public class SourceNotFoundProblem implements CompilationProblem {
 	private final String resourceName;
 
 	public SourceNotFoundProblem(String resourceName) {
-		this.resourceName= resourceName;
+		this.resourceName = resourceName;
 	}
 
 	public boolean isError() {

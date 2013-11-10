@@ -9,8 +9,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.filewatch.DirectoryWatcher;
 import kuleuven.group2.filewatch.DirectoryWatchListener;
+import kuleuven.group2.filewatch.DirectoryWatcher;
+
 import org.apache.commons.io.IOUtils;
 
 public class DirectoryStore implements Store, DirectoryWatchListener {
@@ -19,10 +20,9 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 
 	protected final DirectoryWatcher watcher;
 
-	protected final List<StoreListener> listeners= new ArrayList<StoreListener>();
+	protected final List<StoreListener> listeners = new ArrayList<StoreListener>();
 
-	public DirectoryStore(Path root) throws IllegalArgumentException,
-			IOException {
+	public DirectoryStore(Path root) throws IllegalArgumentException, IOException {
 		if (root == null) {
 			throw new IllegalArgumentException("Root must be effective.");
 		}
@@ -33,12 +33,11 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 		if (!Files.exists(root)) {
 			Files.createDirectory(root);
 		}
-		this.root= root;
-		this.watcher= new DirectoryWatcher(root);
+		this.root = root;
+		this.watcher = new DirectoryWatcher(root);
 	}
 
-	public DirectoryStore(String root) throws IllegalArgumentException,
-			IOException {
+	public DirectoryStore(String root) throws IllegalArgumentException, IOException {
 		this(Paths.get(root));
 	}
 
@@ -47,10 +46,10 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 	}
 
 	public byte[] read(String resourceName) {
-		InputStream is= null;
+		InputStream is = null;
 		try {
 			// Read file as byte array
-			is= Files.newInputStream(getPath(resourceName));
+			is = Files.newInputStream(getPath(resourceName));
 			return IOUtils.toByteArray(is);
 		} catch (IOException e) {
 			// File not found or not readable
@@ -62,10 +61,10 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 	}
 
 	public void write(String resourceName, byte[] contents) {
-		OutputStream os= null;
+		OutputStream os = null;
 		try {
 			// Read file as byte array
-			os= Files.newOutputStream(getPath(resourceName));
+			os = Files.newOutputStream(getPath(resourceName));
 			IOUtils.write(contents, os);
 		} catch (IOException e) {
 			// File not found or not writable
@@ -92,21 +91,21 @@ public class DirectoryStore implements Store, DirectoryWatchListener {
 	}
 
 	public void fileCreated(Path filePath) {
-		String resourceName= getResourceName(filePath);
+		String resourceName = getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceAdded(resourceName);
 		}
 	}
 
 	public void fileModified(Path filePath) {
-		String resourceName= getResourceName(filePath);
+		String resourceName = getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceChanged(resourceName);
 		}
 	}
 
 	public void fileDeleted(Path filePath) {
-		String resourceName= getResourceName(filePath);
+		String resourceName = getResourceName(filePath);
 		for (StoreListener listener : listeners) {
 			listener.resourceRemoved(resourceName);
 		}

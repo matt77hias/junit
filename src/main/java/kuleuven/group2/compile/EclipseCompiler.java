@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import kuleuven.group2.store.Store;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.ClassFile;
@@ -31,22 +32,19 @@ public class EclipseCompiler implements JavaCompiler {
 	protected final Store binaryStore;
 
 	public EclipseCompiler(Store sourceStore, Store binaryStore) {
-		this.sourceStore= sourceStore;
-		this.binaryStore= binaryStore;
+		this.sourceStore = sourceStore;
+		this.binaryStore = binaryStore;
 	}
 
-	public CompilationResult compile(final Collection<String> sourceNames,
-			final ClassLoader classLoader) {
-		final List<String> compiled= new ArrayList<String>();
-		final List<CompilationProblem> problems= new ArrayList<CompilationProblem>();
+	public CompilationResult compile(final Collection<String> sourceNames, final ClassLoader classLoader) {
+		final List<String> compiled = new ArrayList<String>();
+		final List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
 
 		// Collect compilation units
-		final List<ICompilationUnit> compilationUnits= new ArrayList<ICompilationUnit>(
-				sourceNames.size());
+		final List<ICompilationUnit> compilationUnits = new ArrayList<ICompilationUnit>(sourceNames.size());
 		for (String sourceName : sourceNames) {
 			if (sourceStore.contains(sourceName)) {
-				compilationUnits.add(new EclipseCompilationUnit(sourceStore,
-						sourceName));
+				compilationUnits.add(new EclipseCompilationUnit(sourceStore, sourceName));
 			} else {
 				// Source not found, error
 				problems.add(new SourceNotFoundProblem(sourceName));
@@ -59,17 +57,14 @@ public class EclipseCompiler implements JavaCompiler {
 		}
 
 		// Setup compiler environment
-		final IErrorHandlingPolicy policy= DefaultErrorHandlingPolicies
-				.proceedWithAllProblems();
-		final IProblemFactory problemFactory= new DefaultProblemFactory(
-				Locale.getDefault());
-		final INameEnvironment nameEnvironment= new NameEnvironment(classLoader);
-		final ICompilerRequestor compilerRequestor= new CompilerRequestor(
-				problems, compiled);
+		final IErrorHandlingPolicy policy = DefaultErrorHandlingPolicies.proceedWithAllProblems();
+		final IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
+		final INameEnvironment nameEnvironment = new NameEnvironment(classLoader);
+		final ICompilerRequestor compilerRequestor = new CompilerRequestor(problems, compiled);
 
 		// Compile
-		final Compiler compiler= new Compiler(nameEnvironment, policy,
-				new CompilerOptions(), compilerRequestor, problemFactory);
+		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(), compilerRequestor,
+				problemFactory);
 		compiler.compile(compilationUnits.toArray(new ICompilationUnit[0]));
 
 		// Return result
@@ -85,15 +80,14 @@ public class EclipseCompiler implements JavaCompiler {
 		private final ClassLoader classLoader;
 
 		private NameEnvironment(ClassLoader classLoader) {
-			this.classLoader= classLoader;
+			this.classLoader = classLoader;
 		}
 
 		public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
 			return findType(NameUtils.getClassName(compoundTypeName));
 		}
 
-		public NameEnvironmentAnswer findType(char[] typeName,
-				char[][] packageName) {
+		public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName) {
 			return findType(NameUtils.getClassName(typeName, packageName));
 		}
 
@@ -101,23 +95,21 @@ public class EclipseCompiler implements JavaCompiler {
 			if (isPackage(className)) {
 				return null;
 			}
-			String classResourceName= NameUtils.toBinaryName(className);
+			String classResourceName = NameUtils.toBinaryName(className);
 
 			// Find in binary store
-			byte[] classBytes= binaryStore.read(classResourceName);
+			byte[] classBytes = binaryStore.read(classResourceName);
 			if (classBytes != null) {
 				// Found, produce answer
 				return createFindTypeAnswer(className, classBytes);
 			}
 
 			// Find in class loader
-			final InputStream is= classLoader
-					.getResourceAsStream(classResourceName);
+			final InputStream is = classLoader.getResourceAsStream(classResourceName);
 			if (is != null) {
 				try {
 					// Found, produce answer
-					return createFindTypeAnswer(className,
-							IOUtils.toByteArray(is));
+					return createFindTypeAnswer(className, IOUtils.toByteArray(is));
 				} catch (IOException e) {
 					// Could not read class
 					return null;
@@ -129,12 +121,10 @@ public class EclipseCompiler implements JavaCompiler {
 			return null;
 		}
 
-		protected NameEnvironmentAnswer createFindTypeAnswer(String className,
-				byte[] classBytes) {
-			final char[] fileName= className.toCharArray();
+		protected NameEnvironmentAnswer createFindTypeAnswer(String className, byte[] classBytes) {
+			final char[] fileName = className.toCharArray();
 			try {
-				final ClassFileReader classFileReader= new ClassFileReader(
-						classBytes, fileName, true);
+				final ClassFileReader classFileReader = new ClassFileReader(classBytes, fileName, true);
 				return new NameEnvironmentAnswer(classFileReader, null);
 			} catch (final ClassFormatException e) {
 				// Wrong class format
@@ -143,8 +133,7 @@ public class EclipseCompiler implements JavaCompiler {
 		}
 
 		public boolean isPackage(char[][] parentPackageName, char[] packageName) {
-			return isPackage(NameUtils.getPackageName(parentPackageName,
-					packageName));
+			return isPackage(NameUtils.getPackageName(parentPackageName, packageName));
 		}
 
 		private boolean isPackage(final String className) {
@@ -154,9 +143,8 @@ public class EclipseCompiler implements JavaCompiler {
 			}
 
 			// Check for loaded class
-			String classResourceName= NameUtils.toBinaryName(className);
-			final InputStream is= classLoader
-					.getResourceAsStream(classResourceName);
+			String classResourceName = NameUtils.toBinaryName(className);
+			final InputStream is = classLoader.getResourceAsStream(classResourceName);
 			if (is != null) {
 				// Class found, not a package
 				IOUtils.closeQuietly(is);
@@ -164,7 +152,7 @@ public class EclipseCompiler implements JavaCompiler {
 			}
 
 			// Check for source resource
-			String sourceResourceName= NameUtils.toSourceName(className);
+			String sourceResourceName = NameUtils.toSourceName(className);
 			if (sourceStore.contains(sourceResourceName)) {
 				// Source found, not a package
 				return false;
@@ -189,14 +177,12 @@ public class EclipseCompiler implements JavaCompiler {
 
 		protected final List<String> compiled;
 
-		public CompilerRequestor(List<CompilationProblem> problems,
-				List<String> compiled) {
-			this.problems= problems;
-			this.compiled= compiled;
+		public CompilerRequestor(List<CompilationProblem> problems, List<String> compiled) {
+			this.problems = problems;
+			this.compiled = compiled;
 		}
 
-		public void acceptResult(
-				final org.eclipse.jdt.internal.compiler.CompilationResult result) {
+		public void acceptResult(final org.eclipse.jdt.internal.compiler.CompilationResult result) {
 			if (result.hasProblems()) {
 				// Store compilation problems
 				for (IProblem iproblem : result.getProblems()) {
@@ -204,12 +190,11 @@ public class EclipseCompiler implements JavaCompiler {
 				}
 			}
 			if (!result.hasErrors()) {
-				final ClassFile[] classFiles= result.getClassFiles();
+				final ClassFile[] classFiles = result.getClassFiles();
 				for (ClassFile classFile : classFiles) {
 					// Write class file to store
-					String className= NameUtils.getClassName(classFile
-							.getCompoundName());
-					String resourceName= NameUtils.toBinaryName(className);
+					String className = NameUtils.getClassName(classFile.getCompoundName());
+					String resourceName = NameUtils.toBinaryName(className);
 					binaryStore.write(resourceName, classFile.getBytes());
 					// Add to compiled resources list
 					compiled.add(resourceName);

@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class MemoryStore implements Store {
 
-	protected final Map<String, byte[]> store= new HashMap<String, byte[]>();
+	protected final Map<String, byte[]> store = new HashMap<String, byte[]>();
 
-	protected final List<StoreListener> listeners= new ArrayList<StoreListener>();
+	protected final List<StoreListener> listeners = new ArrayList<StoreListener>();
 
 	public boolean contains(String resourceName) {
 		return store.containsKey(resourceName);
@@ -20,7 +20,7 @@ public class MemoryStore implements Store {
 	}
 
 	public void write(String resourceName, byte[] contents) {
-		boolean isChanged= contains(resourceName);
+		boolean isChanged = contains(resourceName);
 		store.put(resourceName, contents);
 		if (isChanged) {
 			fireChanged(resourceName);
@@ -30,7 +30,7 @@ public class MemoryStore implements Store {
 	}
 
 	public void remove(String resourceName) {
-		boolean isRemoved= contains(resourceName);
+		boolean isRemoved = contains(resourceName);
 		store.remove(resourceName);
 		if (isRemoved) {
 			fireRemoved(resourceName);

@@ -13,7 +13,6 @@ public interface JavaCompiler {
 	 *            Class loader to lookup existing classes.
 	 * @return The compilation result.
 	 */
-	public abstract CompilationResult compile(Collection<String> sourceNames,
-			ClassLoader classLoader);
+	public abstract CompilationResult compile(Collection<String> sourceNames, ClassLoader classLoader);
 
 }

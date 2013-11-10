@@ -27,10 +27,8 @@ public class NameUtils {
 		return StringUtils.join(packageName, '.') + '.' + new String(typeName);
 	}
 
-	public static String getPackageName(char[][] parentPackageName,
-			char[] packageName) {
-		return StringUtils.join(parentPackageName, '.') + '.'
-				+ new String(packageName);
+	public static String getPackageName(char[][] parentPackageName, char[] packageName) {
+		return StringUtils.join(parentPackageName, '.') + '.' + new String(packageName);
 	}
 
 	public static char[][] getCompoundName(String className) {
@@ -38,15 +36,15 @@ public class NameUtils {
 	}
 
 	protected static char[][] toCharArrays(String... strings) {
-		char[][] charArrays= new char[strings.length][];
-		for (int i= 0; i < strings.length; i++) {
-			charArrays[i]= strings[i].toCharArray();
+		char[][] charArrays = new char[strings.length][];
+		for (int i = 0; i < strings.length; i++) {
+			charArrays[i] = strings[i].toCharArray();
 		}
 		return charArrays;
 	}
 
 	protected static String stripExtension(String name) {
-		int i= name.lastIndexOf('.');
+		int i = name.lastIndexOf('.');
 		return (i < 0) ? name : name.substring(0, i);
 	}
 
