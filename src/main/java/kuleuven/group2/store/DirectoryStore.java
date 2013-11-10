@@ -98,6 +98,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	@Override
 	public void remove(String resourceName) {
 		try {
+			// Delete resource file
 			Files.delete(getPath(resourceName));
 		} catch (IOException e) {
 			// File not writable
@@ -107,11 +108,8 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	@Override
 	public void clear() {
 		try {
-			/*
-			 * TODO This also deletes the root directory. Can the watcher deal
-			 * with that?
-			 */
-			FileUtils.deleteRecursively(root);
+			// Delete directory contents
+			FileUtils.deleteRecursively(root, false);
 		} catch (IOException e) {
 			// Ignore
 		}

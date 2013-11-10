@@ -12,16 +12,22 @@ public final class FileUtils {
 	private FileUtils() {
 	}
 
-	public static void deleteRecursively(Path path) throws IOException {
+	public static void deleteRecursively(final Path path) throws IOException {
+		deleteRecursively(path, true);
+	}
+
+	public static void deleteRecursively(final Path path, final boolean deleteSelf) throws IOException {
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				// Delete file
 				Files.delete(file);
 				return FileVisitResult.CONTINUE;
 			}
 
 			@Override
 			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+				// Try to delete anyway
 				Files.delete(file);
 				return FileVisitResult.CONTINUE;
 			}
@@ -29,7 +35,10 @@ public final class FileUtils {
 			@Override
 			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 				if (exc == null) {
-					Files.delete(dir);
+					// Delete directory (unless self)
+					if (deleteSelf || !dir.equals(path)) {
+						Files.delete(dir);
+					}
 					return FileVisitResult.CONTINUE;
 				} else {
 					throw exc;
@@ -37,5 +46,4 @@ public final class FileUtils {
 			}
 		});
 	}
-
 }

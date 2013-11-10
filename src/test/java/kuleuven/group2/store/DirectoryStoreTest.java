@@ -13,23 +13,34 @@ import java.util.Collections;
 import kuleuven.group2.util.FileUtils;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DirectoryStoreTest {
 
+	protected static Path root;
 	protected DirectoryStore store;
-	protected Path root;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException {
+		root = Files.createTempDirectory(DirectoryStoreTest.class.getSimpleName());
+	}
 
 	@Before
-	public void setup() throws IOException {
-		root = Files.createTempDirectory(DirectoryStoreTest.class.getSimpleName());
+	public void setUp() throws IOException {
 		store = new DirectoryStore(root);
 	}
 
 	@After
-	public void teardown() throws IOException {
-		FileUtils.deleteRecursively(root);
+	public void tearDown() throws IOException {
+		FileUtils.deleteRecursively(root, false);
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws IOException {
+		FileUtils.deleteRecursively(root, true);
 	}
 
 	@Test

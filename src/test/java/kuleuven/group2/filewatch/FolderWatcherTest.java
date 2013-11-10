@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kuleuven.group2.util.FileUtils;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,8 +43,7 @@ public class FolderWatcherTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		deleteFolder(MAIN_TEST_FOLDER);
-		MAIN_TEST_FOLDER.delete();
+		FileUtils.deleteRecursively(MAIN_TEST_FOLDER.toPath(), false);
 	}
 
 	@Before
@@ -54,20 +55,8 @@ public class FolderWatcherTest {
 
 	@After
 	public void tearDown() throws Exception {
-		deleteFolder(MAIN_TEST_FOLDER);
+		FileUtils.deleteRecursively(MAIN_TEST_FOLDER.toPath(), true);
 		Thread.sleep(FILEWATCHER_TIMEOUT);
-	}
-
-	private static void deleteFolder(File directory) throws IOException {
-		for (File testFile : directory.listFiles()) {
-			if (testFile.isDirectory()) {
-				deleteFolder(testFile);
-				Files.deleteIfExists(testFile.toPath());
-			} else {
-				// System.out.println("deleting " + testFile.toPath());
-				Files.deleteIfExists(testFile.toPath());
-			}
-		}
 	}
 
 	public class TestFolderWatcherThread extends Thread {
