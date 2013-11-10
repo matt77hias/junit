@@ -9,6 +9,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunListener;
@@ -57,11 +58,6 @@ public class TestDaemon {
 	 * for the test suite of this test deamon.
 	 */
 	private final JUnitCore jUnitCore;
-	
-	/**
-	 * The class that contains the test suite that has to be run.
-	 */
-	private Class<?> testSuite; 
 	
 	/**
 	 * Creates a new test daemon with default delay time unit.
@@ -148,7 +144,7 @@ public class TestDaemon {
 	 * will be delayed. Once the execution is started, it cannot be canceled
 	 * anymore unless the user forces the test daemon to stop immediately.
 	 */
-	public void start() {
+	public synchronized void start() {
 		if (currentRunTaskFinished()) {
 			createRunTask();
 			scheduleRunTask();
@@ -247,27 +243,17 @@ public class TestDaemon {
 	 * 			The class with the test suite.
 	 */
 	public void setTestSuite(Class<?> testSuite) {
-		if (!this.runTask.isRunning) { // TODO: Needs to be atomic
-			this.testSuite = testSuite;
-		} else {
-			this.notYetAcceptedClass = testSuite;
-		}
+		classUpdater.set(this, testSuite);
 	}
 	
 	/**
-	 * The not yet accepted class to set to the class of this test daemon after the current test.
+	 * The class that contains the test suite that has to be run.
 	 */
-	private Class<?> notYetAcceptedClass;
+	private Class<?> testSuite; 
 	
-	/**
-	 * Sets the not yet accepted class to the class with the test suite
-	 * of this test daemon.
-	 */
-	private void classSetUp() {
-		if (this.notYetAcceptedClass != null) {
-			this.testSuite = this.notYetAcceptedClass;
-		}
-	}
+	@SuppressWarnings("rawtypes")
+	private static AtomicReferenceFieldUpdater<TestDaemon, Class> classUpdater 
+		= AtomicReferenceFieldUpdater.newUpdater(TestDaemon.class, Class.class, "testSuite");
 	
 	/**
 	 * Returns the class with the test suite of this test daemon.
@@ -275,7 +261,7 @@ public class TestDaemon {
 	 * @return	The class with the test suite of this test daemon.
 	 */
 	public Class<?> getTestSuite() {
-		return this.testSuite;
+		return classUpdater.get(this);
 	}
 	
 	/**
@@ -286,26 +272,9 @@ public class TestDaemon {
      * @see 	org.junit.runner.notification.RunListener
      */
 	public void addListener(RunListener listener) {
-		 if (!this.runTask.isRunning) { // TODO: Needs to be atomic
+		 if (!this.runTask.isRunning) {
 			 this.jUnitCore.addListener(listener);
-		 } else {
-			 this.notYetAcceptedListeners.add(listener);
 		 }
-	}
-	
-	/**
-	 * The not yet accepted listeners who needs to be registered after the current run.
-	 */
-	private Set<RunListener> notYetAcceptedListeners = new HashSet<RunListener>();
-	
-	/**
-	 * Adds the not yet accepted listeners.
-	 */
-	private void listenerSetUp() {
-		for (RunListener listener : notYetAcceptedListeners) {
-			addListener(listener);
-		}
-		this.notYetAcceptedListeners = new HashSet<RunListener>();
 	}
     
 	/**
@@ -314,22 +283,9 @@ public class TestDaemon {
     private class RunTask implements Runnable {
     	
     	/**
-    	 * Is this run task started running.
-    	 */
-    	private volatile boolean isStarted;
-    	
-    	/**
     	 * Is this run task running the test suite.
     	 */
     	private volatile boolean isRunning;
-    	
-    	/**
-    	 * Sets the not yet accepted test suite and listeners up.
-    	 */
-    	private void setUp() {
-    		classSetUp();
-    		listenerSetUp();
-    	}
     	
     	/**
     	 * Creates a new run task.
@@ -342,18 +298,16 @@ public class TestDaemon {
     	 * Runs this run task.
     	 */
 		public void run() {
-			this.isStarted = true;
-			
-			setUp();
 			
 			this.isRunning = true;
 			
-			if (getTestSuite() != null) {
+			try {
 				jUnitCore.run(getTestSuite());
+			} catch (NullPointerException e){
+				
+			} finally {
+				this.isRunning = false;
 			}
-			
-			this.isRunning = false;
-			this.isStarted = false;
 		}
     }
 }
