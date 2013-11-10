@@ -13,9 +13,7 @@ import java.util.List;
 public class CompilationResult {
 
 	private final List<String> compiled = new ArrayList<String>();
-
 	private final List<CompilationProblem> errors = new ArrayList<CompilationProblem>();
-
 	private final List<CompilationProblem> warnings = new ArrayList<CompilationProblem>();
 
 	public CompilationResult(Collection<CompilationProblem> problems, Collection<String> compiled) {

@@ -28,7 +28,6 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 public class EclipseCompiler implements JavaCompiler {
 
 	protected final Store sourceStore;
-
 	protected final Store binaryStore;
 
 	public EclipseCompiler(Store sourceStore, Store binaryStore) {

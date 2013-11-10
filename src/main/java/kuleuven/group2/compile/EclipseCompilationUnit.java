@@ -9,13 +9,9 @@ import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 public class EclipseCompilationUnit implements ICompilationUnit {
 
 	private final String className;
-
 	private final String sourceName;
-
 	private final char[] typeName;
-
 	private final char[][] packageName;
-
 	private final Store store;
 
 	public EclipseCompilationUnit(final Store store, final String sourceName) {
