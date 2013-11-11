@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * Keeps track of the links between (tested) methods and tests as a unidirectional, oneToMany relation.
+ * @author vital.dhaveloose
+ *
+ */
 public class MethodLinkRegistry {
 	
 	protected Map<Method, Collection<Test>> methodToTestLinks = new HashMap<Method, Collection<Test>>();
