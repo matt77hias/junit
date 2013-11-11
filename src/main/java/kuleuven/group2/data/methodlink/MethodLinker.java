@@ -9,6 +9,12 @@ import be.kuleuven.cs.ossrewriter.Predicate;
 
 import com.sun.tools.attach.VirtualMachine;
 
+/**
+ * Configures the ossRewriter for reporting method execution.
+ * TODO: opnemen in rest van structuur.
+ * @author vital.dhaveloose
+ *
+ */
 public class MethodLinker {
 	
 	private static MethodLinker instance;
