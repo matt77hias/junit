@@ -1,4 +1,4 @@
-package kuleuven.group2;
+package kuleuven.group2.methodlink;
 
 import static org.junit.Assert.assertTrue;
 
@@ -49,7 +49,6 @@ public class OssRewriterTest {
 
 		OSSRewriter.enable();
 		OSSRewriter.setUserExclusionFilter(new Predicate<String>() {
-
 			public boolean apply(String arg0) {
 				return arg0.startsWith("org/junit");
 			}
@@ -109,8 +108,8 @@ public class OssRewriterTest {
 		});
 
 		a.visit();
-
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/OssRewriterTest$A.visit()V"));
+		
+		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/testtomethodlink/OssRewriterTest$A.visit()V"));
 	}
 
 }
