@@ -2,7 +2,7 @@ package kuleuven.group2.signature;
 
 import java.util.List;
 
-import kuleuven.group2.data.methodlink.Method;
+import kuleuven.group2.data.TestedMethod;
 
 
 public class JavaSignatureParser {
@@ -13,13 +13,13 @@ public class JavaSignatureParser {
 		this.signature = signature;
 	}
 
-	public Method parseSignature() {
+	public TestedMethod parseSignature() {
 	    String name = parseMethodName();
 	    String packageName = parsePackageName();
 	    List<String> arguments = parseArguments();
 	    String returnType = parseReturnType();
 	    
-	    Method method = new Method(name, packageName, arguments, returnType);
+	    TestedMethod method = new TestedMethod(name, packageName, arguments, returnType);
 	    
 		return method;
 	}

@@ -1,16 +1,25 @@
-package kuleuven.group2.data.methodlink;
+package kuleuven.group2.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method {
+/**
+ * A class that represents a method that is used by at least one test. It also
+ * keeps the time of its latest change.
+ * @author vital.dhaveloose
+ *
+ */
+public class TestedMethod {
 
 	protected String name;
 	protected String packageName;
 	protected List<String> argumentTypes = new ArrayList<String>();
 	protected String returnType;
 	
-	public Method(String name, String packageName, List<String> arguments,
+	//TODO: lijst van tests (bepaalde ordening?)
+	//TODO: tijd van laatste verandering
+	
+	public TestedMethod(String name, String packageName, List<String> arguments,
 			String returnType) {
 		super();
 		this.name = name;
@@ -57,7 +66,7 @@ public class Method {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Method other= (Method) obj;
+		TestedMethod other= (TestedMethod) obj;
 		if (argumentTypes == null) {
 			if (other.argumentTypes != null)
 				return false;

@@ -1,9 +1,18 @@
-package kuleuven.group2.data.methodlink;
+package kuleuven.group2.data;
 
+/**
+ * A class that represents a test method. It also keeps track of the running
+ * of this method, that is the timings and results.
+ * @author vital.dhaveloose
+ *
+ */
 public class Test {
 
 	protected String testClassName;
 	protected String testMethodName;
+	
+	//TODO: soort lijst van runs: LinkdList van Booleans, of uitgebreider
+	//      TestRuns (={Test,Boolean,Time})
 	
 	public Test(String testClassName, String testMethodName) {
 		super();
