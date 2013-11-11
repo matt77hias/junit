@@ -9,6 +9,6 @@ package kuleuven.group2.data;
  */
 public class TestedMethodDatabase {
 	
-	// TODO implementeren, daarbij rekening houden met concurrency
+	// TODO implementeren, daarbij rekening houden met concurrency en uitbreidbaarheid
 
 }

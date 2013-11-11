@@ -10,6 +10,6 @@ package kuleuven.group2.data;
  */
 public class TestRunDatabase {
 	
-	//TODO implementeren, daarbij rekening houden met concurrency
+	//TODO implementeren, daarbij rekening houden met concurrency en uitbreidbaarheid
 
 }
