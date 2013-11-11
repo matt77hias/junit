@@ -1,4 +1,4 @@
-package kuleuven.group2.methodlink;
+package kuleuven.group2.data.methodlink;
 
 public class Test {
 

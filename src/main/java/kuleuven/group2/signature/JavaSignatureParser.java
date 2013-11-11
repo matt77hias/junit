@@ -2,7 +2,7 @@ package kuleuven.group2.signature;
 
 import java.util.List;
 
-import kuleuven.group2.methodlink.Method;
+import kuleuven.group2.data.methodlink.Method;
 
 
 public class JavaSignatureParser {
