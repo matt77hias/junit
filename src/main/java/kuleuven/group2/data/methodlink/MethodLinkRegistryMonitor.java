@@ -1,4 +1,4 @@
-package kuleuven.group2.methodlink;
+package kuleuven.group2.data.methodlink;
 
 import kuleuven.group2.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;

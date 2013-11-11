@@ -1,4 +1,4 @@
-package kuleuven.group2.methodlink;
+package kuleuven.group2.data.methodlink;
 
 import static org.junit.Assert.*;
 
@@ -41,14 +41,14 @@ public class MethodLinkerTest {
 	
 	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {
 		
-		protected kuleuven.group2.methodlink.Test currentTest; 
+		protected kuleuven.group2.data.methodlink.Test currentTest; 
 		
 		public TestCurrentRunningTestHolder(String testClassName, String testMethodName) {
 			this.currentTest = new
-					kuleuven.group2.methodlink.Test(testClassName, testMethodName);
+					kuleuven.group2.data.methodlink.Test(testClassName, testMethodName);
 		}
 
-		public kuleuven.group2.methodlink.Test getCurrentRunningTest() {
+		public kuleuven.group2.data.methodlink.Test getCurrentRunningTest() {
 			return currentTest;
 		}
 	}
