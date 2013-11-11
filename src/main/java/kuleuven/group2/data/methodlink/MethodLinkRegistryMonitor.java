@@ -6,6 +6,12 @@ import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
 import kuleuven.group2.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
+/**
+ * Does what precicely?
+ * TODO: opnemen in rest van structuur
+ * @author vital.dhaveloose
+ *
+ */
 public class MethodLinkRegistryMonitor extends Monitor {
 	
 	protected MethodLinkRegistry methodLinkRegistry;
