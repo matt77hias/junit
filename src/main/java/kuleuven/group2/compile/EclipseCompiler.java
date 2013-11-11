@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreFilter;
@@ -52,7 +54,7 @@ public class EclipseCompiler implements JavaCompiler {
 
 	@Override
 	public CompilationResult compile(final Collection<String> sourceNames, final ClassLoader classLoader) {
-		final List<String> compiled = new ArrayList<String>();
+		final Map<String, byte[]> compiled = new HashMap<String, byte[]>();
 		final List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
 
 		// Collect compilation units
@@ -186,9 +188,9 @@ public class EclipseCompiler implements JavaCompiler {
 	protected class CompilerRequestor implements ICompilerRequestor {
 
 		protected final List<CompilationProblem> problems;
-		protected final List<String> compiled;
+		protected final Map<String, byte[]> compiled;
 
-		public CompilerRequestor(List<CompilationProblem> problems, List<String> compiled) {
+		public CompilerRequestor(List<CompilationProblem> problems, Map<String, byte[]> compiled) {
 			this.problems = problems;
 			this.compiled = compiled;
 		}
@@ -206,9 +208,10 @@ public class EclipseCompiler implements JavaCompiler {
 					// Write class file to store
 					String className = NameUtils.getClassName(classFile.getCompoundName());
 					String resourceName = NameUtils.toBinaryName(className);
-					getBinaryStore().write(resourceName, classFile.getBytes());
-					// Add to compiled resources list
-					compiled.add(resourceName);
+					byte[] classBytes = classFile.getBytes();
+					getBinaryStore().write(resourceName, classBytes);
+					// Add to compiled resources
+					compiled.put(resourceName, classBytes);
 				}
 			}
 		}
