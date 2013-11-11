@@ -237,7 +237,7 @@ public class TestDaemon {
 	/**
 	 * The class that contains the test suite that has to be run.
 	 */
-	private Class<?> testSuite; 
+	private volatile Class<?> testSuite; 
 	
 	@SuppressWarnings("rawtypes")
 	private static AtomicReferenceFieldUpdater<TestDaemon, Class> classUpdater 
