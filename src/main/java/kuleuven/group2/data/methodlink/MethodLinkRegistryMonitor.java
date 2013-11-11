@@ -1,5 +1,8 @@
 package kuleuven.group2.data.methodlink;
 
+import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.Test;
+import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
 import kuleuven.group2.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
@@ -17,7 +20,7 @@ public class MethodLinkRegistryMonitor extends Monitor {
 	@Override
 	public void enterMethod(String methodName) {
 		Test currentRunningTest = currentRunningTestHolder.getCurrentRunningTest();
-		Method enteredMethod = new JavaSignatureParser(methodName)
+		TestedMethod enteredMethod = new JavaSignatureParser(methodName)
 			.parseSignature();
 		methodLinkRegistry.addLink(enteredMethod, currentRunningTest);
 	};
