@@ -1,7 +1,5 @@
 package kuleuven.group2;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -25,16 +23,6 @@ import org.junit.runner.notification.RunListener;
  * @version 9 November 2013
  */
 public class TestDaemon {
-	
-	/**
-	 * Starts a test daemon.
-	 * 
-	 * @param 	args
-	 * 			Not used arguments.
-	 */
-	public static void main(String[] args) {
-		new TestDaemon();
-	}
 	
 	/**
 	 * The executor service used for periodically running the tests.
