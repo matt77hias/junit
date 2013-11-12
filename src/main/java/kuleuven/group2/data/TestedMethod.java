@@ -1,23 +1,31 @@
 package kuleuven.group2.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
  * A class that represents a method that is used by at least one test. It also
  * keeps the time of its latest change.
- * @author vital.dhaveloose
- *
+ * 
+ * @author Ruben Pieters, Vital D'haveloose
  */
 public class TestedMethod {
+	
+	// ATTRIBUTES
 
 	protected String name;
 	protected String packageName;
 	protected List<String> argumentTypes = new ArrayList<String>();
 	protected String returnType;
 	
-	//TODO: lijst van tests (bepaalde ordening?)
-	//TODO: tijd van laatste verandering
+	protected Collection<Test> tests = new HashSet<Test>();
+	
+	protected Date lastChangeTime;
+	
+	// CONSTRUCTION
 	
 	public TestedMethod(String name, String packageName, List<String> arguments,
 			String returnType) {
@@ -27,6 +35,8 @@ public class TestedMethod {
 		this.argumentTypes = arguments;
 		this.returnType = returnType;
 	}
+	
+	// GETTERS & SETTERS
 
 	public String getName() {
 		return name;
@@ -43,6 +53,30 @@ public class TestedMethod {
 	public String getReturnType() {
 		return returnType;
 	}
+	
+	public Date getLastChange() {
+		return lastChangeTime;
+	}
+
+	public void setLastChange(Date time) {
+		this.lastChangeTime = time;
+	}
+	
+	// TESTS
+	
+	public void addTest(Test test) {
+		tests.add(test);
+	}
+
+	public void removeTest(Test test) {
+		tests.remove(test);
+	}
+	
+	public boolean containsTest(Test test) {
+		return tests.contains(test);
+	}
+	
+	//HASCODE, EQUALS & TOSTRING
 
 	@Override
 	public int hashCode() {

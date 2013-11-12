@@ -3,10 +3,12 @@ package kuleuven.group2.data;
 /**
  * A class that represents a test method. It also keeps track of the running
  * of this method, that is the timings and results.
- * @author vital.dhaveloose
- *
+ * 
+ * @author Ruben Pieters, Vital D'haveloose
  */
 public class Test {
+	
+	//ATTRIBUTES
 
 	protected String testClassName;
 	protected String testMethodName;
@@ -14,11 +16,15 @@ public class Test {
 	//TODO: soort lijst van runs: LinkdList van Booleans, of uitgebreider
 	//      TestRuns (={Test,Boolean,Time})
 	
+	// CONSTRUCTION
+	
 	public Test(String testClassName, String testMethodName) {
 		super();
 		this.testClassName= testClassName;
 		this.testMethodName= testMethodName;
 	}
+	
+	// GETTERS & SETTERS
 
 	public String getTestClassName() {
 		return testClassName;
@@ -27,7 +33,9 @@ public class Test {
 	public String getTestMethodName() {
 		return testMethodName;
 	}
-
+	
+	//HASCODE, EQUALS & TOSTRING
+	
 	@Override
 	public int hashCode() {
 		final int prime= 31;
