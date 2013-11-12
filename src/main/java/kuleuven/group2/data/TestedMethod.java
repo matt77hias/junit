@@ -21,7 +21,7 @@ public class TestedMethod {
 	protected List<String> argumentTypes = new ArrayList<String>();
 	protected String returnType;
 	
-	protected Collection<Test> tests = new HashSet<Test>();
+	protected Collection<Test> tests = new HashSet<Test>(); //TODO: concurrency?
 	
 	protected Date lastChangeTime;
 	
