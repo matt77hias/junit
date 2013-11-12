@@ -17,7 +17,7 @@ public class MethodLinkerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		methodLinker.start();
+		methodLinker.launchOSSRewriter();
 	}
 
 	@AfterClass
