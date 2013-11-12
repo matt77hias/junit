@@ -1,4 +1,4 @@
-package kuleuven.group2.ui;
+package kuleuven.group2.testrunner.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

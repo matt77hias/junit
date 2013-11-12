@@ -1,4 +1,4 @@
-package kuleuven.group2.ui;
+package kuleuven.group2.testrunner.ui;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 
-import kuleuven.group2.TestDaemon;
+import kuleuven.group2.testrunner.TestDaemon;
 
 import com.javarichclient.icon.tango.actions.MediaPlaybackStartIcon;
 import com.javarichclient.icon.tango.actions.MediaPlaybackStopIcon;
@@ -46,7 +46,8 @@ public class TestDaemonView extends JFrame {
 	 * Create the frame.
 	 */
 	public TestDaemonView() {
-		this.testDaemon = new TestDaemon();
+		this.testDaemon = new TestDaemon(null);
+		this.testDaemon.createDeferredRunner();
 		
 		// Frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,5 +90,4 @@ public class TestDaemonView extends JFrame {
 		this.logPanel = new LogPanel();
 		this.contentPane.add(this.logPanel, "cell 0 3");
 	}
-
 }
