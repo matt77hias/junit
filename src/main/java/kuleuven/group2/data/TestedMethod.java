@@ -76,6 +76,11 @@ public class TestedMethod {
 		return tests.contains(test);
 	}
 	
+	public Collection<Test> getTests() {
+		return new HashSet<Test>(tests);
+		//TODO: nodig? origineel doorgeven in de plaats?
+	}
+	
 	//HASCODE, EQUALS & TOSTRING
 
 	@Override

@@ -1,7 +1,10 @@
 package kuleuven.group2.data.methodlink;
 
-import static org.junit.Assert.*;
+import java.util.HashSet;
+
+import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
+import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -11,13 +14,10 @@ import org.junit.Test;
 
 public class MethodLinkerTest {
 	
-	private static MethodLinker methodLinker = MethodLinker.getInstance();
-	private MethodLinkRegistry methodLinkRegistry;
-	private MethodLinkRegistryMonitor monitor;
+	private static MethodTestLinkUpdater methodLinker;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		methodLinker.launchOSSRewriter();
 	}
 
 	@AfterClass
@@ -26,18 +26,15 @@ public class MethodLinkerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		methodLinkRegistry = new MethodLinkRegistry();
-		monitor
-			= new MethodLinkRegistryMonitor(
-					methodLinkRegistry,
-					new TestCurrentRunningTestHolder("A", "MethodA"));
-		methodLinker.registerMonitor(monitor);
+		methodLinker = new MethodTestLinkUpdater(
+				new TestCurrentRunningTestHolder("A", "MethodA"),
+				new HashSet<TestedMethod>());
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		methodLinker.unregisterMonitor(monitor);
-		System.out.println(methodLinkRegistry.tests);
+		methodLinker.printMethodLinks();
+		methodLinker.destroy();
 	}
 	
 	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {

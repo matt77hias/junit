@@ -1,6 +1,7 @@
 package kuleuven.group2.data.updating;
 
 import java.lang.management.ManagementFactory;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.sun.tools.attach.VirtualMachine;
@@ -35,9 +36,21 @@ public class MethodTestLinkUpdater extends Monitor{
 		super();
 		this.currentRunningTestHolder = currentRunningTestHolder;
 		this.methods = methods;
+		
+		launchOSSRewriter();
+		registerMonitor(this);
 	}
 	
-	// ADD LINK
+	// DESTRUCTION
+	
+	public void destroy() {
+		unregisterMonitor(this);
+		stopOSSRewriter();
+		currentRunningTestHolder = null;
+		methods = null;
+	}
+	
+	// LINKS
 
 	@Override
 	public void enterMethod(String methodName) {
@@ -46,10 +59,20 @@ public class MethodTestLinkUpdater extends Monitor{
 			.parseSignature();
 		enteredMethod.addTest(currentRunningTest);
 		methods.add(enteredMethod);
-		
-		launchOSSRewriter();
-		registerMonitor(this);
 	}
+
+	public void printMethodLinks() {
+		Set<Test> tests;
+		for(TestedMethod method : methods) {
+			System.out.println(method);
+			tests = new HashSet<Test>(method.getTests());
+			for(Test test : tests) {
+				System.out.println(test);
+			}
+		}
+	}
+	
+	//TODO: delete links? => impossibruh
 	
 	// MANAGE OSSREWRITER
 	
@@ -57,14 +80,16 @@ public class MethodTestLinkUpdater extends Monitor{
 	 * Loads the ossrewriter to the current VM, enables it, sets a filter (for exclusion of org/junit code)
 	 * and finally, lets it retransform all classes.
 	 */
-	public static void launchOSSRewriter() {
+	private void launchOSSRewriter() {
 	    String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
 	    int p = nameOfRunningVM.indexOf('@');
 	    String pid = nameOfRunningVM.substring(0, p);
 
 	    try {
 	        VirtualMachine vm = VirtualMachine.attach(pid);
-	        vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", ""); // TODO: link to project jar
+	        // TODO: link to project jar
+	        vm.loadAgent("U:\\vital.dhaveloose\\Lokaal\\Eclipse_Workspace\\junit\\bin\\lib\\ossrewriter-1.0.jar", ""); // Vitals locatie
+	        //vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", ""); Rubens locatie
 	        vm.detach();
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
@@ -79,15 +104,15 @@ public class MethodTestLinkUpdater extends Monitor{
 	    OSSRewriter.retransformAllClasses();
 	}
 	
-	public static void stopOSSRewriter() {
+	private void stopOSSRewriter() {
 		OSSRewriter.disable();
 	}
 	
-	public static void registerMonitor(Monitor monitor) {
+	private void registerMonitor(Monitor monitor) {
 		MonitorEntrypoint.register(monitor);
 	}
 	
-	public static void unregisterMonitor(Monitor monitor) {
+	private void unregisterMonitor(Monitor monitor) {
 		MonitorEntrypoint.unregister(monitor);
 	}
 }
