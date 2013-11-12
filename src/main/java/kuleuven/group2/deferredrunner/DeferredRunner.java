@@ -250,9 +250,8 @@ public class DeferredRunner {
 	public boolean currentRunnableFinished() {
 		if (getScheduledFuture() == null) {
 			return true;
-		} else {
-			return getScheduledFuture().isDone();
 		}
+		return getScheduledFuture().isDone();
 	}
 	
 	/**
