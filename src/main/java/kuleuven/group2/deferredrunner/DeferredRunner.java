@@ -251,16 +251,7 @@ public class DeferredRunner {
 		if (getScheduledFuture() == null) {
 			return true;
 		} else {
-			try {
-				boolean notFinished = (getScheduledFuture().get() != null);
-				return notFinished;
-			} catch (CancellationException e) {
-				return true;
-			} catch (InterruptedException e) {
-				return true;
-			} catch (ExecutionException e) {
-				return true;
-			}
+			return getScheduledFuture().isDone();
 		}
 	}
 	
