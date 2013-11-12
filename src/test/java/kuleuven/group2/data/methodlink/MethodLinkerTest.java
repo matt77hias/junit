@@ -37,7 +37,7 @@ public class MethodLinkerTest {
 	@After
 	public void tearDown() throws Exception {
 		methodLinker.unregisterMonitor(monitor);
-		System.out.println(methodLinkRegistry.methodToTestLinks);
+		System.out.println(methodLinkRegistry.tests);
 	}
 	
 	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {

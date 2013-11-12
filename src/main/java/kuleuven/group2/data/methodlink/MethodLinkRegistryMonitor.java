@@ -28,7 +28,7 @@ public class MethodLinkRegistryMonitor extends Monitor {
 		Test currentRunningTest = currentRunningTestHolder.getCurrentRunningTest();
 		TestedMethod enteredMethod = new JavaSignatureParser(methodName)
 			.parseSignature();
-		methodLinkRegistry.addLink(enteredMethod, currentRunningTest);
+		methodLinkRegistry.addTest(enteredMethod, currentRunningTest);
 	};
 	
 }
