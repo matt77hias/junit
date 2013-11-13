@@ -1,4 +1,4 @@
-package kuleuven.group2.signature;
+package kuleuven.group2.data.updating.signature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
