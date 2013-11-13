@@ -1,4 +1,4 @@
-package kuleuven.group2.signature;
+package kuleuven.group2.data.updating.signature;
 
 public abstract class JavaSignatureParserComponent<T> {
 	
