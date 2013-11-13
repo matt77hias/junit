@@ -27,7 +27,7 @@ public class DeferredRunner {
 	 * 
 	 * @return	The scheduler of this deferred runner.
 	 */
-	private ScheduledExecutorService getScheduledExecutorService() {
+	protected ScheduledExecutorService getScheduledExecutorService() {
 		return this.scheduler;
 	}
 	
@@ -111,7 +111,7 @@ public class DeferredRunner {
 	 * 
 	 * @return	The runnable factory of this deferred runner.
 	 */
-	private RunnableFactory getRunnableFactory() {
+	protected RunnableFactory getRunnableFactory() {
 		return this.runnableFactory;
 	}
 	
@@ -125,21 +125,21 @@ public class DeferredRunner {
 	 * 
 	 * @return	The runnable of this deferred runner.
 	 */
-	private Runnable getRunnable() {
+	protected RunTask getRunnable() {
 		return this.runnable;
 	}
 	
 	/**
 	 * Creates a new runnable for this deferred runner.
 	 */
-	private void createRunnable() {
-		this.runnable = getRunnableFactory().createRunnable();
+	protected void createRunnable() {
+		this.runnable = new RunTask(getRunnableFactory().createRunnable());
 	}
 	
 	/**
 	 * The runnable object of this deferred runner.
 	 */
-	private Runnable runnable;
+	private RunTask runnable;
 	
 	/*
 	 * Pool management
@@ -189,7 +189,7 @@ public class DeferredRunner {
 	 * 			The time unit for the delay of the execution
 	 * 			of this deferred runner's runnable object.
 	 */
-	private void setScheduleParameters(long delay, TimeUnit timeUnit) {
+	protected void setScheduleParameters(long delay, TimeUnit timeUnit) {
 		this.delay = delay;
 		this.timeUnit = timeUnit;
 	}
@@ -219,21 +219,28 @@ public class DeferredRunner {
 	 * 			the method call will have no effect on this deferred runner).
 	 */
 	public synchronized void start(boolean createIfRunning) {
+		boolean hadRequest = hasRequest();
 		if (currentRunnableFinished()) {
+			// nothing scheduled or finished running
+			setRequest();
 			scheduleNewRunnable();
+		} else if (getRunnable().isRunning()) { 
+			// currently running
+			setRequest();
 		} else {
+			// scheduled but not running
+			// reschedule
 			boolean cancelled = delay();
 			if (!cancelled & createIfRunning) {
 				scheduleNewRunnable();
 			}
-			
 		}
 	}
 	
 	/**
 	 * Schedules a new runnable for this deferred test runner.
 	 */
-	private void scheduleNewRunnable() {
+	protected void scheduleNewRunnable() {
 		createRunnable();
 		scheduleRunnable();
 	}
@@ -246,10 +253,10 @@ public class DeferredRunner {
 	 * 			deferred runner is finished.
 	 */
 	public boolean currentRunnableFinished() {
-		if (getScheduledFuture() == null) {
+		if (getRunnable() == null) {
 			return true;
 		}
-		return getScheduledFuture().isDone();
+		return !getRunnable().isRunning();
 	}
 	
 	/**
@@ -299,14 +306,14 @@ public class DeferredRunner {
 	/**
 	 * Returns the scheduled future of this deferred runner.
 	 */
-	private ScheduledFuture<?> getScheduledFuture() {
+	protected ScheduledFuture<?> getScheduledFuture() {
 		return this.scheduledFuture;
 	}
 	
 	/**
 	 * Sets the scheduled future of this deferred runner to the given request.
 	 */
-	private void setScheduledFuture(ScheduledFuture<?> request) {
+	protected void setScheduledFuture(ScheduledFuture<?> request) {
 		this.scheduledFuture = request;
 	}
 	
@@ -320,12 +327,78 @@ public class DeferredRunner {
 	 * 
 	 * @pre		May not be called when no runnable is created.
 	 */
-	private void scheduleRunnable() {
+	protected void scheduleRunnable() {
 		try {
 			setScheduledFuture(getScheduledExecutorService().
 					schedule(getRunnable(), getDelay(), getTimeUnit()));
 		} catch (RejectedExecutionException e){
 			System.out.println(e.getMessage());
+		}
+	}
+	
+	protected void reschedule() {
+		
+	}
+	
+	protected void setRequest() {
+		setRequest(true);
+	}
+	
+	private boolean hasRequest() {
+		return this.hasRequest;
+	}
+	
+	private void setRequest(boolean request) {
+		this.hasRequest = request;
+	}
+	
+	private volatile boolean hasRequest;
+	
+	/**
+	 * 
+	 */
+	protected class RunTask implements Runnable {
+		
+		/**
+		 * 
+		 */
+		protected boolean isRunning() {
+			return this.running;
+		}
+		
+		/**
+		 * 
+		 */
+		private volatile boolean running;
+		
+		/**
+		 * 
+		 */
+		private Runnable child;
+		
+		/**
+		 * 
+		 */
+		public RunTask(Runnable child) {
+			this.running = false;
+			this.child = child;
+		}
+
+		/**
+		 * 
+		 */
+		@Override
+		public void run() {
+			this.running = true;
+			setRequest(false);
+			try {
+				this.child.run();
+			} finally {
+				this.running = false;
+				if (hasRequest()) {
+					scheduleRunnable();
+				}
+			}
 		}
 	}
 }
