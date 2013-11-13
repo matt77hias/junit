@@ -293,8 +293,11 @@ public class DeferredRunner {
 	 * if the current runnable is running.
 	 */
 	public void stop() {
+		// Unset request flag
+		setRequest(false);
+		// Cancel currently running or scheduled task
 		if (getScheduledFuture() != null) {
-			getScheduledFuture().cancel(true);
+			getScheduledFuture().cancel(false);
 		}
 	}
 
