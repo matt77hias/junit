@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
@@ -43,6 +44,11 @@ public class LogPanel extends JPanel {
 
 		createTable();
 		createToolbar();
+	}
+
+	public LogPanel(Logger log) {
+		this();
+		log.addHandler(new LogHandler());
 	}
 
 	private void createToolbar() {
@@ -82,7 +88,7 @@ public class LogPanel extends JPanel {
 		final JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(level.getLocalizedName());
 		menuItem.setSelected(level == tableFilter.getFilterLevel());
 		menuItem.addItemListener(new ItemListener() {
-			//@Override
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					tableFilter.setFilterLevel(level);
@@ -133,16 +139,14 @@ public class LogPanel extends JPanel {
 		Level {
 			@Override
 			public Object getValue(LogRecord record) {
-				if (record == null)
-					return "";
+				if (record == null) return "";
 				return record.getLevel().getLocalizedName();
 			}
 		},
 		Message {
 			@Override
 			public Object getValue(LogRecord record) {
-				if (record == null)
-					return "";
+				if (record == null) return "";
 				return record.getMessage();
 			}
 		};
@@ -175,11 +179,10 @@ public class LogPanel extends JPanel {
 
 		@Override
 		public void publish(final LogRecord record) {
-			if (!isLoggable(record))
-				return;
+			if (!isLoggable(record)) return;
 
 			EventQueue.invokeLater(new Runnable() {
-				//@Override
+				@Override
 				public void run() {
 					tableModel.add(record);
 				}
@@ -209,12 +212,12 @@ public class LogPanel extends JPanel {
 			fireTableRowsInserted(index, index);
 		}
 
-		//@Override
+		@Override
 		public int getColumnCount() {
 			return LogTableColumn.values().length;
 		}
 
-		//@Override
+		@Override
 		public int getRowCount() {
 			return records.size();
 		}
@@ -232,10 +235,9 @@ public class LogPanel extends JPanel {
 			return column.ordinal();
 		}
 
-		//@Override
+		@Override
 		public Object getValueAt(int row, int col) {
-			if (row >= getRowCount())
-				return "";
+			if (row >= getRowCount()) return "";
 			return getColumn(col).getValue(records.get(row));
 		}
 

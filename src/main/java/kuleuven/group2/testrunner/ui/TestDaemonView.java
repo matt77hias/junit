@@ -3,11 +3,14 @@ package kuleuven.group2.testrunner.ui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JButton;
 
 import kuleuven.group2.testrunner.TestDaemon;
@@ -87,7 +90,7 @@ public class TestDaemonView extends JFrame {
 		});
 		this.contentPane.add(this.fbtnStop, "cell 0 1");
 		
-		this.logPanel = new LogPanel();
+		this.logPanel = new LogPanel(Logger.getGlobal());
 		this.contentPane.add(this.logPanel, "cell 0 3");
 	}
 }
