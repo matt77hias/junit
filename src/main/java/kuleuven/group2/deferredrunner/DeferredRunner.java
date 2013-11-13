@@ -1,7 +1,5 @@
 package kuleuven.group2.deferredrunner;
 
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -282,6 +280,20 @@ public class DeferredRunner {
 		if (getScheduledFuture() != null) {
 			getScheduledFuture().cancel(true);
 		}
+	}
+	
+	/**
+	 * Stops the service of this deferred runner immediately.
+	 * 
+	 * If an infinite runnable is scheduled and running, and
+	 * you force a new runnable to be created. There's no way
+	 * for you to stop the old runnable, because the deferred
+	 * runner doesn't support such silly things. The only support
+	 * the deferred runner gives you in this case is shutting
+	 * down its thread pool immediately.
+	 */
+	public void stopService() {
+		getScheduledExecutorService().shutdownNow();
 	}
 	
 	/**
