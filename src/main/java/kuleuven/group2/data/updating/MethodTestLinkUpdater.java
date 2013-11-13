@@ -8,7 +8,7 @@ import com.sun.tools.attach.VirtualMachine;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestedMethod;
-import kuleuven.group2.signature.JavaSignatureParser;
+import kuleuven.group2.data.updating.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 import be.kuleuven.cs.ossrewriter.MonitorEntrypoint;
 import be.kuleuven.cs.ossrewriter.OSSRewriter;
@@ -27,7 +27,7 @@ public class MethodTestLinkUpdater extends Monitor{
 	
 	// ATTRIBUTES
 	
-	protected ICurrentRunningTestHolder currentRunningTestHolder;
+	protected ICurrentRunningTestHolder currentRunningTestHolder; //TODO: doen met een RunListener (inner class), en als een test start: alle links met die test flushen
 	protected Set<TestedMethod> methods;
 	
 	// CONSTRUCTION
