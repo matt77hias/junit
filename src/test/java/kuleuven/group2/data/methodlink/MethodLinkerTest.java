@@ -1,10 +1,9 @@
 package kuleuven.group2.data.methodlink;
 
-import java.util.HashSet;
-
-import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
+import kuleuven.group2.data.updating.OssRewriterLoader;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,9 +14,13 @@ import org.junit.Test;
 public class MethodLinkerTest {
 	
 	private static MethodTestLinkUpdater methodLinker;
+	private static TestDatabase testDatabase;
+	private static OssRewriterLoader ossRewriterLoader;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		testDatabase = new TestDatabase();
+		ossRewriterLoader = new OssRewriterLoader();
 	}
 
 	@AfterClass
@@ -28,13 +31,13 @@ public class MethodLinkerTest {
 	public void setUp() throws Exception {
 		methodLinker = new MethodTestLinkUpdater(
 				new TestCurrentRunningTestHolder("A", "MethodA"),
-				new HashSet<TestedMethod>());
+				testDatabase,
+				ossRewriterLoader);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		methodLinker.printMethodLinks();
-		methodLinker.destroy();
 	}
 	
 	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {
@@ -61,7 +64,12 @@ public class MethodLinkerTest {
 	public void test() {
 		A a = new A();
 		
+		// OssRewriter is started here because we only want to enter this specific method and not all previous method calls
+		ossRewriterLoader.launchOssRewriter();
+		
 		a.testMethodA("", 0);
+		
+		ossRewriterLoader.stopOssRewriter();
 	}
 
 }

@@ -14,6 +14,22 @@ public class TestDatabase {
 	
 	protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
+
+	public void addLink(Test currentRunningTest, TestedMethod enteredMethod) {
+		enteredMethod.addTest(currentRunningTest);
+		methods.add(enteredMethod);
+	}
+
+	public void printMethodLinks() {
+		Set<Test> tests;
+		for(TestedMethod method : methods) {
+			System.out.println(method);
+			tests = new HashSet<Test>(method.getTests());
+			for(Test test : tests) {
+				System.out.println(test);
+			}
+		}
+	}
 	
 	//TODO: wijzigingen in database hier laten gebeuren (methodes voor schrijven), updaters hebben dan de databas en gebruiken die methodes
 	
