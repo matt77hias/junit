@@ -40,7 +40,7 @@ public class DeferredRunner {
 	 * The default delay for delaying the execution (initially & in case of a
 	 * new change notification).
 	 */
-	public static final long DEFAULT_DELAY = 30l;
+	public static final long DEFAULT_DELAY = 5l;
 
 	/**
 	 * The default time unit used for delaying the execution.
@@ -254,7 +254,7 @@ public class DeferredRunner {
 	 *         is running.
 	 */
 	public boolean isRunning() {
-		return getRunnable() != null && getRunnable().isRunning();
+		return getRunnable() != null && getRunnable().isRunning() && !isFinished();
 	}
 
 	/**
@@ -343,10 +343,6 @@ public class DeferredRunner {
 		}
 	}
 
-	protected void reschedule() {
-
-	}
-
 	protected boolean hasRequest() {
 		return hasRequest.get();
 	}
@@ -407,15 +403,15 @@ public class DeferredRunner {
 		 * Finish the run.
 		 * 
 		 * <ol>
-		 * <li>Mark the task as not running.</li>
 		 * <li>If there are new requests, schedule a new task.</li>
+		 * <li>Mark the task as not running.</li>
 		 * </ol>
 		 */
 		protected void postRun() {
-			this.running = false;
 			if (hasRequest()) {
 				scheduleRunnable();
 			}
+			this.running = false;
 		}
 	}
 }
