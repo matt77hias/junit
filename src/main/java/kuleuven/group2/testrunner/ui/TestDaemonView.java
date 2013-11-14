@@ -20,7 +20,7 @@ import com.javarichclient.icon.tango.actions.MediaPlaybackStopIcon;
 
 public class TestDaemonView extends JFrame {
 
-	private static final long serialVersionUID= -3861100747106978982L;
+	private static final long serialVersionUID = -3861100747106978982L;
 
 	/**
 	 * Launch the application.
@@ -29,7 +29,7 @@ public class TestDaemonView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TestDaemonView frame= new TestDaemonView();
+					TestDaemonView frame = new TestDaemonView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,40 +37,39 @@ public class TestDaemonView extends JFrame {
 			}
 		});
 	}
-	
+
 	private JPanel contentPane;
 	private JButton fbtnStart;
 	private JButton fbtnStop;
 	private LogPanel logPanel;
-	
+
 	private TestDaemon testDaemon;
 
 	/**
 	 * Create the frame.
 	 */
 	public TestDaemonView() {
-		this.testDaemon = new TestDaemon(null);
-		this.testDaemon.createDeferredRunner();
-		
+		this.testDaemon = new TestDaemon();
+
 		// Frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		
+
 		// Content Panel
-		this.contentPane= new JPanel();
+		this.contentPane = new JPanel();
 		this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(this.contentPane);
 		this.contentPane.setLayout(new MigLayout("", "[]", "[][][]"));
-		
+
 		initialize();
 	}
-	
+
 	private TestDaemon getTestDaemon() {
 		return this.testDaemon;
 	}
-	
+
 	private void initialize() {
-		
+
 		this.fbtnStart = new JButton("");
 		this.fbtnStart.setIcon(new MediaPlaybackStartIcon(32, 32));
 		this.fbtnStart.addActionListener(new ActionListener() {
@@ -79,8 +78,7 @@ public class TestDaemonView extends JFrame {
 			}
 		});
 		this.contentPane.add(this.fbtnStart, "cell 0 0");
-		
-		
+
 		this.fbtnStop = new JButton("");
 		this.fbtnStop.setIcon(new MediaPlaybackStopIcon(32, 32));
 		this.fbtnStop.addActionListener(new ActionListener() {
@@ -89,7 +87,7 @@ public class TestDaemonView extends JFrame {
 			}
 		});
 		this.contentPane.add(this.fbtnStop, "cell 0 1");
-		
+
 		this.logPanel = new LogPanel(Logger.getGlobal());
 		this.contentPane.add(this.logPanel, "cell 0 3");
 	}

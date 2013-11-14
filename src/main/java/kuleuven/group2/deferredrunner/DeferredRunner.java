@@ -7,8 +7,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import kuleuven.group2.deferredrunner.RunnableFactory;
-
 /**
  * A class of deferred runners. If a deferred test runner is called for starting
  * an execution of its runnable implementing object, it will schedule an
@@ -48,38 +46,38 @@ public class DeferredRunner {
 	public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
 
 	/**
-	 * Checks if the given runnable factory is a valid runnable factory.
+	 * Checks if the given runnable is a valid runnable.
 	 * 
-	 * @param The
-	 *            runnable factory that has to be checked.
-	 * @return True if and only if the given runnable factory does not refer the
-	 *         null reference.
+	 * @param runnable
+	 *            The runnable that has to be checked.
+	 * @return True if and only if the given runnable does not refer the null
+	 *         reference.
 	 */
-	public static boolean isValidRunnableFactory(RunnableFactory runnableFactory) {
-		return (runnableFactory != null);
+	public static boolean isValidRunnable(Runnable runnable) {
+		return (runnable != null);
 	}
 
 	/**
-	 * Creates a new deferred runner with given runnable factory and default
-	 * delay and time unit.
+	 * Creates a new deferred runner with given runnable and default delay and
+	 * time unit.
 	 * 
-	 * @param runnableFactory
-	 *            The runnable factory for this new deferred runner.
+	 * @param runnable
+	 *            The runnable for this new deferred runner.
 	 * @throws IllegalArgumentException
 	 *             The given runnable factory must be a valid runnable factory.
 	 *             | !isValidRunnableFactory(runnableFactory)
 	 */
-	public DeferredRunner(RunnableFactory runnableFactory) throws IllegalArgumentException {
+	public DeferredRunner(Runnable runnableFactory) throws IllegalArgumentException {
 		this(runnableFactory, DEFAULT_DELAY, DEFAULT_TIME_UNIT);
 	}
 
 	/**
-	 * Creates a new deferred runner with given runnable factory and given delay
-	 * and given time unit for the execution of this deferred runner's runnable
+	 * Creates a new deferred runner with given runnable and given delay and
+	 * given time unit for the execution of this deferred runner's runnable
 	 * object.
 	 * 
-	 * @param runnableFactory
-	 *            The runnable factory for this new deferred runner.
+	 * @param runnable
+	 *            The runnable for this new deferred runner.
 	 * @param delay
 	 *            The delay for the execution of this new deferred runner's
 	 *            runnable object.
@@ -87,16 +85,14 @@ public class DeferredRunner {
 	 *            The time unit for the delay of this new deferred runner's
 	 *            runnable object.
 	 * @throws IllegalArgumentException
-	 *             The given runnable factory must be a valid runnable factory.
-	 *             | !isValidRunnableFactory(runnableFactory)
+	 *             The given runnable must be a valid runnable factory. |
+	 *             !isValidRunnable(runnable)
 	 */
-	public DeferredRunner(RunnableFactory runnableFactory, long delay, TimeUnit timeUnit)
-			throws IllegalArgumentException {
-
-		if (!isValidRunnableFactory(runnableFactory)) {
+	public DeferredRunner(Runnable runnable, long delay, TimeUnit timeUnit) throws IllegalArgumentException {
+		if (!isValidRunnable(runnable)) {
 			throw new IllegalArgumentException("The given runnable factory must be a valid runnable factory.");
 		}
-		this.runnableFactory = runnableFactory;
+		this.runnable = new RunTask(runnable);
 
 		setScheduleParameters(delay, timeUnit);
 		this.scheduler = Executors.newScheduledThreadPool(1);
@@ -105,20 +101,6 @@ public class DeferredRunner {
 	/*
 	 * Runnable management
 	 */
-
-	/**
-	 * Returns the runnable factory of this deferred runner.
-	 * 
-	 * @return The runnable factory of this deferred runner.
-	 */
-	protected RunnableFactory getRunnableFactory() {
-		return this.runnableFactory;
-	}
-
-	/**
-	 * The runnable factory of this deferred runner.
-	 */
-	private final RunnableFactory runnableFactory;
 
 	/**
 	 * Returns the runnable of this deferred runner.
@@ -130,16 +112,9 @@ public class DeferredRunner {
 	}
 
 	/**
-	 * Creates a new runnable for this deferred runner.
-	 */
-	protected void createRunnable() {
-		this.runnable = new RunTask(getRunnableFactory().createRunnable());
-	}
-
-	/**
 	 * The runnable object of this deferred runner.
 	 */
-	private RunTask runnable;
+	private final RunTask runnable;
 
 	/*
 	 * Pool management
@@ -202,24 +177,6 @@ public class DeferredRunner {
 	 * unless the user forces the deferred runner to stop immediately.
 	 */
 	public void start() {
-		start(false);
-	}
-
-	/**
-	 * Requests an execution of the runnable object of this deferred runner.
-	 * 
-	 * If an execution is scheduled and not yet started, the scheduled time will
-	 * be delayed. Once the execution is started, it cannot be canceled anymore
-	 * unless the user forces the deferred runner to stop immediately.
-	 * 
-	 * @param createIfRunning
-	 *            If the current runnable of this deferred runner is already
-	 *            running, a new runnable is scheduled if this parameter is
-	 *            true. No new runnable is scheduled otherwise (this also means
-	 *            that the method call will have no effect on this deferred
-	 *            runner).
-	 */
-	public void start(boolean createIfRunning) {
 		// Set request flag
 		setRequest(true);
 		if (isRunning()) {
@@ -228,23 +185,12 @@ public class DeferredRunner {
 		} else if (isFinished()) {
 			// Nothing scheduled
 			// Schedule a new task
-			scheduleNewRunnable();
+			scheduleRunnable();
 		} else {
 			// Scheduled but not yet running
 			// Reschedule task
-			boolean cancelled = delay();
-			if (!cancelled & createIfRunning) {
-				scheduleNewRunnable();
-			}
+			delay();
 		}
-	}
-
-	/**
-	 * Schedules a new runnable for this deferred test runner.
-	 */
-	protected void scheduleNewRunnable() {
-		createRunnable();
-		scheduleRunnable();
 	}
 
 	/**
@@ -272,20 +218,15 @@ public class DeferredRunner {
 	 * Delays the scheduled execution if the current runnable of this deferred
 	 * runner is not yet running.
 	 * 
-	 * @return False if the task could not be cancelled, true otherwise.
+	 * @return True if and only if the previous future is properly cancelled, in
+	 *         which case it could be replace by the new future.
 	 */
 	public boolean delay() {
-		if (getScheduledFuture() != null) {
-			boolean cancelled = getScheduledFuture().cancel(false);
-
-			if (cancelled) {
-				scheduleRunnable();
-			}
-
-			return cancelled;
+		if (cancelScheduledFuture()) {
+			scheduleRunnable();
+			return true;
 		}
-		// No task, so cancellation succeeded
-		return true;
+		return false;
 	}
 
 	/**
@@ -296,9 +237,7 @@ public class DeferredRunner {
 		// Unset request flag
 		setRequest(false);
 		// Cancel currently running or scheduled task
-		if (getScheduledFuture() != null) {
-			getScheduledFuture().cancel(false);
-		}
+		cancelScheduledFuture();
 	}
 
 	/**
@@ -334,6 +273,17 @@ public class DeferredRunner {
 	private ScheduledFuture<?> scheduledFuture;
 
 	/**
+	 * Cancel the scheduled future (if any).
+	 * 
+	 * @return True if and only if the scheduled future is null or is
+	 *         successfully canceled.
+	 */
+	protected boolean cancelScheduledFuture() {
+		ScheduledFuture<?> future = getScheduledFuture();
+		return future == null || future.cancel(false);
+	}
+
+	/**
 	 * Schedules the runnable of this deferred runner.
 	 * 
 	 * @pre May not be called when no runnable is created.
@@ -361,12 +311,12 @@ public class DeferredRunner {
 	 */
 	protected class RunTask implements Runnable {
 
-		private final Runnable child;
+		private final Runnable delegate;
 		private volatile boolean running;
 
 		public RunTask(Runnable child) {
 			this.running = false;
-			this.child = child;
+			this.delegate = child;
 		}
 
 		@Override
@@ -374,7 +324,7 @@ public class DeferredRunner {
 			try {
 				boolean shouldStart = preRun();
 				if (shouldStart) {
-					this.child.run();
+					this.delegate.run();
 				}
 			} finally {
 				postRun();
