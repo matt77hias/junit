@@ -176,7 +176,7 @@ public class DeferredRunner {
 	 * be delayed. Once the execution is started, it cannot be canceled anymore
 	 * unless the user forces the deferred runner to stop immediately.
 	 */
-	public void start() {
+	public synchronized void start() {
 		// Set request flag
 		setRequest(true);
 		if (isRunning()) {
@@ -221,7 +221,7 @@ public class DeferredRunner {
 	 * @return True if and only if the previous future is properly cancelled, in
 	 *         which case it could be replace by the new future.
 	 */
-	public boolean delay() {
+	protected boolean delay() {
 		if (cancelScheduledFuture()) {
 			scheduleRunnable();
 			return true;
@@ -233,7 +233,7 @@ public class DeferredRunner {
 	 * Stops the execution of the current runnable of this deferred runner even
 	 * if the current runnable is running.
 	 */
-	public void stop() {
+	public synchronized void stop() {
 		// Unset request flag
 		setRequest(false);
 		// Cancel currently running or scheduled task
