@@ -211,7 +211,8 @@ public class DeferredRunner {
 	 *         runner is finished.
 	 */
 	public boolean isFinished() {
-		return getScheduledFuture() == null || getScheduledFuture().isDone();
+		ScheduledFuture<?> future = getScheduledFuture();
+		return future == null || future.isDone();
 	}
 
 	/**
@@ -304,7 +305,7 @@ public class DeferredRunner {
 		return hasRequest.getAndSet(request);
 	}
 
-	private AtomicBoolean hasRequest = new AtomicBoolean(false);
+	private final AtomicBoolean hasRequest = new AtomicBoolean(false);
 
 	/**
 	 * 
