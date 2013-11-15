@@ -15,6 +15,8 @@ import kuleuven.group2.data.signature.JavaSignature;
 public class TestDatabase {
 
 	protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
+	
+	// TODO Use a Map with the signature as key?
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
 
 	// TODO: synchronized gebruiken?

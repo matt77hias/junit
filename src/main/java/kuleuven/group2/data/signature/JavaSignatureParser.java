@@ -10,13 +10,26 @@ public class JavaSignatureParser {
 		this.signature = signature;
 	}
 
+	/*
+	 * TODO Parse whole signature with one regular expression
+	 * using capture groups?
+	 */
 	public JavaSignature parseSignature() {
 		String name = parseMethodName();
+		String className = parseClassName();
 		String packageName = parsePackageName();
 		List<String> arguments = parseArguments();
 		String returnType = parseReturnType();
 
-		return new JavaSignature(name, packageName, arguments, returnType);
+		return new JavaSignature(name, className, packageName, arguments, returnType);
+	}
+
+	protected String parsedClassName = null;
+
+	public String parseClassName() {
+		if (parsedClassName == null)
+			parsedClassName = null; // TODO
+		return parsedClassName;
 	}
 
 	protected String parsedPackageName = null;
