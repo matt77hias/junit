@@ -38,7 +38,9 @@ public class MethodChangeDetector {
 	 */
 	public void detectChanges(Map<String, byte[]> compiledClasses, Date timestamp) {
 		for (Map.Entry<String, byte[]> entry : compiledClasses.entrySet()) {
-			detectChanges(entry.getKey(), entry.getValue(), timestamp);
+			String className = entry.getKey();
+			byte[] classBytes = entry.getValue();
+			detectChanges(className, classBytes, timestamp);
 		}
 	}
 
@@ -56,8 +58,10 @@ public class MethodChangeDetector {
 		// Calculate all method hashes
 		Map<String, MethodHash> methodHashes = new MethodHasher(classBytes).getHashes();
 		for (Map.Entry<String, MethodHash> entry : methodHashes.entrySet()) {
-			JavaSignature signature = new JavaSignatureParser(entry.getKey()).parseSignature();
-			updateMethodHash(signature, entry.getValue(), timestamp);
+			String methodName = entry.getKey();
+			MethodHash methodHash = entry.getValue();
+			JavaSignature signature = new JavaSignatureParser(className + "." + methodName).parseSignature();
+			updateMethodHash(signature, methodHash, timestamp);
 		}
 	}
 
