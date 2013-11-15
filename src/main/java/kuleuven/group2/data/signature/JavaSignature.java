@@ -3,6 +3,7 @@ package kuleuven.group2.data.signature;
 import java.util.List;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 public class JavaSignature {
@@ -34,7 +35,12 @@ public class JavaSignature {
 	}
 
 	public String getFullClassName() {
-		return getPackageName() + "." + getClassName();
+		if (Strings.isNullOrEmpty(getPackageName())) {
+			// Default package
+			return getClassName();
+		} else {
+			return getPackageName() + "." + getClassName();
+		}
 	}
 
 	public List<String> getArguments() {
