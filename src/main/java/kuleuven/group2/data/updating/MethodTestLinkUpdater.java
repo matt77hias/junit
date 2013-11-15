@@ -33,7 +33,7 @@ public class MethodTestLinkUpdater extends Monitor{
 		Test currentRunningTest = currentRunningTestHolder.getCurrentRunningTest();
 		TestedMethod enteredMethod = new JavaSignatureParser(methodName)
 			.parseSignature();
-		testDatabase.addLink(currentRunningTest, enteredMethod);
+		testDatabase.addMethodTestLink(currentRunningTest, enteredMethod);
 	}
 
 	public void printMethodLinks() {
