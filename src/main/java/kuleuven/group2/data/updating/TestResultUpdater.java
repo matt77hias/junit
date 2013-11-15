@@ -1,6 +1,6 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
-import kuleuven.group2.store.StoreListener;
+import kuleuven.group2.data.TestDatabase;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
@@ -9,55 +9,26 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
- * The updater class listens to changes in the code as well as
- * the running of tests, and updates the necessary data accordingly.
- * 
+ * Updates the data with the latest results when tests are run. To do this, this class
+ * extends RunListener.
  * @author vital.dhaveloose
+ *
  */
-
-// TODO: is het wel ok dat deze klasse dat alletwee doet?
-public class DatabaseUpdater extends RunListener implements StoreListener{
+public class TestResultUpdater extends RunListener{
 	
-	private final TestRunDatabase testDatabase;
-	private final TestedMethodDatabase methodDatabase;
-
-	public DatabaseUpdater(TestRunDatabase testDatabase, TestedMethodDatabase methodDatabase) {
-		this.testDatabase = testDatabase;
-		this.methodDatabase = methodDatabase;
+	private TestDatabase database;
+	
+    public TestResultUpdater(TestDatabase database) {
+		this.database = database;
 	}
 
 	/**
-	 * LISTENING TO CHANGES IN THE SOURCECODE
-	 */
-	
-	
-	public void resourceAdded(String resourceName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void resourceChanged(String resourceName) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void resourceRemoved(String resourceName) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-	 * LISTENING TO TEST RESULTS
-	 */
-	
-    /**
      * Called before any tests have been run.
      *
      * @param description describes the tests to be run
      */
-	@Override
     public void testRunStarted(Description description) throws Exception {
-		//TODO
+    	// do nothing
     }
 
     /**
@@ -65,9 +36,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      *
      * @param result the summary of the test run, including all the tests that failed
      */
-	@Override
     public void testRunFinished(Result result) throws Exception {
-		//TODO
+    	// do nothing
     }
 
     /**
@@ -76,9 +46,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      * @param description the description of the test that is about to be run
      * (generally a class and method name)
      */
-	@Override
     public void testStarted(Description description) throws Exception {
-		//TODO
+    	// do nothing
     }
 
     /**
@@ -86,9 +55,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      *
      * @param description the description of the test that just ran
      */
-	@Override
     public void testFinished(Description description) throws Exception {
-		//TODO
+    	// do nothing
     }
 
     /**
@@ -96,9 +64,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      *
      * @param failure describes the test that failed and the exception that was thrown
      */
-	@Override
     public void testFailure(Failure failure) throws Exception {
-		//TODO
+    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
     }
 
     /**
@@ -108,9 +75,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      * @param failure describes the test that failed and the
      * {@link AssumptionViolatedException} that was thrown
      */
-	@Override
     public void testAssumptionFailure(Failure failure) {
-		//TODO
+    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
     }
 
     /**
@@ -119,9 +85,8 @@ public class DatabaseUpdater extends RunListener implements StoreListener{
      *
      * @param description describes the test that will not be run
      */
-	@Override
     public void testIgnored(Description description) throws Exception {
-		//TODO
+    	// do nothing
     }
-
+	
 }
