@@ -1,7 +1,6 @@
 package kuleuven.group2.compile;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 
@@ -41,7 +40,7 @@ public class EclipseCompilerTest {
 		CompilationResult result = compiler.compile(classLoader);
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getCompiledResources().size());
-		assertTrue(result.getCompiledResources().contains(NameUtils.toBinaryName(className)));
+		assertNotNull(result.getCompiledResource(NameUtils.toBinaryName(className)));
 
 		assertEquals(Boolean.TRUE, invokeMethod(className, "foo"));
 	}
