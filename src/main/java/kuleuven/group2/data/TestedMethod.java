@@ -13,11 +13,9 @@ import java.util.List;
  * @author Ruben Pieters, Vital D'haveloose
  */
 public class TestedMethod {
-	
-	// ATTRIBUTES
 
 	protected String name;
-	protected String packageName;
+	protected String className;
 	protected List<String> argumentTypes = new ArrayList<String>();
 	protected String returnType;
 	
@@ -25,25 +23,21 @@ public class TestedMethod {
 	
 	protected Date lastChangeTime;
 	
-	// CONSTRUCTION
-	
-	public TestedMethod(String name, String packageName, List<String> arguments,
+	public TestedMethod(String name, String className, List<String> arguments,
 			String returnType) {
 		super();
 		this.name = name;
-		this.packageName = packageName;
+		this.className = className;
 		this.argumentTypes = arguments;
 		this.returnType = returnType;
 	}
-	
-	// GETTERS & SETTERS
 
 	public String getName() {
 		return name;
 	}
 
-	public String getPackageName() {
-		return packageName;
+	public String getClassName() {
+		return className;
 	}
 
 	public List<String> getArguments() {
@@ -53,6 +47,11 @@ public class TestedMethod {
 	public String getReturnType() {
 		return returnType;
 	}
+
+	public String getSignature() {
+		// TODO invullen, hoe ziet die signatuur er precies uit?
+		return "";
+	}
 	
 	public Date getLastChange() {
 		return lastChangeTime;
@@ -61,8 +60,6 @@ public class TestedMethod {
 	public void setLastChange(Date time) {
 		this.lastChangeTime = time;
 	}
-	
-	// TESTS
 	
 	public void addTest(Test test) {
 		tests.add(test);
@@ -80,8 +77,6 @@ public class TestedMethod {
 		return new HashSet<Test>(tests);
 		//TODO: nodig? origineel doorgeven in de plaats?
 	}
-	
-	//HASCODE, EQUALS & TOSTRING
 
 	@Override
 	public int hashCode() {
@@ -91,7 +86,7 @@ public class TestedMethod {
 				+ ((argumentTypes == null) ? 0 : argumentTypes.hashCode());
 		result= prime * result + ((name == null) ? 0 : name.hashCode());
 		result= prime * result
-				+ ((packageName == null) ? 0 : packageName.hashCode());
+				+ ((className == null) ? 0 : className.hashCode());
 		result= prime * result
 				+ ((returnType == null) ? 0 : returnType.hashCode());
 		return result;
@@ -116,10 +111,10 @@ public class TestedMethod {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (packageName == null) {
-			if (other.packageName != null)
+		if (className == null) {
+			if (other.className != null)
 				return false;
-		} else if (!packageName.equals(other.packageName))
+		} else if (!className.equals(other.className))
 			return false;
 		if (returnType == null) {
 			if (other.returnType != null)
@@ -131,7 +126,7 @@ public class TestedMethod {
 
 	@Override
 	public String toString() {
-		return "Method [name=" + name + ", packageName=" + packageName
+		return "Method [name=" + name + ", className=" + className
 				+ ", argumentTypes=" + argumentTypes + ", returnType="
 				+ returnType + "]";
 	}
