@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
+import kuleuven.group2.methodchange.MethodHash;
 
 /**
  * A class that represents a method that is used by at least one test. It also
@@ -16,9 +17,8 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
 public class TestedMethod {
 
 	protected final JavaSignature signature;
-
 	protected Collection<Test> tests = new HashSet<Test>(); // TODO: concurrency?
-
+	protected MethodHash hash;
 	protected Date lastChanged;
 
 	public TestedMethod(String signature) {
@@ -31,6 +31,14 @@ public class TestedMethod {
 
 	public JavaSignature getSignature() {
 		return signature;
+	}
+
+	public MethodHash getHash() {
+		return hash;
+	}
+
+	public void setHash(MethodHash hash) {
+		this.hash = hash;
 	}
 
 	public Date getLastChange() {

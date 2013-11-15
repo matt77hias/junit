@@ -211,7 +211,7 @@ public class EclipseCompiler implements JavaCompiler {
 					byte[] classBytes = classFile.getBytes();
 					getBinaryStore().write(resourceName, classBytes);
 					// Add to compiled resources
-					compiled.put(resourceName, classBytes);
+					compiled.put(className, classBytes);
 				}
 			}
 		}
