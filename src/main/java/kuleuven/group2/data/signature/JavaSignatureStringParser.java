@@ -1,4 +1,4 @@
-package kuleuven.group2.data.updating.signature;
+package kuleuven.group2.data.signature;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
