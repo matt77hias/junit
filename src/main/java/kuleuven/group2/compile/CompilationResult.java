@@ -43,24 +43,24 @@ public class CompilationResult {
 	}
 
 	/**
-	 * Get all compiled resources.
+	 * Get all compiled classes.
 	 */
-	public Map<String, byte[]> getCompiledResources() {
+	public Map<String, byte[]> getCompiledClasses() {
 		return Collections.unmodifiableMap(compiled);
 	}
 
 	/**
-	 * Get the names of all compiled resources.
+	 * Get the class names of all compiled classes.
 	 */
-	public Collection<String> getCompiledResourceNames() {
-		return getCompiledResources().keySet();
+	public Collection<String> getCompiledClassNames() {
+		return getCompiledClasses().keySet();
 	}
 
 	/**
-	 * Get the compiled resource by the given name.
+	 * Get the compiled class by the given class name.
 	 */
-	public byte[] getCompiledResource(String resourceName) {
-		return getCompiledResources().get(resourceName);
+	public byte[] getCompiledClass(String className) {
+		return getCompiledClasses().get(className);
 	}
 
 	/**
