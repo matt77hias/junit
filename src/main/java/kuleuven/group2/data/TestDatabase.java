@@ -15,6 +15,7 @@ public class TestDatabase {
 	
 	protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
+	// TODO: synchronized gebruiken?
 
 	// LAST FAILURE FIRST, FREQUENT FAILURE FIRST
 	
@@ -44,11 +45,19 @@ public class TestDatabase {
 	
 	// ACCESS
 	
-	public Method getMethod(String className, String methodSignature) {
-		// TODO: implementeren
-		return null;
+	public void addMethod(TestedMethod method) {
+		methods.add(method);
 	}
 	
-
+	public void removeMethod(TestedMethod method) {
+		methods.remove(method);
+	}
+	
+	public TestedMethod getMethod(String className, String methodSignature) throws Exception {
+		for(TestedMethod method : methods) {
+			if(method.getClassName().equals(className) && method.getSignature().equals(methodSignature)) return method;
+		}
+		throw new Exception("There is no method with class name" + className + " and signature " + methodSignature + " in the test database.");
+	}
 	
 }
