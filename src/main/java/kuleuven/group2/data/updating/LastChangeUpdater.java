@@ -1,26 +1,27 @@
 package kuleuven.group2.data.updating;
 
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.Date;
 
-import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.TestDatabase;
 
 /**
  * Updates the data when a method is changed. For this, the class implements a StoreListener.
  * @author vital.dhaveloose
  *
  */
-public class LastChangeUpdater{
+public class LastChangeUpdater implements MethodChangeListener {
 	
-	//TODO: implements some kind of listener to know when methods are changed
+	protected TestDatabase database;
 	
-	// ATTRIBUTES
-	
-	protected Set<TestedMethod> methods;
-	
-	// CONSTRUCTION
-	
-	public LastChangeUpdater(Set<TestedMethod> methods) {
-		this.methods = methods;
+	public LastChangeUpdater(TestDatabase database) {
+		this.database = database;
+	}
+
+	@Override
+	public void changed(Method method, Date time) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

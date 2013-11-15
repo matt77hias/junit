@@ -15,7 +15,13 @@ public class TestDatabase {
 	protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
 
-	public void addLink(Test currentRunningTest, TestedMethod enteredMethod) {
+	// LAST FAILURE FIRST, FREQUENT FAILURE FIRST
+	
+		// TODO: methodes implementeren voor TestResultUpdater
+	
+	// DISTINCT FAILURE FIRST
+	
+	public void addMethodTestLink(Test currentRunningTest, TestedMethod enteredMethod) {
 		enteredMethod.addTest(currentRunningTest);
 		methods.add(enteredMethod);
 	}
@@ -31,11 +37,13 @@ public class TestDatabase {
 		}
 	}
 	
-	//TODO: wijzigingen in database hier laten gebeuren (methodes voor schrijven), updaters hebben dan de databas en gebruiken die methodes
+	// CHANGED CODE FIRST
 	
-	//TODO: implementatie van verschillende access-interfaces voor users
+		// TODO: methodes implementeren voor LastChangeUpdater
 	
-	//TODO implementeren, daarbij rekening houden met concurrency (synchronized sets) en uitbreidbaarheid
+	// ACCESS
+	
+		//TODO: implementatie van verschillende access-interfaces voor users
 
 	
 }

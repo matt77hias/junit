@@ -1,8 +1,6 @@
 package kuleuven.group2.data.updating;
 
-import java.util.Set;
-
-import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
@@ -18,17 +16,11 @@ import org.junit.runner.notification.RunListener;
  */
 public class TestResultUpdater extends RunListener{
 	
-	// ATTRIBUTES
+	private TestDatabase database;
 	
-	protected Set<Test> tests;
-
-	// CONSTRUCTION
-	
-    public TestResultUpdater(Set<Test> tests) {
-		this.tests = tests;
+    public TestResultUpdater(TestDatabase database) {
+		this.database = database;
 	}
-    
-    // LISTENING TO TEST RUNNING
 
 	/**
      * Called before any tests have been run.
@@ -36,7 +28,7 @@ public class TestResultUpdater extends RunListener{
      * @param description describes the tests to be run
      */
     public void testRunStarted(Description description) throws Exception {
-    	// TODO
+    	// do nothing
     }
 
     /**
@@ -45,7 +37,7 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	// TODO
+    	// do nothing
     }
 
     /**
@@ -55,7 +47,7 @@ public class TestResultUpdater extends RunListener{
      * (generally a class and method name)
      */
     public void testStarted(Description description) throws Exception {
-    	// TODO
+    	// do nothing
     }
 
     /**
@@ -64,7 +56,7 @@ public class TestResultUpdater extends RunListener{
      * @param description the description of the test that just ran
      */
     public void testFinished(Description description) throws Exception {
-    	// TODO
+    	// do nothing
     }
 
     /**
@@ -73,7 +65,7 @@ public class TestResultUpdater extends RunListener{
      * @param failure describes the test that failed and the exception that was thrown
      */
     public void testFailure(Failure failure) throws Exception {
-    	// TODO
+    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
     }
 
     /**
@@ -84,7 +76,7 @@ public class TestResultUpdater extends RunListener{
      * {@link AssumptionViolatedException} that was thrown
      */
     public void testAssumptionFailure(Failure failure) {
-    	// TODO
+    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
     }
 
     /**
@@ -94,7 +86,7 @@ public class TestResultUpdater extends RunListener{
      * @param description describes the test that will not be run
      */
     public void testIgnored(Description description) throws Exception {
-    	// TODO
+    	// do nothing
     }
 	
 }
