@@ -77,7 +77,6 @@ public class JavaSignatureParserTest {
 	public void testMethodDefault_Package() {
 		JavaSignature signature = new JavaSignatureParser(testMethodDefault).parseSignature();
 
-		System.out.println(signature.toString());
 		assertTrue(signature.getPackageName().isEmpty());
 	}
 
