@@ -1,6 +1,5 @@
 package kuleuven.group2.data.updating;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 
 import kuleuven.group2.data.TestDatabase;
@@ -19,9 +18,8 @@ public class LastChangeUpdater implements MethodChangeListener {
 	}
 
 	@Override
-	public void changed(Method method, Date time) {
-		// TODO Auto-generated method stub
-		
+	public void changed(String signature, Date time) {
+		// TODO implement
 	}
 
 }
