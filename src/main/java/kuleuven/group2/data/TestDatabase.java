@@ -1,5 +1,6 @@
 package kuleuven.group2.data;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,7 +44,11 @@ public class TestDatabase {
 	
 	// ACCESS
 	
-		//TODO: implementatie van verschillende access-interfaces voor users
+	public Method getMethod(String className, String methodSignature) {
+		// TODO: implementeren
+		return null;
+	}
+	
 
 	
 }
