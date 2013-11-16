@@ -28,8 +28,9 @@ public class OssRewriterLoader {
 	    try {
 	        VirtualMachine vm = VirtualMachine.attach(pid);
 	        // TODO: link to project jar
-	        vm.loadAgent("U:\\vital.dhaveloose\\Lokaal\\Eclipse_Workspace\\junit\\bin\\lib\\ossrewriter-1.0.jar", ""); // Vitals locatie
+	        //vm.loadAgent("U:\\vital.dhaveloose\\Lokaal\\Eclipse_Workspace\\junit\\bin\\lib\\ossrewriter-1.0.jar", ""); // Vitals locatie
 	        //vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", ""); //Rubens locatie
+	        vm.loadAgent("res\\ossrewriter-1.0.jar", "");
 	        vm.detach();
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
@@ -44,10 +45,8 @@ public class OssRewriterLoader {
 	    OSSRewriter.retransformAllClasses();
 	}
 	
-	// TODO: check how restarting of ossrewriter works
-	public void stopOssRewriter() {
-		OSSRewriter.disable();
-	}
+	// stopOssRewriter removed
+	// 'starting' and 'stopping' must be done by registering and unregistering your monitor
 	
 	public void registerMonitor(Monitor monitor) {
 		MonitorEntrypoint.register(monitor);
