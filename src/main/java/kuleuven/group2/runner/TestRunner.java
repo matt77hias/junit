@@ -35,7 +35,24 @@ public class TestRunner {
 	 * 			The new class loader of this test runner.
 	 */
 	public TestRunner(ClassLoader classLoader) {
+		this(classLoader, new JUnitCore());
+	}
+	
+	/**
+	 * Creates a new test runner with the given class loader
+	 * as its class loader.
+	 * 
+	 * @param	classLoader
+	 * 			The new class loader of this test runner.
+	 * @param	jUnitCore
+	 * 			The JUnitCore for this test runner.
+	 * 			You can give your own JUnitCore so
+	 * 			that you don't need to regsiter to
+	 * 			another JUnitCore.
+	 */
+	public TestRunner(ClassLoader classLoader, JUnitCore jUnitCore) {
 		this.classLoader = classLoader;
+		this.jUntiCore = jUnitCore;
 	}
 	
 	/**
@@ -57,7 +74,6 @@ public class TestRunner {
 	 */
 	public void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
-		this.jUntiCore = new JUnitCore();
 	}
 	
 	/**
