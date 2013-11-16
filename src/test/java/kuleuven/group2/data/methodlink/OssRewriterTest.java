@@ -41,7 +41,9 @@ public class OssRewriterTest {
 
 		try {
 			VirtualMachine vm = VirtualMachine.attach(pid);
-			vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", "");
+	        // TODO: link to project jar
+	        vm.loadAgent("U:\\vital.dhaveloose\\Lokaal\\Eclipse_Workspace\\junit\\bin\\lib\\ossrewriter-1.0.jar", ""); // Vitals locatie
+	        //vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", ""); //Rubens locatie
 			vm.detach();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -109,7 +111,7 @@ public class OssRewriterTest {
 
 		a.visit();
 		
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/testtomethodlink/OssRewriterTest$A.visit()V"));
+		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/methodlink/OssRewriterTest$A.visit()V"));
 	}
 
 }

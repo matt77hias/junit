@@ -30,9 +30,9 @@ public class MethodLinkerTest {
 	@Before
 	public void setUp() throws Exception {
 		methodLinker = new MethodTestLinkUpdater(
-				new TestCurrentRunningTestHolder("A", "MethodA"),
 				testDatabase,
-				ossRewriterLoader);
+				ossRewriterLoader,
+				new TestCurrentRunningTestHolder("A", "MethodA"));
 	}
 
 	@After

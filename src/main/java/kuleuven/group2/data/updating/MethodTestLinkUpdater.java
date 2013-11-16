@@ -19,14 +19,18 @@ import be.kuleuven.cs.ossrewriter.Monitor;
 public class MethodTestLinkUpdater extends Monitor {
 
 	protected TestDatabase testDatabase;
-	protected Test currentTest;
+	protected ICurrentRunningTestHolder currentTestHolder;
 
 	public MethodTestLinkUpdater(TestDatabase testDatabase, OssRewriterLoader ossRewriterLoader, JUnitCore core) {
+		new MethodTestLinkUpdater(testDatabase, ossRewriterLoader, new MethodTestLinkRunListener(core));
+	}
+	
+	public MethodTestLinkUpdater(TestDatabase testDatabase, OssRewriterLoader ossRewriterLoader, ICurrentRunningTestHolder currentTestHolder) {
 		super();
 		this.testDatabase = testDatabase;
 
 		ossRewriterLoader.registerMonitor(this);
-		core.addListener(new MethodTestLinkRunListener());
+		this.currentTestHolder = currentTestHolder;
 	}
 
 	@Override
@@ -34,19 +38,22 @@ public class MethodTestLinkUpdater extends Monitor {
 		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
 		TestedMethod enteredMethod = testDatabase.getMethod(signature);
 		if (enteredMethod != null) {
-			enteredMethod.addTest(currentTest);
+			enteredMethod.addTest(currentTestHolder.getCurrentRunningTest());
 			testDatabase.addMethod(enteredMethod);
 		}
 	}
 
 	public void printMethodLinks() {
+		System.out.println("Method-test links:");
 		testDatabase.printMethodLinks();
 	}
 	
-	private class MethodTestLinkRunListener extends RunListener {
+	private class MethodTestLinkRunListener extends RunListener implements ICurrentRunningTestHolder{
 		
-		protected MethodTestLinkRunListener() {
-			// do nothing
+		private Test currentTest = null;
+		
+		protected MethodTestLinkRunListener(JUnitCore core) {
+			core.addListener(this);
 		}
 
 	    /**
@@ -72,6 +79,11 @@ public class MethodTestLinkUpdater extends Monitor {
 	    public void testFinished(Description description) throws Exception {
 	    	currentTest = null;
 	    }
+
+		@Override
+		public Test getCurrentRunningTest() {
+			return currentTest;
+		}
 	    
 	}
 
