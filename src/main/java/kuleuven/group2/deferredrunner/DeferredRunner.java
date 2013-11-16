@@ -67,8 +67,8 @@ public class DeferredRunner {
 	 *             The given runnable factory must be a valid runnable factory.
 	 *             | !isValidRunnableFactory(runnableFactory)
 	 */
-	public DeferredRunner(Runnable runnableFactory) throws IllegalArgumentException {
-		this(runnableFactory, DEFAULT_DELAY, DEFAULT_TIME_UNIT);
+	public DeferredRunner(Runnable runnable) throws IllegalArgumentException {
+		this(runnable, DEFAULT_DELAY, DEFAULT_TIME_UNIT);
 	}
 
 	/**
@@ -85,12 +85,12 @@ public class DeferredRunner {
 	 *            The time unit for the delay of this new deferred runner's
 	 *            runnable object.
 	 * @throws IllegalArgumentException
-	 *             The given runnable must be a valid runnable factory. |
-	 *             !isValidRunnable(runnable)
+	 *             The given runnable must be a valid runnable.
+	 *             | !isValidRunnable(runnable)
 	 */
 	public DeferredRunner(Runnable runnable, long delay, TimeUnit timeUnit) throws IllegalArgumentException {
 		if (!isValidRunnable(runnable)) {
-			throw new IllegalArgumentException("The given runnable factory must be a valid runnable factory.");
+			throw new IllegalArgumentException("The given runnable must be valid.");
 		}
 		this.runnable = new RunTask(runnable);
 
