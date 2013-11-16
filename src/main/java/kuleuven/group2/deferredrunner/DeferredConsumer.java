@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
+import kuleuven.group2.util.Consumer;
+
 public class DeferredConsumer<T> implements Consumer<T> {
 
 	protected final DeferredRunner runner;

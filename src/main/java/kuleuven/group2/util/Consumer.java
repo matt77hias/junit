@@ -1,4 +1,4 @@
-package kuleuven.group2.deferredrunner;
+package kuleuven.group2.util;
 
 public interface Consumer<T> {
 

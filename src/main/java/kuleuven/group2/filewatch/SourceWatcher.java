@@ -3,64 +3,62 @@ package kuleuven.group2.filewatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreListener;
+import kuleuven.group2.util.Consumer;
 
 /**
- * The SourceWatcher class notifies its subscribers of changed method lists in
- * edited .java files.
+ * The SourceWatcher class notifies its consumers of changed source files.
  * 
- * @author Ruben
- * 
+ * @author Ruben, Mattias
  */
 public class SourceWatcher implements StoreListener {
 
-	protected final List<SourceWatchListener> listeners = new ArrayList<SourceWatchListener>();
+	protected StoreFilter filter = StoreFilter.SOURCE;
 
-	public void registerSubscriber(SourceWatchListener listener) {
-		listeners.add(listener);
+	protected final List<Consumer<SourceEvent>> consumers = new ArrayList<Consumer<SourceEvent>>();
+
+	protected StoreFilter getFilter() {
+		return filter;
 	}
 
-	public void unregisterSubscriber(SourceWatchListener listener) {
-		listeners.remove(listener);
+	protected void setFilter(StoreFilter filter) {
+		this.filter = filter;
 	}
 
+	public void registerConsumer(Consumer<SourceEvent> consumer) {
+		consumers.add(consumer);
+	}
+
+	public void unregisterConsumer(Consumer<SourceEvent> consumer) {
+		consumers.remove(consumer);
+	}
+
+	@Override
 	public void resourceAdded(String resourceName) {
-		if (!interestedInResource(resourceName)) {
-			return;
+		if (getFilter().accept(resourceName)) {
+			fireSourceEvent(new SourceEvent(SourceEvent.Type.ADDED, resourceName));
 		}
 	}
 
+	@Override
 	public void resourceChanged(String resourceName) {
-		if (!interestedInResource(resourceName)) {
-			return;
-		}
-
-	}
-
-	private void onModifiedResource(String resourceName) {
-		getChangedMethodListForResource(resourceName);
-
-	}
-
-	private void getChangedMethodListForResource(String resourceName) {
-
-	}
-
-	private void notifyChangedMethod() {
-		for (SourceWatchListener listener : listeners) {
-			listener.reportChangedMethod();
+		if (getFilter().accept(resourceName)) {
+			fireSourceEvent(new SourceEvent(SourceEvent.Type.CHANGED, resourceName));
 		}
 	}
 
+	@Override
 	public void resourceRemoved(String resourceName) {
-		if (!interestedInResource(resourceName)) {
-			return;
+		if (getFilter().accept(resourceName)) {
+			fireSourceEvent(new SourceEvent(SourceEvent.Type.REMOVED, resourceName));
 		}
-
 	}
 
-	private boolean interestedInResource(String resourceName) {
-		return resourceName.endsWith(".java");
+	protected void fireSourceEvent(SourceEvent event) {
+		for (Consumer<SourceEvent> consumer : consumers) {
+			consumer.consume(event);
+		}
 	}
 
 }
