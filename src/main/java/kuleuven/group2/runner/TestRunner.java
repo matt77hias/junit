@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
+import org.junit.runner.notification.RunListener;
 
 import kuleuven.group2.data.Test;
 
@@ -159,6 +160,13 @@ public class TestRunner {
 	}
 	
 	/**
+	 * Returns the JUnitCore of this test runner.
+	 */
+	protected JUnitCore getJUnitCore() {
+		return this.jUntiCore;
+	}
+	
+	/**
 	 * Runs all the tests contained in request.
 	 * 
 	 * @param	request
@@ -167,6 +175,16 @@ public class TestRunner {
 	 * 			the test run and the failed tests.
 	 */
 	public Result runTestMethod(Request request) {
-		return this.jUntiCore.run(request);
+		return getJUnitCore().run(request);
+	}
+	
+	/**
+	 * Adds a listener to be notified as the tests run.
+	 * 
+	 * @param	runListener
+	 * 			The listener to add.
+	 */
+	public void addRunListener(RunListener runListener) {
+		getJUnitCore().addListener(runListener);
 	}
 }
