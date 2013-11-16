@@ -1,7 +1,10 @@
 package kuleuven.group2.data;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import kuleuven.group2.data.signature.JavaSignature;
@@ -14,62 +17,114 @@ import kuleuven.group2.data.signature.JavaSignature;
  */
 public class TestDatabase {
 
-	// protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
 	
 	// TODO Use a Map with the signature as key?
-	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
+	protected Collection<TestMethodLink> testMethodLinks =
+			Collections.synchronizedCollection(new HashSet<TestMethodLink>());
+	protected Set<TestedMethod> methods =
+			Collections.synchronizedSet(new HashSet<TestedMethod>());
+	protected Set<Test> tests =
+			Collections.synchronizedSet(new HashSet<Test>());
 
 	// TODO: synchronized gebruiken?
 	
 	// ACCESS
 
-	public void addMethod(TestedMethod method) {
-		methods.add(method);
-	}
-
-	public void removeMethod(TestedMethod method) {
-		methods.remove(method);
-	}
-
-	public TestedMethod getMethod(JavaSignature signature) {
-		for (TestedMethod method : methods) {
-			if (method.getSignature().equals(signature)) return method;
+	
+	// TODO: I'm not sure I agree with this approach,
+	// why exactly do we need to get these references so people can do with it whatever they want?
+	// shouldn't we provide methods for the update operations we want to support?
+	// - ruben
+	public Test getTest(String testClassName, String testMethodName) {
+		for (Test test : tests) {
+			if (test.equalName(testClassName, testMethodName)) {
+				return test;
+			}
 		}
 		return null;
 	}
-	
-	public Test getTest(String className, String methodName) throws Exception {
-		for(TestedMethod method : methods) {
-			for(Test test : method.getTests()) {
-				if(test.getTestClassName().equals(className) && test.getTestMethodName().equals(methodName)) return test;
+
+	public TestedMethod getMethod(JavaSignature signature) {
+		for (TestedMethod testedMethod : methods) {
+			if (testedMethod.getSignature().equals(signature)) {
+				return testedMethod;
 			}
 		}
-		throw new Exception("There is no test in the database with class name " + className + " and method name " + methodName + " .");
+		throw new IllegalArgumentException("Method with signature " + signature + " not in database.");
 	}
 	
-	public Set<TestedMethod> getLinkedMethods(Test test) {
-		Set<TestedMethod> linkedMethods = new HashSet<TestedMethod>();
-		for(TestedMethod method : methods) {
-			if(method.isTestedBy(test)) linkedMethods.add(method);
+	
+
+	public void addMethod(TestedMethod testedMethod) {
+		methods.add(testedMethod);
+	}
+
+	public void removeMethod(TestedMethod testedMethod) {
+		methods.remove(testedMethod);
+	}
+	
+	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
+		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
+	}
+	
+	public void addMethodTestLink(TestedMethod testedMethod, Test test) {
+		testMethodLinks.add(new TestMethodLink(testedMethod, test));
+	}
+	
+	public Collection<TestedMethod> getLinkedMethods(Test test) {
+		Collection<TestedMethod> linkedMethods = new HashSet<TestedMethod>();
+		for(TestMethodLink testMethodLink : testMethodLinks) {
+			if (testMethodLink.getTest().equalName(test.getTestClassName(), test.getTestMethodName())) {
+				linkedMethods.add(testMethodLink.getTestedMethod());
+			}
 		}
 		return linkedMethods;
 	}
 	
-	public void removeMethodLinks(Test test) {
-		for(TestedMethod method : getLinkedMethods(test)) {
-			method.removeTest(test);
+	public Collection<Test> getLinkedTests(TestedMethod testedMethod) {
+		Collection<Test> linkedTests = new HashSet<Test>();
+		for(TestMethodLink testMethodLink : testMethodLinks) {
+			if (testMethodLink.getTestedMethod().equals(testedMethod)) {
+				linkedTests.add(testMethodLink.getTest());
+			}
 		}
+		return linkedTests;
+	}
+	
+	public void clearMethodLinks() {
+		testMethodLinks.clear();
 	}
 
 	public void printMethodLinks() {
-		Set<Test> tests;
-		for (TestedMethod method : methods) {
-			System.out.println(method);
-			tests = new HashSet<Test>(method.getTests());
-			for (Test test : tests) {
-				System.out.println(test);
+		for (TestMethodLink testMethodLink : testMethodLinks) {
+			System.out.println(testMethodLink);
+		}
+	}
+	
+	protected Test getTestByName(String testClassName, String testMethodName) {
+		for (Test test : tests) {
+			if (test.equalName(testClassName, testMethodName)) {
+				return test;
 			}
 		}
+		throw new IllegalArgumentException("Test " + testClassName + " " + testMethodName + " does not exist.");
+	}
+	
+	protected void addTest(Test test) {
+		tests.add(test);
+	}
+	
+	protected void removeTest(Test test) {
+		tests.remove(test);
+	}
+	
+	public void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
+		Test test = getTestByName(testClassName, testMethodName);
+		if (test == null) {
+			test = new Test(testClassName, testMethodName);
+			addTest(test);
+		}
+		test.addTestRun(testRun);
 	}
 
 }

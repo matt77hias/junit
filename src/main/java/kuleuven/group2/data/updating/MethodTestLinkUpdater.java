@@ -38,8 +38,8 @@ public class MethodTestLinkUpdater extends Monitor {
 		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
 		TestedMethod enteredMethod = testDatabase.getMethod(signature);
 		if (enteredMethod != null) {
-			enteredMethod.addTest(currentTestHolder.getCurrentRunningTest());
-			testDatabase.addMethod(enteredMethod);
+			Test currentTest = currentTestHolder.getCurrentRunningTest();
+			testDatabase.addMethodTestLink(enteredMethod, currentTest);
 		}
 	}
 
@@ -67,8 +67,9 @@ public class MethodTestLinkUpdater extends Monitor {
 	    	String testMethodName = description.getMethodName();
 	    	currentTest = testDatabase.getTest(testClassName, testMethodName);
 	    	
+	    	// TODO: clearing testMethodLinks should be done at level of pipeline?
 	    	// remove old links
-	    	testDatabase.removeMethodLinks(currentTest);
+	    	//testDatabase.removeMethodLinks(currentTest);
 	    }
 
 	    /**

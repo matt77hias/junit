@@ -17,7 +17,6 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
 public class TestedMethod {
 
 	protected final JavaSignature signature;
-	protected Collection<Test> tests = new HashSet<Test>(); // TODO: concurrency?
 	protected MethodHash hash;
 	protected Date lastChanged;
 
@@ -49,27 +48,6 @@ public class TestedMethod {
 		this.lastChanged = time;
 	}
 
-	public void addTest(Test test) {
-		tests.add(test);
-	}
-
-	public void removeTest(Test test) {
-		tests.remove(test);
-	}
-
-	public boolean containsTest(Test test) {
-		return tests.contains(test);
-	}
-
-	public Collection<Test> getTests() {
-		return new HashSet<Test>(tests);
-		// TODO: nodig? origineel doorgeven in de plaats?
-	}
-
-	public boolean isTestedBy(Test test) {
-		return tests.contains(test);
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -92,8 +70,7 @@ public class TestedMethod {
 
 	@Override
 	public String toString() {
-		return "TestedMethod [signature=" + getSignature() + ", lastChange=" + getLastChange() + ", tests="
-				+ getTests() + "]";
+		return "TestedMethod [signature=" + signature + ", hash=" + hash + ", lastChanged=" + lastChanged + "]";
 	}
 
 }
