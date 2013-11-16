@@ -20,33 +20,7 @@ public class TestDatabase {
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
 
 	// TODO: synchronized gebruiken?
-
-	// LAST FAILURE FIRST, FREQUENT FAILURE FIRST
-
-	// TODO: methodes implementeren voor TestResultUpdater
-
-	// DISTINCT FAILURE FIRST
-
-	public void addMethodTestLink(Test currentRunningTest, TestedMethod enteredMethod) {
-		enteredMethod.addTest(currentRunningTest);
-		methods.add(enteredMethod);
-	}
-
-	public void printMethodLinks() {
-		Set<Test> tests;
-		for (TestedMethod method : methods) {
-			System.out.println(method);
-			tests = new HashSet<Test>(method.getTests());
-			for (Test test : tests) {
-				System.out.println(test);
-			}
-		}
-	}
-
-	// CHANGED CODE FIRST
-
-	// TODO: methodes implementeren voor LastChangeUpdater
-
+	
 	// ACCESS
 
 	public void addMethod(TestedMethod method) {
@@ -62,6 +36,17 @@ public class TestDatabase {
 			if (method.getSignature().equals(signature)) return method;
 		}
 		return null;
+	}
+
+	public void printMethodLinks() {
+		Set<Test> tests;
+		for (TestedMethod method : methods) {
+			System.out.println(method);
+			tests = new HashSet<Test>(method.getTests());
+			for (Test test : tests) {
+				System.out.println(test);
+			}
+		}
 	}
 
 }

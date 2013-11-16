@@ -3,6 +3,7 @@ package kuleuven.group2.data.updating;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
@@ -31,9 +32,11 @@ public class MethodTestLinkUpdater extends Monitor {
 	@Override
 	public void enterMethod(String methodName) {
 		Test currentRunningTest = currentRunningTestHolder.getCurrentRunningTest();
-		TestedMethod enteredMethod = testDatabase.getMethod(new JavaSignatureParser(methodName).parseSignature());
+		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
+		TestedMethod enteredMethod = testDatabase.getMethod(signature);
 		if (enteredMethod != null) {
-			testDatabase.addMethodTestLink(currentRunningTest, enteredMethod);
+			enteredMethod.addTest(currentRunningTest);
+			testDatabase.addMethod(enteredMethod);
 		}
 	}
 
