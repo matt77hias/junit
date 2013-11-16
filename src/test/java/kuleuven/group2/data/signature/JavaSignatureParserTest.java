@@ -2,6 +2,8 @@ package kuleuven.group2.data.signature;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import kuleuven.group2.data.signature.JavaSignature;
+import kuleuven.group2.data.signature.JavaSignatureParser;
 
 import org.junit.After;
 import org.junit.AfterClass;

@@ -49,9 +49,11 @@ public class JavaSignatureParser {
 		this.signature = signature;
 	}
 
-	public JavaSignature parseSignature() {
+	public JavaSignature parseSignature() throws IllegalArgumentException {
 		Matcher match = SIGNATURE_PATTERN.matcher(signature);
-		if (!match.matches()) return null;
+		if (!match.matches()) {
+			throw new IllegalArgumentException("Incorrectly formatted signature");
+		}
 
 		String packageName = Strings.nullToEmpty(match.group(1)).replace('/', '.');
 		String className = match.group(2);
