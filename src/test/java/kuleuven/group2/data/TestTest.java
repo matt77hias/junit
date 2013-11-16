@@ -36,12 +36,12 @@ public class TestTest {
 
 	@Test
 	public void lastFailureTimeTest() {
-		test.addTestRun(new FailedTestRun(new Date(0)));
 		test.addTestRun(new FailedTestRun(new Date(1)));
 		test.addTestRun(new FailedTestRun(new Date(2)));
-		test.addTestRun(new SuccesfullTestRun(new Date(3)));
+		test.addTestRun(new FailedTestRun(new Date(3)));
+		test.addTestRun(new SuccesfullTestRun(new Date(4)));
 		
-		assertEquals(new Date(2), test.getLastFailureTime());
+		assertEquals(new Date(3), test.getLastFailureTime());
 	}
 
 	@Test
@@ -56,4 +56,42 @@ public class TestTest {
 		assertEquals(new Date(0), test.getLastFailureTime());
 	}
 
+
+	@Test
+	public void failurePercentageTest() {
+		test.addTestRun(new SuccesfullTestRun(new Date(1)));
+		test.addTestRun(new FailedTestRun(new Date(2)));
+		test.addTestRun(new FailedTestRun(new Date(3)));
+		test.addTestRun(new FailedTestRun(new Date(4)));
+		test.addTestRun(new SuccesfullTestRun(new Date(5)));
+		test.addTestRun(new SuccesfullTestRun(new Date(6)));
+		test.addTestRun(new FailedTestRun(new Date(7)));
+		
+		assertEquals(0.5f, test.getFailurePercentage(4), 0.001f);
+	}
+
+	@Test
+	public void failurePercentageTestTooHighDepth() {
+		test.addTestRun(new SuccesfullTestRun(new Date(1)));
+		test.addTestRun(new FailedTestRun(new Date(2)));
+		test.addTestRun(new FailedTestRun(new Date(3)));
+		test.addTestRun(new FailedTestRun(new Date(4)));
+		test.addTestRun(new SuccesfullTestRun(new Date(5)));
+		test.addTestRun(new SuccesfullTestRun(new Date(6)));
+		
+		assertEquals(0.5f, test.getFailurePercentage(20), 0.001f);
+	}
+
+	@Test
+	public void failurePercentageTestTooLowDepth() {
+		test.addTestRun(new SuccesfullTestRun(new Date(1)));
+		test.addTestRun(new FailedTestRun(new Date(2)));
+		test.addTestRun(new FailedTestRun(new Date(3)));
+		test.addTestRun(new FailedTestRun(new Date(4)));
+		test.addTestRun(new SuccesfullTestRun(new Date(5)));
+		test.addTestRun(new SuccesfullTestRun(new Date(6)));
+		test.addTestRun(new FailedTestRun(new Date(7)));
+		
+		assertEquals(0f, test.getFailurePercentage(-1), 0.001f);
+	}
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import kuleuven.group2.data.testrun.TestRun;
@@ -41,39 +42,55 @@ public class Test {
 	public void addTestRun(TestRun testRun) {
 		testRuns.add(testRun);
 	
+		// TODO: make use of the fact that the list is sorted to insert at the right spot with binary search
 		Collections.sort(testRuns, new Comparator<TestRun>() {
 			@Override
 			public int compare(TestRun o1, TestRun o2) {
-				return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+				return - o1.getTimeStamp().compareTo(o2.getTimeStamp());
 			}
 		});
 	}
 	
 	public Collection<TestRun> getTestRuns() {
-		return testRuns;
+		return Collections.unmodifiableList(testRuns);
+	}
+	
+	public float getFailurePercentage(int depth) {
+		float failed = 0;
+		float succeeded = 0;
+		
+		if (depth < 0)
+			depth = 0;
+		
+		int count = 0;
+		Iterator<TestRun> iterator = testRuns.iterator();
+		while(iterator.hasNext() && count < depth) {
+			TestRun testRun = iterator.next();
+			if (testRun.isFailedRun())
+				failed++;
+			if (testRun.isSuccesfulRun())
+				succeeded++;
+			count++;
+		}
+		
+		System.out.println(failed + "f " + succeeded + "s");
+		
+		if (failed + succeeded == 0)
+			return 0;
+		
+		return failed / (failed + succeeded);
 	}
 	
 	public Date getLastFailureTime() {
 		if (testRuns.isEmpty())
 			return new Date(0);
-		TestRun latestFailureRun = Collections.max(testRuns, new Comparator<TestRun>() {
-			@Override
-			public int compare(TestRun o1, TestRun o2) {
-				if (o1.isSuccesfulRun() && o2.isFailedRun())
-					return -1;
-				if (o2.isFailedRun() && o1.isSuccesfulRun())
-					return 1;
-				return o1.getTimeStamp().compareTo(o2.getTimeStamp());
-			}
-			
-		});
 		
-		if (latestFailureRun == null)
-			return new Date(0);
-		if (latestFailureRun.isSuccesfulRun())
-			return new Date(0);
+		for (TestRun testRun : testRuns) {
+			if (testRun.isFailedRun())
+				return testRun.getTimeStamp();
+		}
 		
-		return latestFailureRun.getTimeStamp();
+		return new Date(0);
 	}
 	
 	
