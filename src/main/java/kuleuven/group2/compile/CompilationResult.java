@@ -3,7 +3,9 @@ package kuleuven.group2.compile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@code CompilationResult} represents the result of a compilation. It
@@ -12,12 +14,12 @@ import java.util.List;
  */
 public class CompilationResult {
 
-	private final List<String> compiled = new ArrayList<String>();
+	private final Map<String, byte[]> compiled = new HashMap<String, byte[]>();
 	private final List<CompilationProblem> errors = new ArrayList<CompilationProblem>();
 	private final List<CompilationProblem> warnings = new ArrayList<CompilationProblem>();
 
-	public CompilationResult(Collection<CompilationProblem> problems, Collection<String> compiled) {
-		this.compiled.addAll(compiled);
+	public CompilationResult(Collection<CompilationProblem> problems, Map<String, byte[]> compiled) {
+		this.compiled.putAll(compiled);
 		for (CompilationProblem problem : problems) {
 			if (problem.isError()) {
 				this.errors.add(problem);
@@ -28,7 +30,7 @@ public class CompilationResult {
 	}
 
 	public CompilationResult(Collection<CompilationProblem> problems) {
-		this(problems, Collections.<String> emptyList());
+		this(problems, Collections.<String, byte[]> emptyMap());
 	}
 
 	/**
@@ -41,10 +43,24 @@ public class CompilationResult {
 	}
 
 	/**
-	 * Get the names of all compiled resources.
+	 * Get all compiled classes.
 	 */
-	public List<String> getCompiledResources() {
-		return Collections.unmodifiableList(compiled);
+	public Map<String, byte[]> getCompiledClasses() {
+		return Collections.unmodifiableMap(compiled);
+	}
+
+	/**
+	 * Get the class names of all compiled classes.
+	 */
+	public Collection<String> getCompiledClassNames() {
+		return getCompiledClasses().keySet();
+	}
+
+	/**
+	 * Get the compiled class by the given class name.
+	 */
+	public byte[] getCompiledClass(String className) {
+		return getCompiledClasses().get(className);
 	}
 
 	/**

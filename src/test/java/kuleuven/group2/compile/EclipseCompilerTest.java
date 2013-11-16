@@ -1,6 +1,7 @@
 package kuleuven.group2.compile;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
@@ -40,8 +41,8 @@ public class EclipseCompilerTest {
 
 		CompilationResult result = compiler.compile(classLoader);
 		assertTrue(result.isSuccess());
-		assertEquals(1, result.getCompiledResources().size());
-		assertTrue(result.getCompiledResources().contains(NameUtils.toBinaryName(className)));
+		assertEquals(1, result.getCompiledClasses().size());
+		assertNotNull(result.getCompiledClass(className));
 
 		assertEquals(Boolean.TRUE, invokeMethod(className, "foo"));
 	}
@@ -63,7 +64,7 @@ public class EclipseCompilerTest {
 
 		CompilationResult result = compiler.compile(classLoader);
 		assertTrue(result.isSuccess());
-		assertEquals(2, result.getCompiledResources().size());
+		assertEquals(2, result.getCompiledClasses().size());
 
 		assertEquals(Boolean.TRUE, invokeMethod("A", "foo"));
 	}
@@ -83,7 +84,7 @@ public class EclipseCompilerTest {
 
 		CompilationResult result = compiler.compile(classLoader);
 		assertTrue(result.isSuccess());
-		assertEquals(2, result.getCompiledResources().size());
+		assertEquals(2, result.getCompiledClasses().size());
 
 		assertEquals(Boolean.TRUE, invokeMethod("A", "foo"));
 	}
