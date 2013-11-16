@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import kuleuven.group2.data.signature.JavaSignature;
+import kuleuven.group2.data.testrun.TestRun;
 
 /**
  * A class that has access to all tests (Test) and tested methods (TestedMethod)

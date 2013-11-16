@@ -1,8 +1,10 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.testrun;
+
+import java.util.Date;
 
 public class FailedTestRun extends TestRun {
 
-	public FailedTestRun(float timestamp) {
+	public FailedTestRun(Date timestamp) {
 		super(timestamp);
 	}
 

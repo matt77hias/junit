@@ -1,8 +1,10 @@
 package kuleuven.group2.data.updating;
 
-import kuleuven.group2.data.FailedTestRun;
+import java.util.Date;
+
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.TestRun;
+import kuleuven.group2.data.testrun.FailedTestRun;
+import kuleuven.group2.data.testrun.TestRun;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
@@ -72,7 +74,7 @@ public class TestResultUpdater extends RunListener{
     	String testClassName = failure.getDescription().getClassName();
     	String testMethodName = failure.getDescription().getMethodName();
     	
-    	TestRun testRun = new FailedTestRun(System.currentTimeMillis());
+    	TestRun testRun = new FailedTestRun(new Date());
     	
     	testDatabase.addTestRun(testRun, testClassName, testMethodName);
     }
@@ -88,7 +90,7 @@ public class TestResultUpdater extends RunListener{
     	String testClassName = failure.getDescription().getClassName();
     	String testMethodName = failure.getDescription().getMethodName();
     	
-    	TestRun testRun = new FailedTestRun(System.currentTimeMillis());
+    	TestRun testRun = new FailedTestRun(new Date());
     	
     	testDatabase.addTestRun(testRun, testClassName, testMethodName);
     }

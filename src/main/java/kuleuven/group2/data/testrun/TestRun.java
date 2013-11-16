@@ -1,10 +1,12 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.testrun;
+
+import java.util.Date;
 
 public abstract class TestRun {
 
-	protected float timestamp;
+	protected Date timestamp;
 	
-	public TestRun(float timestamp) {
+	public TestRun(Date timestamp) {
 		super();
 		this.timestamp = timestamp;
 	}

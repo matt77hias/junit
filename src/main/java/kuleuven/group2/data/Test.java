@@ -2,6 +2,8 @@ package kuleuven.group2.data;
 
 import java.util.LinkedList;
 
+import kuleuven.group2.data.testrun.TestRun;
+
 /**
  * A class that represents a test method. It also keeps track of the running
  * of this method, that is the timings and results.
