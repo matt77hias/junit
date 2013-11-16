@@ -1,4 +1,4 @@
-package kuleuven.group2.methodchange;
+package kuleuven.group2.data.hash;
 
 import java.util.Arrays;
 

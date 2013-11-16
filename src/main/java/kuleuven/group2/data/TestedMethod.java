@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
+import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
-import kuleuven.group2.methodchange.MethodHash;
 
 /**
  * A class that represents a method that is used by at least one test. It also

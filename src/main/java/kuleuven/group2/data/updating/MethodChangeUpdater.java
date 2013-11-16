@@ -1,4 +1,4 @@
-package kuleuven.group2.methodchange;
+package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -7,14 +7,16 @@ import java.util.Map;
 
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.hash.MethodHash;
+import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 
-public class MethodChangeDetector {
+public class MethodChangeUpdater {
 
 	protected final TestDatabase database;
 
-	public MethodChangeDetector(TestDatabase database) {
+	public MethodChangeUpdater(TestDatabase database) {
 		this.database = checkNotNull(database);
 	}
 
