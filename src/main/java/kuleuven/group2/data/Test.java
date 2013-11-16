@@ -19,6 +19,7 @@ public class Test {
 
 	protected String testClassName;
 	protected String testMethodName;
+	// sorted, last failures are first, first failures are last
 	protected LinkedList<TestRun> testRuns = new LinkedList<TestRun>();
 	
 	public Test(String testClassName, String testMethodName) {
@@ -72,8 +73,6 @@ public class Test {
 				succeeded++;
 			count++;
 		}
-		
-		System.out.println(failed + "f " + succeeded + "s");
 		
 		if (failed + succeeded == 0)
 			return 0;

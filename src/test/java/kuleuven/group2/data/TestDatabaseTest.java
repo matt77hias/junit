@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import kuleuven.group2.data.testrun.FailedTestRun;
+import kuleuven.group2.data.testrun.SuccesfullTestRun;
 import kuleuven.group2.data.testrun.TestRun;
 
 import org.junit.After;
@@ -90,6 +91,57 @@ public class TestDatabaseTest {
 		
 		assertEquals(TEST, lastFailedTests.get(0));
 		assertEquals(TEST2, lastFailedTests.get(1));
+	}
+
+	@Test
+	public void mostFailedTestsTestSimple() {
+		TestRun run1 = new FailedTestRun(new Date(1));
+		testDatabase.addTestRun(run1, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run2 = new FailedTestRun(new Date(2));
+		testDatabase.addTestRun(run2, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		TestRun run3 = new FailedTestRun(new Date(3));
+		testDatabase.addTestRun(run3, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run4 = new SuccesfullTestRun(new Date(4));
+		testDatabase.addTestRun(run4, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		
+		List<kuleuven.group2.data.Test> mostFailedTests = testDatabase.getMostFailedTests(1);
+		
+		assertEquals(TEST, mostFailedTests.get(0));
+		assertEquals(TEST2, mostFailedTests.get(1));
+	}
+
+	@Test
+	public void mostFailedTestsTestSimple2() {
+		TestRun run1 = new FailedTestRun(new Date(1));
+		testDatabase.addTestRun(run1, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run2 = new SuccesfullTestRun(new Date(2));
+		testDatabase.addTestRun(run2, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		TestRun run3 = new SuccesfullTestRun(new Date(3));
+		testDatabase.addTestRun(run3, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run4 = new FailedTestRun(new Date(4));
+		testDatabase.addTestRun(run4, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		
+		List<kuleuven.group2.data.Test> mostFailedTests = testDatabase.getMostFailedTests(1);
+		
+		assertEquals(TEST2, mostFailedTests.get(0));
+		assertEquals(TEST, mostFailedTests.get(1));
+	}
+
+	@Test
+	public void mostFailedTestsTestSimple3() {
+		TestRun run1 = new SuccesfullTestRun(new Date(1));
+		testDatabase.addTestRun(run1, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run2 = new SuccesfullTestRun(new Date(2));
+		testDatabase.addTestRun(run2, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		TestRun run3 = new SuccesfullTestRun(new Date(3));
+		testDatabase.addTestRun(run3, TEST.getTestClassName(), TEST.getTestMethodName());
+		TestRun run4 = new FailedTestRun(new Date(4));
+		testDatabase.addTestRun(run4, TEST2.getTestClassName(), TEST2.getTestMethodName());
+		
+		List<kuleuven.group2.data.Test> mostFailedTests = testDatabase.getMostFailedTests(2);
+		
+		assertEquals(TEST2, mostFailedTests.get(0));
+		assertEquals(TEST, mostFailedTests.get(1));
 	}
 	
 }

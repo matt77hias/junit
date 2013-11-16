@@ -150,7 +150,7 @@ public class TestDatabase {
 		Collections.sort(lastFailedTests, new Comparator<Test>() {
 			@Override
 			public int compare(Test o1, Test o2) {
-				return Float.compare(o1.getFailurePercentage(depth), o2.getFailurePercentage(depth));
+				return - Float.compare(o1.getFailurePercentage(depth), o2.getFailurePercentage(depth));
 			}
 		});
 		
