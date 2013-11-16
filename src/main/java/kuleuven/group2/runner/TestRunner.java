@@ -57,12 +57,20 @@ public class TestRunner {
 	 */
 	public void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
+		this.jUntiCore = new JUnitCore();
 	}
 	
 	/**
 	 * The class loader of this test runner.
 	 */
 	private ClassLoader classLoader;
+	
+	/**
+	 * Returns the default test runner.
+	 */
+	public static TestRunner getDefaultRunner() {
+		return DEFAULT_RUNNER;
+	}
 	
 	/**
 	 * The default runner used for running tests.
@@ -142,7 +150,7 @@ public class TestRunner {
 	/**
 	 * The JUnitCore object (facade) used for running tests.
 	 */
-	private JUnitCore jUntiCore = new JUnitCore();
+	private JUnitCore jUntiCore;
 	
 	/**
 	 * Create a Request that, when processed, will run a single test.
