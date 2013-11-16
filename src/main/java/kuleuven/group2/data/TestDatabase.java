@@ -14,7 +14,7 @@ import kuleuven.group2.data.signature.JavaSignature;
  */
 public class TestDatabase {
 
-	protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
+	// protected Set<Test> tests = Collections.synchronizedSet(new HashSet<Test>());
 	
 	// TODO Use a Map with the signature as key?
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
@@ -36,6 +36,29 @@ public class TestDatabase {
 			if (method.getSignature().equals(signature)) return method;
 		}
 		return null;
+	}
+	
+	public Test getTest(String className, String methodName) throws Exception {
+		for(TestedMethod method : methods) {
+			for(Test test : method.getTests()) {
+				if(test.getTestClassName().equals(className) && test.getTestMethodName().equals(methodName)) return test;
+			}
+		}
+		throw new Exception("There is no test in the database with class name " + className + " and method name " + methodName + " .");
+	}
+	
+	public Set<TestedMethod> getLinkedMethods(Test test) {
+		Set<TestedMethod> linkedMethods = new HashSet<TestedMethod>();
+		for(TestedMethod method : methods) {
+			if(method.isTestedBy(test)) linkedMethods.add(method);
+		}
+		return linkedMethods;
+	}
+	
+	public void removeMethodLinks(Test test) {
+		for(TestedMethod method : getLinkedMethods(test)) {
+			method.removeTest(test);
+		}
 	}
 
 	public void printMethodLinks() {

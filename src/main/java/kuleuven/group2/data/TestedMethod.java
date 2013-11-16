@@ -66,6 +66,10 @@ public class TestedMethod {
 		// TODO: nodig? origineel doorgeven in de plaats?
 	}
 
+	public boolean isTestedBy(Test test) {
+		return tests.contains(test);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
