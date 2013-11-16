@@ -1,5 +1,9 @@
 package kuleuven.group2.data;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 
 import kuleuven.group2.data.testrun.TestRun;
@@ -36,7 +40,43 @@ public class Test {
 	
 	public void addTestRun(TestRun testRun) {
 		testRuns.add(testRun);
+	
+		Collections.sort(testRuns, new Comparator<TestRun>() {
+			@Override
+			public int compare(TestRun o1, TestRun o2) {
+				return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+			}
+		});
 	}
+	
+	public Collection<TestRun> getTestRuns() {
+		return testRuns;
+	}
+	
+	public Date getLastFailureTime() {
+		if (testRuns.isEmpty())
+			return new Date(0);
+		TestRun latestFailureRun = Collections.max(testRuns, new Comparator<TestRun>() {
+			@Override
+			public int compare(TestRun o1, TestRun o2) {
+				if (o1.isSuccesfulRun() && o2.isFailedRun())
+					return -1;
+				if (o2.isFailedRun() && o1.isSuccesfulRun())
+					return 1;
+				return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+			}
+			
+		});
+		
+		if (latestFailureRun == null)
+			return new Date(0);
+		if (latestFailureRun.isSuccesfulRun())
+			return new Date(0);
+		
+		return latestFailureRun.getTimeStamp();
+	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -44,7 +84,6 @@ public class Test {
 		int result = 1;
 		result = prime * result + ((testClassName == null) ? 0 : testClassName.hashCode());
 		result = prime * result + ((testMethodName == null) ? 0 : testMethodName.hashCode());
-		result = prime * result + ((testRuns == null) ? 0 : testRuns.hashCode());
 		return result;
 	}
 
@@ -60,9 +99,6 @@ public class Test {
 		if (testMethodName == null) {
 			if (other.testMethodName != null) return false;
 		} else if (!testMethodName.equals(other.testMethodName)) return false;
-		if (testRuns == null) {
-			if (other.testRuns != null) return false;
-		} else if (!testRuns.equals(other.testRuns)) return false;
 		return true;
 	}
 

@@ -1,9 +1,13 @@
 package kuleuven.group2.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,7 +79,7 @@ public class TestDatabase {
 	public Collection<TestedMethod> getLinkedMethods(Test test) {
 		Collection<TestedMethod> linkedMethods = new HashSet<TestedMethod>();
 		for(TestMethodLink testMethodLink : testMethodLinks) {
-			if (testMethodLink.getTest().equalName(test.getTestClassName(), test.getTestMethodName())) {
+			if (testMethodLink.getTest().equals(test)) {
 				linkedMethods.add(testMethodLink.getTestedMethod());
 			}
 		}
@@ -108,7 +112,7 @@ public class TestDatabase {
 				return test;
 			}
 		}
-		throw new IllegalArgumentException("Test " + testClassName + " " + testMethodName + " does not exist.");
+		return null;
 	}
 	
 	protected void addTest(Test test) {
@@ -117,6 +121,27 @@ public class TestDatabase {
 	
 	protected void removeTest(Test test) {
 		tests.remove(test);
+	}
+	
+	public List<TestRun> getAllTestRuns() {
+		List<TestRun> testRuns = new ArrayList<TestRun>();
+		for (Test test : tests) {
+			testRuns.addAll(test.getTestRuns());
+		}
+		return testRuns;
+	}
+	
+	public List<Test> getLastFailedTests() {
+		List<Test> lastFailedTests = new ArrayList<Test>(tests);
+		
+		Collections.sort(lastFailedTests, new Comparator<Test>() {
+			@Override
+			public int compare(Test o1, Test o2) {
+				return - o1.getLastFailureTime().compareTo(o2.getLastFailureTime());
+			}
+		});
+		
+		return lastFailedTests;
 	}
 	
 	public void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
