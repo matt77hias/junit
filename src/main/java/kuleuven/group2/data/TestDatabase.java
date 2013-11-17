@@ -65,6 +65,8 @@ public class TestDatabase {
 	protected void removeTest(Test test) {
 		tests.remove(test);
 	}
+	
+	// TESTRUNS
 
 	public List<TestRun> getAllTestRuns() {
 		List<TestRun> testRuns = new ArrayList<TestRun>();
@@ -73,8 +75,6 @@ public class TestDatabase {
 		}
 		return testRuns;
 	}
-	
-	// TESTRUNS
 
 	public List<Test> getLastFailedTests() {
 		List<Test> lastFailedTests = new ArrayList<Test>(tests);
