@@ -1,5 +1,10 @@
 package kuleuven.group2.data;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import kuleuven.group2.data.testrun.TestRun;
@@ -14,6 +19,7 @@ public class Test {
 
 	protected String testClassName;
 	protected String testMethodName;
+	// sorted, last failures are first, first failures are last
 	protected LinkedList<TestRun> testRuns = new LinkedList<TestRun>();
 	
 	public Test(String testClassName, String testMethodName) {
@@ -36,7 +42,57 @@ public class Test {
 	
 	public void addTestRun(TestRun testRun) {
 		testRuns.add(testRun);
+	
+		// TODO: make use of the fact that the list is sorted to insert at the right spot with binary search
+		Collections.sort(testRuns, new Comparator<TestRun>() {
+			@Override
+			public int compare(TestRun o1, TestRun o2) {
+				return - o1.getTimeStamp().compareTo(o2.getTimeStamp());
+			}
+		});
 	}
+	
+	public Collection<TestRun> getTestRuns() {
+		return Collections.unmodifiableList(testRuns);
+	}
+	
+	public float getFailurePercentage(int depth) {
+		float failed = 0;
+		float succeeded = 0;
+		
+		if (depth < 0)
+			depth = 0;
+		
+		int count = 0;
+		Iterator<TestRun> iterator = testRuns.iterator();
+		while(iterator.hasNext() && count < depth) {
+			TestRun testRun = iterator.next();
+			if (testRun.isFailedRun())
+				failed++;
+			if (testRun.isSuccesfulRun())
+				succeeded++;
+			count++;
+		}
+		
+		if (failed + succeeded == 0)
+			return 0;
+		
+		return failed / (failed + succeeded);
+	}
+	
+	public Date getLastFailureTime() {
+		if (testRuns.isEmpty())
+			return new Date(0);
+		
+		for (TestRun testRun : testRuns) {
+			if (testRun.isFailedRun())
+				return testRun.getTimeStamp();
+		}
+		
+		return new Date(0);
+	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -44,7 +100,6 @@ public class Test {
 		int result = 1;
 		result = prime * result + ((testClassName == null) ? 0 : testClassName.hashCode());
 		result = prime * result + ((testMethodName == null) ? 0 : testMethodName.hashCode());
-		result = prime * result + ((testRuns == null) ? 0 : testRuns.hashCode());
 		return result;
 	}
 
@@ -60,9 +115,6 @@ public class Test {
 		if (testMethodName == null) {
 			if (other.testMethodName != null) return false;
 		} else if (!testMethodName.equals(other.testMethodName)) return false;
-		if (testRuns == null) {
-			if (other.testRuns != null) return false;
-		} else if (!testRuns.equals(other.testRuns)) return false;
 		return true;
 	}
 

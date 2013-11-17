@@ -1,12 +1,10 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 import java.util.Map;
 
-import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;

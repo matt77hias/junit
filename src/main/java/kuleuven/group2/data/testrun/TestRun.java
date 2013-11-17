@@ -10,6 +10,10 @@ public abstract class TestRun {
 		super();
 		this.timestamp = timestamp;
 	}
+	
+	public Date getTimeStamp() {
+		return timestamp;
+	}
 
 	public abstract boolean isSuccesfulRun();
 	

@@ -1,8 +1,7 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.data;
 
 import java.util.Date;
 
-import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.testrun.FailedTestRun;
 import kuleuven.group2.data.testrun.TestRun;
 
