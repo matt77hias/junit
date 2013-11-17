@@ -23,7 +23,7 @@ import org.junit.runner.notification.RunListener;
 public class TestResultUpdater extends RunListener{
 	
 	private TestDatabase testDatabase;
-	private Map<String[], TestRun> succesfullTestRuns = new HashMap<String[], TestRun>();
+	private Map<String[], TestRun> successfulTestRuns = new HashMap<String[], TestRun>();
 	
     public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
@@ -44,10 +44,10 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	for(String[] pseudoSignature : succesfullTestRuns.keySet()) {
-    		testDatabase.addTestRun(succesfullTestRuns.get(pseudoSignature), pseudoSignature[0] , pseudoSignature[1]);
+    	for(String[] pseudoSignature : successfulTestRuns.keySet()) {
+    		testDatabase.addTestRun(successfulTestRuns.get(pseudoSignature), pseudoSignature[0] , pseudoSignature[1]);
     	}
-    	succesfullTestRuns.clear(); //TODO: nodig, of bij volgende run nieuwe updater?
+    	successfulTestRuns.clear(); //TODO: nodig, of bij volgende run nieuwe updater?
     }
 
     /**
@@ -62,7 +62,7 @@ public class TestResultUpdater extends RunListener{
     	String[] key = {testClassName, testMethodName};
     	
     	TestRun testRun = new SuccesfullTestRun(new Date());
-    	succesfullTestRuns.put(key, testRun);
+    	successfulTestRuns.put(key, testRun);
     }
 
     /**
@@ -101,7 +101,7 @@ public class TestResultUpdater extends RunListener{
     	TestRun testRun = new FailedTestRun(new Date());
     	
     	testDatabase.addTestRun(testRun, testClassName, testMethodName);
-    	succesfullTestRuns.remove(testClassName + "." + testMethodName);    	
+    	successfulTestRuns.remove(testClassName + "." + testMethodName);    	
     }
 
     /**
