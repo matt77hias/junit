@@ -47,6 +47,7 @@ public class TestResultUpdater extends RunListener{
     	for(String[] pseudoSignature : succesfullTestRuns.keySet()) {
     		testDatabase.addTestRun(succesfullTestRuns.get(pseudoSignature), pseudoSignature[0] , pseudoSignature[1]);
     	}
+    	succesfullTestRuns.clear(); //TODO: nodig, of bij volgende run nieuwe updater?
     }
 
     /**
