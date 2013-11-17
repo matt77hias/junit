@@ -23,7 +23,7 @@ import org.junit.runner.notification.RunListener;
 public class TestResultUpdater extends RunListener{
 	
 	private TestDatabase testDatabase;
-	private Map<String[], TestRun> successfulTestRuns = new HashMap<String[], TestRun>();
+	private Map<String, TestRun> successfulTestRuns = new HashMap<String, TestRun>();
 	
     public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
@@ -44,8 +44,9 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	for(String[] pseudoSignature : successfulTestRuns.keySet()) {
-    		testDatabase.addTestRun(successfulTestRuns.get(pseudoSignature), pseudoSignature[0] , pseudoSignature[1]);
+    	for(String pseudoSignature : successfulTestRuns.keySet()) {
+    		String[] parts = pseudoSignature.split(":");
+    		testDatabase.addTestRun(successfulTestRuns.get(pseudoSignature), parts[0] , parts[1]);
     	}
     	successfulTestRuns.clear(); //TODO: nodig, of bij volgende run nieuwe updater?
     }
@@ -59,7 +60,7 @@ public class TestResultUpdater extends RunListener{
     public void testStarted(Description description) throws Exception {
     	String testClassName = description.getClassName();
     	String testMethodName = description.getMethodName();
-    	String[] key = {testClassName, testMethodName};
+    	String key = testClassName+":"+testMethodName;
     	
     	TestRun testRun = new SuccesfullTestRun(new Date());
     	successfulTestRuns.put(key, testRun);
@@ -99,9 +100,10 @@ public class TestResultUpdater extends RunListener{
     	String testMethodName = failure.getDescription().getMethodName();
     	
     	TestRun testRun = new FailedTestRun(new Date());
+    	String key = testClassName+":"+testMethodName;
     	
     	testDatabase.addTestRun(testRun, testClassName, testMethodName);
-    	successfulTestRuns.remove(testClassName + "." + testMethodName);    	
+    	successfulTestRuns.remove(key);    	
     }
 
     /**
