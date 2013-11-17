@@ -15,6 +15,13 @@ import kuleuven.group2.data.Test;
  */
 public interface Policy extends Comparator<Test> {
 	
+	/*
+	 * Policy is not an abstract class for the same reason Comparator
+	 * is not an abstract class.
+	 * If significant similarities between policies appear in the future,
+	 * the Policy interface can change to an abstract class.
+	 */
+	
 	/**
 	 * Sorts the given tests according to this policy.
 	 * 
