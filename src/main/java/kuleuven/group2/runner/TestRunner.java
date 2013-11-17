@@ -1,6 +1,6 @@
 package kuleuven.group2.runner;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
@@ -52,7 +52,7 @@ public class TestRunner {
 	 */
 	public TestRunner(ClassLoader classLoader, JUnitCore jUnitCore) {
 		this.classLoader = classLoader;
-		this.jUntiCore = jUnitCore;
+		this.junitCore = jUnitCore;
 	}
 	
 	/**
@@ -103,9 +103,8 @@ public class TestRunner {
 	 * @param	tests
 	 * 			The tests that has to be ran.
 	 */
-	@SuppressWarnings("static-access")
 	public static Result[] runTests(ClassLoader classLoader, Test[] tests) {
-		return DEFAULT_RUNNER.runTests(classLoader, tests);
+		return DEFAULT_RUNNER.runTestMethods(classLoader, tests);
 	}
 	
 	/**
@@ -117,7 +116,7 @@ public class TestRunner {
 	 * @param	tests
 	 * 			The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(ArrayList<Test> tests) {
+	public Result[] runTestMethods(List<Test> tests) {
 		return runTestMethods(getClassLoader(), tests.toArray(new Test[tests.size()]));
 	}
 	
@@ -166,7 +165,7 @@ public class TestRunner {
 	/**
 	 * The JUnitCore object (facade) used for running tests.
 	 */
-	private JUnitCore jUntiCore;
+	private JUnitCore junitCore;
 	
 	/**
 	 * Create a Request that, when processed, will run a single test.
@@ -187,7 +186,7 @@ public class TestRunner {
 	 * Returns the JUnitCore of this test runner.
 	 */
 	protected JUnitCore getJUnitCore() {
-		return this.jUntiCore;
+		return this.junitCore;
 	}
 	
 	/**
