@@ -81,31 +81,31 @@ public class TestRunner {
 	 */
 	private ClassLoader classLoader;
 	
-	/**
-	 * Returns the default test runner.
-	 */
-	public static TestRunner getDefaultRunner() {
-		return DEFAULT_RUNNER;
-	}
-	
-	/**
-	 * The default runner used for running tests.
-	 * In this way object creation can be decreased.
-	 */
-	private static final TestRunner DEFAULT_RUNNER = new TestRunner();
-	
-	/**
-	 * Runs the given tests. This means that all the methods referred to
-	 * in the Test objects will be ran separately.
-	 * 
-	 * @param	ClassLoader
-	 * 			The class loader needed to obtain the class references.
-	 * @param	tests
-	 * 			The tests that has to be ran.
-	 */
-	public static Result[] runTests(ClassLoader classLoader, Test[] tests) {
-		return DEFAULT_RUNNER.runTestMethods(classLoader, tests);
-	}
+//	/**
+//	 * Returns the default test runner.
+//	 */
+//	public static TestRunner getDefaultRunner() {
+//		return DEFAULT_RUNNER;
+//	}
+//	
+//	/**
+//	 * The default runner used for running tests.
+//	 * In this way object creation can be decreased.
+//	 */
+//	private static final TestRunner DEFAULT_RUNNER = new TestRunner();
+//	
+//	/**
+//	 * Runs the given tests. This means that all the methods referred to
+//	 * in the Test objects will be ran separately.
+//	 * 
+//	 * @param	ClassLoader
+//	 * 			The class loader needed to obtain the class references.
+//	 * @param	tests
+//	 * 			The tests that has to be ran.
+//	 */
+//	public static Result[] runTests(ClassLoader classLoader, Test[] tests) {
+//		return DEFAULT_RUNNER.runTestMethods(classLoader, tests);
+//	}
 	
 	/**
 	 * Runs the given tests. This means that all the methods referred to
