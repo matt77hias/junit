@@ -1,8 +1,11 @@
 package kuleuven.group2.data;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import kuleuven.group2.data.testrun.FailedTestRun;
+import kuleuven.group2.data.testrun.SuccesfullTestRun;
 import kuleuven.group2.data.testrun.TestRun;
 
 import org.junit.internal.AssumptionViolatedException;
@@ -19,9 +22,8 @@ import org.junit.runner.notification.RunListener;
  */
 public class TestResultUpdater extends RunListener{
 	
-	// TODO: add testrun in case of succesful run, how exactly do we know this?
-	
 	private TestDatabase testDatabase;
+	private Map<String[], TestRun> succesfullTestRuns = new HashMap<String[], TestRun>();
 	
     public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
@@ -42,7 +44,9 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	// do nothing
+    	for(String[] pseudoSignature : succesfullTestRuns.keySet()) {
+    		testDatabase.addTestRun(succesfullTestRuns.get(pseudoSignature), pseudoSignature[0] , pseudoSignature[1]);
+    	}
     }
 
     /**
@@ -52,7 +56,12 @@ public class TestResultUpdater extends RunListener{
      * (generally a class and method name)
      */
     public void testStarted(Description description) throws Exception {
-    	// do nothing
+    	String testClassName = description.getClassName();
+    	String testMethodName = description.getMethodName();
+    	String[] key = {testClassName, testMethodName};
+    	
+    	TestRun testRun = new SuccesfullTestRun(new Date());
+    	succesfullTestRuns.put(key, testRun);
     }
 
     /**
@@ -70,12 +79,7 @@ public class TestResultUpdater extends RunListener{
      * @param failure describes the test that failed and the exception that was thrown
      */
     public void testFailure(Failure failure) throws Exception {
-    	String testClassName = failure.getDescription().getClassName();
-    	String testMethodName = failure.getDescription().getMethodName();
-    	
-    	TestRun testRun = new FailedTestRun(new Date());
-    	
-    	testDatabase.addTestRun(testRun, testClassName, testMethodName);
+    	generalTestFailure(failure);
     }
 
     /**
@@ -86,12 +90,17 @@ public class TestResultUpdater extends RunListener{
      * {@link AssumptionViolatedException} that was thrown
      */
     public void testAssumptionFailure(Failure failure) {
+    	generalTestFailure(failure);
+    }
+    
+    private void generalTestFailure(Failure failure) {
     	String testClassName = failure.getDescription().getClassName();
     	String testMethodName = failure.getDescription().getMethodName();
     	
     	TestRun testRun = new FailedTestRun(new Date());
     	
     	testDatabase.addTestRun(testRun, testClassName, testMethodName);
+    	succesfullTestRuns.remove(testClassName + "." + testMethodName);    	
     }
 
     /**
