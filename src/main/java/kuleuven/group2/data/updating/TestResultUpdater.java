@@ -1,6 +1,10 @@
 package kuleuven.group2.data.updating;
 
+import java.util.Date;
+
 import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.testrun.FailedTestRun;
+import kuleuven.group2.data.testrun.TestRun;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
@@ -16,10 +20,12 @@ import org.junit.runner.notification.RunListener;
  */
 public class TestResultUpdater extends RunListener{
 	
-	private TestDatabase database;
+	// TODO: add testrun in case of succesful run, how exactly do we know this?
 	
-    public TestResultUpdater(TestDatabase database) {
-		this.database = database;
+	private TestDatabase testDatabase;
+	
+    public TestResultUpdater(TestDatabase testDatabase) {
+		this.testDatabase = testDatabase;
 	}
 
 	/**
@@ -65,7 +71,12 @@ public class TestResultUpdater extends RunListener{
      * @param failure describes the test that failed and the exception that was thrown
      */
     public void testFailure(Failure failure) throws Exception {
-    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
+    	String testClassName = failure.getDescription().getClassName();
+    	String testMethodName = failure.getDescription().getMethodName();
+    	
+    	TestRun testRun = new FailedTestRun(new Date());
+    	
+    	testDatabase.addTestRun(testRun, testClassName, testMethodName);
     }
 
     /**
@@ -76,7 +87,12 @@ public class TestResultUpdater extends RunListener{
      * {@link AssumptionViolatedException} that was thrown
      */
     public void testAssumptionFailure(Failure failure) {
-    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
+    	String testClassName = failure.getDescription().getClassName();
+    	String testMethodName = failure.getDescription().getMethodName();
+    	
+    	TestRun testRun = new FailedTestRun(new Date());
+    	
+    	testDatabase.addTestRun(testRun, testClassName, testMethodName);
     }
 
     /**

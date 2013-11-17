@@ -12,6 +12,11 @@ import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 
+/**
+ * A MethodChangeUpdater detects method changes (using hashes) and updates the test database accordingly.
+ * 
+ * @author Mattias Buelens
+ */
 public class MethodChangeUpdater {
 
 	protected final TestDatabase database;
