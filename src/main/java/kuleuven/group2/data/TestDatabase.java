@@ -57,6 +57,10 @@ public class TestDatabase {
 		}
 		return null;
 	}
+	
+	public Collection<Test> getAllTests() {
+		return tests;
+	}
 
 	protected void addTest(Test test) {
 		tests.add(test);
@@ -64,51 +68,6 @@ public class TestDatabase {
 
 	protected void removeTest(Test test) {
 		tests.remove(test);
-	}
-	
-	// TESTRUNS
-
-	public List<TestRun> getAllTestRuns() {
-		List<TestRun> testRuns = new ArrayList<TestRun>();
-		for (Test test : tests) {
-			testRuns.addAll(test.getTestRuns());
-		}
-		return testRuns;
-	}
-
-	public List<Test> getLastFailedTests() {
-		List<Test> lastFailedTests = new ArrayList<Test>(tests);
-		
-		Collections.sort(lastFailedTests, new Comparator<Test>() {
-			@Override
-			public int compare(Test o1, Test o2) {
-				return - o1.getLastFailureTime().compareTo(o2.getLastFailureTime());
-			}
-		});
-		
-		return lastFailedTests;
-	}
-
-	public List<Test> getMostFailedTests(final int depth) {
-		List<Test> lastFailedTests = new ArrayList<Test>(tests);
-		
-		Collections.sort(lastFailedTests, new Comparator<Test>() {
-			@Override
-			public int compare(Test o1, Test o2) {
-				return - Float.compare(o1.getFailurePercentage(depth), o2.getFailurePercentage(depth));
-			}
-		});
-		
-		return lastFailedTests;
-	}
-
-	protected void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
-		Test test = getTest(testClassName, testMethodName);
-		if (test == null) {
-			test = new Test(testClassName, testMethodName);
-			addTest(test);
-		}
-		test.addTestRun(testRun);
 	}
 	
 	// METHOD-TEST LINKS
