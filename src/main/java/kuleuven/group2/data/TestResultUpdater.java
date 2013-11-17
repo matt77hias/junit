@@ -44,11 +44,12 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	for(String pseudoSignature : successfulTestRuns.keySet()) {
-    		String[] parts = pseudoSignature.split(":");
-    		testDatabase.addTestRun(successfulTestRuns.get(pseudoSignature), parts[0] , parts[1]);
+    	for(String key : successfulTestRuns.keySet()) {
+    		String[] parts = key.split(":");
+    		Test test = testDatabase.getTest(parts[0], parts[1]);
+    		test.addTestRun(successfulTestRuns.get(key));
     	}
-    	successfulTestRuns.clear(); //TODO: nodig, of bij volgende run nieuwe updater?
+    	successfulTestRuns.clear();
     }
 
     /**
@@ -58,11 +59,9 @@ public class TestResultUpdater extends RunListener{
      * (generally a class and method name)
      */
     public void testStarted(Description description) throws Exception {
-    	String testClassName = description.getClassName();
-    	String testMethodName = description.getMethodName();
-    	String key = testClassName+":"+testMethodName;
-    	
+    	String key = getKeyFromDescription(description);
     	TestRun testRun = new SuccesfullTestRun(new Date());
+    	
     	successfulTestRuns.put(key, testRun);
     }
 
@@ -96,13 +95,11 @@ public class TestResultUpdater extends RunListener{
     }
     
     private void generalTestFailure(Failure failure) {
-    	String testClassName = failure.getDescription().getClassName();
-    	String testMethodName = failure.getDescription().getMethodName();
-    	
     	TestRun testRun = new FailedTestRun(new Date());
-    	String key = testClassName+":"+testMethodName;
+    	String key = getKeyFromDescription(failure.getDescription());
+    	Test test = getTestFromDescription(failure.getDescription());
     	
-    	testDatabase.addTestRun(testRun, testClassName, testMethodName);
+		test.addTestRun(testRun);
     	successfulTestRuns.remove(key);    	
     }
 
@@ -114,6 +111,16 @@ public class TestResultUpdater extends RunListener{
      */
     public void testIgnored(Description description) throws Exception {
     	// do nothing
+    }
+    
+    private Test getTestFromDescription(Description description) {
+    	String testClassName = description.getClassName();
+    	String testMethodName = description.getMethodName();
+    	return testDatabase.getTest(testClassName, testMethodName);
+    }
+    
+    private String getKeyFromDescription(Description description) {
+    	return description.getClassName() + ":" + description.getMethodName();
     }
 	
 }

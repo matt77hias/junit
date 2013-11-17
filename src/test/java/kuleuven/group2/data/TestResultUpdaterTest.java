@@ -51,18 +51,27 @@ public class TestResultUpdaterTest {
 		updater.testFinished(method1Description);
 		
 		// successfull tests are added when the run is finished
-		assertEquals(0, database.getAllTestRuns().size());
+		assertEquals(0, getNbTestRuns());
 		
 		updater.testStarted(method2Description);
+		// TODO: test fails here because test is not yet present in the database
 		updater.testAssumptionFailure(method2Failure);
 		
 		// failures are added immediately
-		assertEquals(1, database.getAllTestRuns().size());
+		assertEquals(1, getNbTestRuns());
 		
 		updater.testRunFinished(null);
 		
 		// there are now two runs in the database: one failed and one succeeded
-		assertEquals(2, database.getAllTestRuns().size());
+		assertEquals(2, getNbTestRuns());
+	}
+	
+	private int getNbTestRuns() {
+		int n = 0;
+		for(kuleuven.group2.data.Test test : database.getAllTests()) {
+			n = n + test.getTestRuns().size();
+		}
+		return n;
 	}
 	
 	private class TestClass {
