@@ -109,7 +109,7 @@ public class OssRewriterTest {
 
 		a.visit();
 		
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/methodlink/OssRewriterTest$A.visit()V"));
+		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterTest$A.visit()V"));
 	}
 
 }
