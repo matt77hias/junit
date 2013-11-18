@@ -1,11 +1,14 @@
 package kuleuven.group2.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kuleuven.group2.data.signature.JavaSignature;
+import kuleuven.group2.data.testrun.TestRun;
 
 /**
  * A class that has keepstrack of all tests (Test), tested methods
@@ -63,6 +66,28 @@ public class TestDatabase {
 
 	protected void removeTest(Test test) {
 		tests.remove(test);
+	}
+
+	// TESTRUNS
+	protected void addTestRun(TestRun testRun, Test test) {
+		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
+	}
+
+	protected void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
+		Test test = getTest(testClassName, testMethodName);
+		if (test == null) {
+			test = new Test(testClassName, testMethodName);
+			addTest(test);
+		}
+		test.addTestRun(testRun);
+	}
+
+	public List<TestRun> getAllTestRuns() {
+		List<TestRun> testRuns = new ArrayList<TestRun>();
+		for (Test test : tests) {
+			testRuns.addAll(test.getTestRuns());
+		}
+		return testRuns;
 	}
 
 	// METHOD-TEST LINKS
