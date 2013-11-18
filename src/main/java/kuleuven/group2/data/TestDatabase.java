@@ -27,6 +27,14 @@ public class TestDatabase {
 
 	// METHODS
 
+	public void addMethod(TestedMethod testedMethod) {
+		methods.add(testedMethod);
+	}
+
+	protected void removeMethod(TestedMethod testedMethod) {
+		methods.remove(testedMethod);
+	}
+	
 	public boolean containsMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
@@ -36,7 +44,7 @@ public class TestDatabase {
 		return false;
 		//TODO: FASTER: cache result
 	}
-	
+
 	public TestedMethod getMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
@@ -46,14 +54,6 @@ public class TestDatabase {
 		throw new IllegalArgumentException("Method with signature " + signature + " not in database.");
 	}
 
-	public void addMethod(TestedMethod testedMethod) {
-		methods.add(testedMethod);
-	}
-
-	protected void removeMethod(TestedMethod testedMethod) {
-		methods.remove(testedMethod);
-	}
-	
 	public Collection<TestedMethod> getMethodsIn(String className) {
 		Set<TestedMethod> foundMethods = new HashSet<TestedMethod>();
 		for(TestedMethod method : methods) {
@@ -64,6 +64,14 @@ public class TestDatabase {
 
 	// TESTS
 
+	protected void addTest(Test test) {
+		tests.add(test);
+	}
+
+	protected void removeTest(Test test) {
+		tests.remove(test);
+	}
+	
 	protected Test getTest(String testClassName, String testMethodName) {
 		for (Test test : tests) {
 			if (test.equalName(testClassName, testMethodName)) {
@@ -77,14 +85,6 @@ public class TestDatabase {
 		return tests;
 	}
 
-	protected void addTest(Test test) {
-		tests.add(test);
-	}
-
-	protected void removeTest(Test test) {
-		tests.remove(test);
-	}
-	
 	public Collection<Test> getTestsIn(String testClassName) {
 		Set<Test> foundTests = new HashSet<Test>();
 		for(Test test : tests) {
@@ -118,16 +118,16 @@ public class TestDatabase {
 
 	// METHOD-TEST LINKS
 
-	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
-		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
-	}
-
 	public void addMethodTestLink(TestedMethod testedMethod, Test test) {
 		testMethodLinks.add(new TestMethodLink(testedMethod, test));
 	}
 
 	public void clearMethodLinks() {
 		testMethodLinks.clear();
+	}
+	
+	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
+		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
 	}
 
 	public Collection<TestedMethod> getLinkedMethods(Test test) {

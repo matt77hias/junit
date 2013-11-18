@@ -13,7 +13,7 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
 /**
- * This class updates the link between methods and tests, when tests are run.
+ * This class updates the link between methods and tests when tests are run.
  * 
  * @author Vital D'haveloose, Ruben Pieters
  */
