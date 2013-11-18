@@ -2,9 +2,11 @@ package kuleuven.group2.policy;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the last failure first policy.
@@ -13,7 +15,7 @@ import kuleuven.group2.data.Test;
  * @version	17 November 2013
  * 
  */
-public class LastFailureFirst implements Policy {
+public class LastFailureFirst implements Policy, Comparator<Test> {
 	
 	/**
 	 * Creates a new last failure first policy.
@@ -23,24 +25,43 @@ public class LastFailureFirst implements Policy {
 	}
 	
 	/**
+	 * Sorts the tests of the given test database according to this last failure policy.
+	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
+	 * @return	The tests of the given test database according to this
+	 * 			last failure policy.
+	 */
+	@Override
+	public Test[] getSortedTestAccordingToPolicy(TestDatabase testDatabase) {
+		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
+		getSortedTestAccordingToPolicy(testDatabase, result);
+		return result;
+	}
+	
+	/**
 	 * Sorts the given tests according to this last failure first policy.
 	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(Test[] tests) {
+	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
 		Arrays.sort(tests, 0, tests.length, this);
 	}
 	
 	/**
 	 * Sorts the given tests according to this last failure first policy.
 	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(List<Test> tests) {
+	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
 		Collections.sort(tests, this);
 	}
 
