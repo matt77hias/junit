@@ -46,8 +46,8 @@ public class TestResultUpdater extends RunListener{
     public void testRunFinished(Result result) throws Exception {
     	for(String key : successfulTestRuns.keySet()) {
     		String[] parts = key.split(":");
-    		Test test = testDatabase.getTest(parts[0], parts[1]);
-    		test.addTestRun(successfulTestRuns.get(key));
+    		Test test = new Test(parts[0], parts[1]);
+    		testDatabase.addTestRun(successfulTestRuns.get(key), test);
     	}
     	successfulTestRuns.clear();
     }
@@ -99,7 +99,7 @@ public class TestResultUpdater extends RunListener{
     	String key = getKeyFromDescription(failure.getDescription());
     	Test test = getTestFromDescription(failure.getDescription());
     	
-		test.addTestRun(testRun);
+    	testDatabase.addTestRun(testRun, test);
     	successfulTestRuns.remove(key);    	
     }
 
@@ -116,7 +116,7 @@ public class TestResultUpdater extends RunListener{
     private Test getTestFromDescription(Description description) {
     	String testClassName = description.getClassName();
     	String testMethodName = description.getMethodName();
-    	return testDatabase.getTest(testClassName, testMethodName);
+    	return new Test(testClassName, testMethodName);
     }
     
     private String getKeyFromDescription(Description description) {
