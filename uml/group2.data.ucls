@@ -64,8 +64,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="kuleuven.group2.data.TestResultUpdater" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/TestResultUpdater.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="kuleuven.group2.data.updating.TestResultUpdater" project="junit" 
+    file="/junit/src/main/java/kuleuven/group2/data/updating/TestResultUpdater.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="337" y="968"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -73,8 +74,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="kuleuven.group2.data.MethodTestLinkUpdater" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/MethodTestLinkUpdater.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater" project="junit" 
+    file="/junit/src/main/java/kuleuven/group2/data/updating/MethodTestLinkUpdater.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="343" y="313"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -82,8 +84,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="kuleuven.group2.data.MethodChangeUpdater" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/MethodChangeUpdater.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="kuleuven.group2.data.updating.MethodChangeUpdater" project="junit" 
+    file="/junit/src/main/java/kuleuven/group2/data/updating/MethodChangeUpdater.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="325" y="128"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -91,8 +94,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="11" language="java" name="kuleuven.group2.data.ICurrentRunningTestHolder" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/ICurrentRunningTestHolder.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="11" language="java" name="kuleuven.group2.data.updating.ICurrentRunningTestHolder" project="junit" 
+    file="/junit/src/main/java/kuleuven/group2/data/updating/ICurrentRunningTestHolder.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-33" y="652"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -100,8 +104,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="12" language="java" name="kuleuven.group2.data.OssRewriterLoader" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/OssRewriterLoader.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="kuleuven.group2.data.updating.OssRewriterLoader" project="junit" 
+    file="/junit/src/main/java/kuleuven/group2/data/updating/OssRewriterLoader.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-33" y="499"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -137,8 +142,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="kuleuven.group2.data.MethodTestLinkUpdater.MethodTestLinkRunListener" 
-    project="junit" file="/junit/src/main/java/kuleuven/group2/data/MethodTestLinkUpdater.java" binary="false" 
+  <class id="16" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater.MethodTestLinkRunListener" 
+    project="junit" file="/junit/src/main/java/kuleuven/group2/data/updating/MethodTestLinkUpdater.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="343" y="483"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

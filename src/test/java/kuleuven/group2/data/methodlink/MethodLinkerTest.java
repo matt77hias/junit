@@ -2,11 +2,11 @@ package kuleuven.group2.data.methodlink;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import kuleuven.group2.data.ICurrentRunningTestHolder;
-import kuleuven.group2.data.MethodTestLinkUpdater;
-import kuleuven.group2.data.OssRewriterLoader;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
+import kuleuven.group2.data.updating.MethodTestLinkUpdater;
+import kuleuven.group2.data.updating.OssRewriterLoader;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -73,7 +73,7 @@ public class MethodLinkerTest {
 	
 	@Test
 	public void testWithOssRewriter() {
-		//TODO
+		//TODO: make test with ossRewriter
 	}
 	
 	@SuppressWarnings("unused")

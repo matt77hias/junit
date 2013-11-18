@@ -2,6 +2,7 @@ package kuleuven.group2.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import kuleuven.group2.data.updating.TestResultUpdater;
 
 import org.junit.After;
 import org.junit.AfterClass;

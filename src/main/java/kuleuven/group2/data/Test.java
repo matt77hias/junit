@@ -92,8 +92,6 @@ public class Test {
 		return new Date(0);
 	}
 	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -123,7 +121,5 @@ public class Test {
 		return "Test [testClassName=" + testClassName + ", testMethodName=" + testMethodName + ", testRuns=" + testRuns
 				+ "]";
 	}
-	
-
 	
 }

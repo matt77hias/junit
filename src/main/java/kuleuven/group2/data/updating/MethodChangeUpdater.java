@@ -1,10 +1,12 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 import java.util.Map;
 
+import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
@@ -82,11 +84,13 @@ public class MethodChangeUpdater {
 	 */
 	protected void updateMethodHash(JavaSignature signature, MethodHash newHash, Date timestamp) {
 		// Get or create method
-		TestedMethod method = database.getMethod(signature);
-		if (method == null) {
+		TestedMethod method;
+		if(!database.containsMethod(signature)) {
 			method = new TestedMethod(signature);
 			database.addMethod(method);
 		}
+		else method = database.getMethod(signature);
+
 		// Update hash
 		if (!newHash.equals(method.getHash())) {
 			method.setHash(newHash);

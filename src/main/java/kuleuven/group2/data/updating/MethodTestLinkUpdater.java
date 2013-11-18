@@ -1,10 +1,13 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
+import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import be.kuleuven.cs.ossrewriter.Monitor;

@@ -1,9 +1,11 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.testrun.FailedTestRun;
 import kuleuven.group2.data.testrun.SuccesfullTestRun;
 import kuleuven.group2.data.testrun.TestRun;

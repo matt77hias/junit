@@ -41,9 +41,7 @@ public class OssRewriterTest {
 
 		try {
 			VirtualMachine vm = VirtualMachine.attach(pid);
-	        // TODO: link to project jar
-	        vm.loadAgent("U:\\vital.dhaveloose\\Lokaal\\Eclipse_Workspace\\junit\\bin\\lib\\ossrewriter-1.0.jar", ""); // Vitals locatie
-	        //vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", ""); //Rubens locatie
+	        vm.loadAgent("res\\ossrewriter-1.0.jar", "");
 			vm.detach();
 		} catch (Exception e) {
 			throw new RuntimeException(e);

@@ -27,7 +27,7 @@ public class TestDatabase {
 
 	// METHODS
 
-	protected boolean containsMethod(JavaSignature signature) {
+	public boolean containsMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
 				return true;
@@ -37,7 +37,7 @@ public class TestDatabase {
 		//TODO: FASTER: cache result
 	}
 	
-	protected TestedMethod getMethod(JavaSignature signature) {
+	public TestedMethod getMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
 				return testedMethod;
@@ -52,6 +52,14 @@ public class TestDatabase {
 
 	protected void removeMethod(TestedMethod testedMethod) {
 		methods.remove(testedMethod);
+	}
+	
+	public Collection<TestedMethod> getMethodsIn(String className) {
+		Set<TestedMethod> foundMethods = new HashSet<TestedMethod>();
+		for(TestedMethod method : methods) {
+			if( method.getClass().getSimpleName().equals(className) ) foundMethods.add(method);
+		}
+		return foundMethods;
 	}
 
 	// TESTS
@@ -76,9 +84,18 @@ public class TestDatabase {
 	protected void removeTest(Test test) {
 		tests.remove(test);
 	}
+	
+	public Collection<Test> getTestsIn(String testClassName) {
+		Set<Test> foundTests = new HashSet<Test>();
+		for(Test test : tests) {
+			if( test.getTestClassName().equals(testClassName) ) foundTests.add(test);
+		}
+		return foundTests;
+	}
 
 	// TESTRUNS
-	protected void addTestRun(TestRun testRun, Test test) {
+	
+	public void addTestRun(TestRun testRun, Test test) {
 		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
 	}
 
@@ -105,11 +122,11 @@ public class TestDatabase {
 		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
 	}
 
-	protected void addMethodTestLink(TestedMethod testedMethod, Test test) {
+	public void addMethodTestLink(TestedMethod testedMethod, Test test) {
 		testMethodLinks.add(new TestMethodLink(testedMethod, test));
 	}
 
-	protected void clearMethodLinks() {
+	public void clearMethodLinks() {
 		testMethodLinks.clear();
 	}
 

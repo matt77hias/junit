@@ -1,4 +1,4 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import java.lang.management.ManagementFactory;
 
