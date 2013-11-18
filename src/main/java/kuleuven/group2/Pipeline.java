@@ -20,7 +20,8 @@ import kuleuven.group2.util.Consumer;
 
 public class Pipeline {
 
-	protected final Store sourceStore;
+	protected final Store classSourceStore;
+	protected final Store testSourceStore;
 	protected final Store binaryStore;
 	protected final TestDatabase testDatabase;
 
@@ -29,12 +30,12 @@ public class Pipeline {
 	protected final SourceWatcher sourceWatcher;
 
 	protected final StoreClassLoader testClassLoader;
-	protected final JavaCompiler compiler;
 
 	protected final MethodChangeUpdater methodChangeUpdater;
 
-	public Pipeline(Store sourceStore, Store binaryStore) {
-		this.sourceStore = checkNotNull(sourceStore);
+	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore) {
+		this.classSourceStore = checkNotNull(classSourceStore);
+		this.testSourceStore = checkNotNull(testSourceStore);
 		this.binaryStore = checkNotNull(binaryStore);
 
 		this.task = new PipelineTask();
@@ -43,7 +44,6 @@ public class Pipeline {
 
 		this.testDatabase = new TestDatabase();
 		this.testClassLoader = new StoreClassLoader(binaryStore, getClass().getClassLoader());
-		this.compiler = new EclipseCompiler(sourceStore, binaryStore);
 		this.methodChangeUpdater = new MethodChangeUpdater(testDatabase);
 	}
 
@@ -80,16 +80,31 @@ public class Pipeline {
 
 		@Override
 		public void consume(List<SourceEvent> events) {
-			Set<String> toCompile = handleSourceEvents(events);
-			CompilationResult result = compiler.compile(toCompile, testClassLoader);
+			// TODO Distinguish between class and test source events?
+			Set<String> classesToCompile = handleSourceEvents(events);
+			Set<String> testsToCompile = handleSourceEvents(events);
+
+			// Compile class sources
+			JavaCompiler classCompiler = new EclipseCompiler(classSourceStore, binaryStore, testClassLoader);
+			CompilationResult result = classCompiler.compile(classesToCompile);
 			if (!result.isSuccess()) {
 				// TODO Report errors on GUI?
 				return;
 			}
+
+			// Compile test sources
+			JavaCompiler testCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
+			result = testCompiler.compile(testsToCompile);
+			if (!result.isSuccess()) {
+				// TODO Report errors on GUI?
+				return;
+			}
+
+			// Update database
 			methodChangeUpdater.detectChanges(result.getCompiledClasses());
+
 			// TODO Sort and run tests
 		}
-
 	}
 
 }
