@@ -34,6 +34,8 @@ public class MethodTestLinkUpdater extends Monitor {
 	public void enterMethod(String methodName) {
 		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
 		TestedMethod enteredMethod = testDatabase.getMethod(signature);
+		// if the entered method is null, the method does not occur in the testDatabase
+		// and no link will be added
 		if (enteredMethod != null) {
 			Test currentTest = currentTestHolder.getCurrentRunningTest();
 			testDatabase.addMethodTestLink(enteredMethod, currentTest);
@@ -52,6 +54,16 @@ public class MethodTestLinkUpdater extends Monitor {
 		protected MethodTestLinkRunListener(JUnitCore core) {
 			core.addListener(this);
 		}
+		
+		/**
+	     * Called before any tests have been run.
+	     *
+	     * @param description describes the tests to be run
+	     */
+		@Override
+	    public void testRunStarted(Description description) throws Exception {
+			testDatabase.clearMethodLinks();
+	    }
 
 	    /**
 	     * Called when an atomic test is about to be started.
@@ -59,14 +71,11 @@ public class MethodTestLinkUpdater extends Monitor {
 	     * @param description the description of the test that is about to be run
 	     * (generally a class and method name)
 	     */
+		@Override
 	    public void testStarted(Description description) throws Exception {
 	    	String testClassName = description.getClassName();
 	    	String testMethodName = description.getMethodName();
-	    	currentTest = testDatabase.getTest(testClassName, testMethodName);
-	    	
-	    	// TODO: clearing testMethodLinks should be done at level of pipeline?
-	    	// remove old links
-	    	//testDatabase.removeMethodLinks(currentTest);
+	    	currentTest = new Test(testClassName, testMethodName);
 	    }
 
 	    /**
@@ -74,6 +83,7 @@ public class MethodTestLinkUpdater extends Monitor {
 	     *
 	     * @param description the description of the test that just ran
 	     */
+		@Override
 	    public void testFinished(Description description) throws Exception {
 	    	currentTest = null;
 	    }

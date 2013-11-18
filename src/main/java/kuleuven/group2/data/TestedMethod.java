@@ -1,8 +1,6 @@
 package kuleuven.group2.data;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 
 import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.signature.JavaSignature;
