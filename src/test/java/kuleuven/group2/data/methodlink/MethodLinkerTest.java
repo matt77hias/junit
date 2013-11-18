@@ -1,29 +1,37 @@
 package kuleuven.group2.data.methodlink;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import kuleuven.group2.data.ICurrentRunningTestHolder;
 import kuleuven.group2.data.MethodTestLinkUpdater;
 import kuleuven.group2.data.OssRewriterLoader;
 import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.TestedMethod;
 
-import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import be.kuleuven.cs.ossrewriter.Monitor;
-
 public class MethodLinkerTest {
 	
-	private static MethodTestLinkUpdater methodLinker;
-	private static TestDatabase testDatabase;
-	private static OssRewriterLoader ossRewriterLoader;
+	private TestDatabase database;
+	private MethodTestLinkUpdater updater;
+	CurrentTestHolder currentTestHolder;
+	
+	private static String getFalsePath = "kuleuven/group2/data/methodlink/MethodLinkerTest$TestedClass.getFalse()Z";
+	@SuppressWarnings("unused")
+	private static TestedMethod getFalse = new TestedMethod(getFalsePath);
+	private static String getTruePath = "kuleuven/group2/data/methodlink/MethodLinkerTest$TestedClass.getTrue()Z";
+	private static TestedMethod getTrue = new TestedMethod(getTruePath);
+	
+	private static kuleuven.group2.data.Test testMethod1S = new kuleuven.group2.data.Test("TestClass", "testMethod1S");
+	private static kuleuven.group2.data.Test testMethod2F = new kuleuven.group2.data.Test("TestClass", "testMethod2F");
+	
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		testDatabase = new TestDatabase();
-		ossRewriterLoader = new OssRewriterLoader();
 	}
 
 	@AfterClass
@@ -32,87 +40,76 @@ public class MethodLinkerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		methodLinker = new MethodTestLinkUpdater(
-				testDatabase,
-				ossRewriterLoader,
-				new TestCurrentRunningTestHolder("A", "MethodA"));
+		database = new TestDatabase();
+		database.addMethod(getTrue);
+		OssRewriterLoader loader = new OssRewriterLoader();
+		currentTestHolder = new CurrentTestHolder();
+		updater = new MethodTestLinkUpdater(database, loader, currentTestHolder);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		methodLinker.printMethodLinks();
-	}
-	
-	public class TestCurrentRunningTestHolder implements ICurrentRunningTestHolder {
-		
-		protected kuleuven.group2.data.Test currentTest; 
-		
-		public TestCurrentRunningTestHolder(String testClassName, String testMethodName) {
-			this.currentTest = new
-					kuleuven.group2.data.Test(testClassName, testMethodName);
-		}
-
-		public kuleuven.group2.data.Test getCurrentRunningTest() {
-			return currentTest;
-		}
-	}
-	
-	public class A {
-		private boolean methodAVisited;
-		private boolean methodBVisited;
-		
-		public boolean isMethodAVisited() {
-			return methodAVisited;
-		}
-		
-		public boolean isMethodBVisited() {
-			return methodBVisited;
-		}
-		
-		public void visit(String name) {
-			//System.out.println(name);
-			if (name.contains("testMethodA")) {
-				System.out.println("A");
-				methodAVisited = true;
-			}
-			if (name.contains("testMethodB")) {
-				System.out.println("B");
-				methodBVisited = true;
-			}
-		}
-		
-		public int testMethodA(String arg1, int arg2) {
-			return 0;
-		}
-		public int testMethodB(String arg1, int arg2) {
-			return 0;
-		}
 	}
 
 	@Test
-	public void test() {
-		final A a = new A();
-		Monitor monitor = new Monitor() {
-			@Override
-			public void enterMethod(String arg0) {
-				a.visit(arg0);
-			}
-		};
-		ossRewriterLoader.registerMonitor(monitor);
+	public void testLinks() throws Exception {
+
+		assertEquals(0, database.getNbLinks());
 		
-		// OssRewriter is started here because we only want to enter this specific method and not all previous method calls
-		ossRewriterLoader.launchOssRewriter();
+		currentTestHolder.setCurrentTest(testMethod2F);
+		updater.enterMethod(getFalsePath);
 		
-		a.testMethodA("", 0);
+		// getFalse was not added to the database, and will not be linked
+		assertEquals(0, database.getNbLinks());
 		
-		ossRewriterLoader.unregisterMonitor(monitor);
+		currentTestHolder.setCurrentTest(testMethod1S);
+		updater.enterMethod(getTruePath);
 		
-		a.testMethodB("", 0);
+		// getTrue was added to the database, and now has a link with testMethod1S
+		assertEquals(1, database.getNbLinks());
+
+		assertTrue(database.containsMethodTestLink(getTrue, testMethod1S));
+	}
+	
+	@Test
+	public void testWithOssRewriter() {
+		//TODO
+	}
+	
+	@SuppressWarnings("unused")
+	private class TestedClass {
 		
-		assertTrue(a.isMethodAVisited());
-		assertFalse(a.isMethodBVisited());
+		public TestedClass() {
+			// do nothing
+		}
+
+		public boolean getFalse() {
+			return false;
+		}
+
+		public boolean getTrue() {
+			return true;
+		}
 		
-		//testDatabase.printMethodLinks();
+	}
+	
+	private class CurrentTestHolder implements ICurrentRunningTestHolder {
+		
+		private kuleuven.group2.data.Test currentTest;
+		
+		public CurrentTestHolder() {
+			// do nothing
+		}
+
+		@Override
+		public kuleuven.group2.data.Test getCurrentRunningTest() {
+			return currentTest;
+		}
+		
+		public void setCurrentTest(kuleuven.group2.data.Test test) {
+			currentTest = test;
+		}
+		
 	}
 
 }

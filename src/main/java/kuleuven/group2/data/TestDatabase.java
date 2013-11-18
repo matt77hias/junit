@@ -19,8 +19,7 @@ import kuleuven.group2.data.testrun.TestRun;
  */
 public class TestDatabase {
 
-	// TODO: synchronized gebruiken?
-	// TODO Use a Map with the signature as key?
+	// TODO: FASTER Use a Map with the signature as key?
 	protected Collection<TestMethodLink> testMethodLinks = Collections
 			.synchronizedCollection(new HashSet<TestMethodLink>());
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
@@ -35,7 +34,7 @@ public class TestDatabase {
 			}
 		}
 		return false;
-		//TODO: cache result
+		//TODO: FASTER: cache result
 	}
 	
 	protected TestedMethod getMethod(JavaSignature signature) {
@@ -47,7 +46,7 @@ public class TestDatabase {
 		throw new IllegalArgumentException("Method with signature " + signature + " not in database.");
 	}
 
-	protected void addMethod(TestedMethod testedMethod) {
+	public void addMethod(TestedMethod testedMethod) {
 		methods.add(testedMethod);
 	}
 
@@ -138,6 +137,10 @@ public class TestDatabase {
 		for (TestMethodLink testMethodLink : testMethodLinks) {
 			System.out.println(testMethodLink);
 		}
+	}
+
+	public int getNbLinks() {
+		return testMethodLinks.size();
 	}
 
 }

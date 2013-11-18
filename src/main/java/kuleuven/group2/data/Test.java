@@ -43,7 +43,7 @@ public class Test {
 	public void addTestRun(TestRun testRun) {
 		testRuns.add(testRun);
 	
-		// TODO: make use of the fact that the list is sorted to insert at the right spot with binary search
+		// TODO: FASTER: make use of the fact that the list is sorted to insert at the right spot with binary search
 		Collections.sort(testRuns, new Comparator<TestRun>() {
 			@Override
 			public int compare(TestRun o1, TestRun o2) {

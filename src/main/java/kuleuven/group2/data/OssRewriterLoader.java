@@ -5,7 +5,6 @@ import java.lang.management.ManagementFactory;
 import be.kuleuven.cs.ossrewriter.Monitor;
 import be.kuleuven.cs.ossrewriter.MonitorEntrypoint;
 import be.kuleuven.cs.ossrewriter.OSSRewriter;
-import be.kuleuven.cs.ossrewriter.Predicate;
 
 import com.sun.tools.attach.VirtualMachine;
 
