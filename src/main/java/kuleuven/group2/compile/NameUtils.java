@@ -1,9 +1,12 @@
 package kuleuven.group2.compile;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Collections2;
 import com.google.common.io.Files;
 
 public class NameUtils {
@@ -21,6 +24,15 @@ public class NameUtils {
 
 	public static String toClassName(String resourceName) {
 		return Files.getNameWithoutExtension(resourceName).replace('/', '.');
+	}
+
+	public static Collection<String> toClassNames(Collection<String> resourceNames) {
+		return Collections2.transform(resourceNames, new Function<String, String>() {
+			@Override
+			public String apply(String resourceName) {
+				return toClassName(resourceName);
+			}
+		});
 	}
 
 	public static String getClassName(char[][] compoundName) {
