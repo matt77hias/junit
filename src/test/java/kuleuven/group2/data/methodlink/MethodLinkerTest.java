@@ -1,9 +1,9 @@
 package kuleuven.group2.data.methodlink;
 
+import kuleuven.group2.data.ICurrentRunningTestHolder;
+import kuleuven.group2.data.MethodTestLinkUpdater;
+import kuleuven.group2.data.OssRewriterLoader;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
-import kuleuven.group2.data.updating.MethodTestLinkUpdater;
-import kuleuven.group2.data.updating.OssRewriterLoader;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,9 +30,9 @@ public class MethodLinkerTest {
 	@Before
 	public void setUp() throws Exception {
 		methodLinker = new MethodTestLinkUpdater(
-				new TestCurrentRunningTestHolder("A", "MethodA"),
 				testDatabase,
-				ossRewriterLoader);
+				ossRewriterLoader,
+				new TestCurrentRunningTestHolder("A", "MethodA"));
 	}
 
 	@After

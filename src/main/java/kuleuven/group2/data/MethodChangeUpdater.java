@@ -1,17 +1,20 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 import java.util.Map;
 
-import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 
+/**
+ * A MethodChangeUpdater detects method changes (using hashes) and updates the test database accordingly.
+ * 
+ * @author Mattias Buelens
+ */
 public class MethodChangeUpdater {
 
 	protected final TestDatabase database;

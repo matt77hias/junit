@@ -1,6 +1,12 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.data;
 
-import kuleuven.group2.data.TestDatabase;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import kuleuven.group2.data.testrun.FailedTestRun;
+import kuleuven.group2.data.testrun.SuccesfullTestRun;
+import kuleuven.group2.data.testrun.TestRun;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
@@ -16,10 +22,11 @@ import org.junit.runner.notification.RunListener;
  */
 public class TestResultUpdater extends RunListener{
 	
-	private TestDatabase database;
+	private TestDatabase testDatabase;
+	private Map<String, TestRun> successfulTestRuns = new HashMap<String, TestRun>();
 	
-    public TestResultUpdater(TestDatabase database) {
-		this.database = database;
+    public TestResultUpdater(TestDatabase testDatabase) {
+		this.testDatabase = testDatabase;
 	}
 
 	/**
@@ -37,7 +44,12 @@ public class TestResultUpdater extends RunListener{
      * @param result the summary of the test run, including all the tests that failed
      */
     public void testRunFinished(Result result) throws Exception {
-    	// do nothing
+    	for(String key : successfulTestRuns.keySet()) {
+    		String[] parts = key.split(":");
+    		Test test = new Test(parts[0], parts[1]);
+    		testDatabase.addTestRun(successfulTestRuns.get(key), test);
+    	}
+    	successfulTestRuns.clear();
     }
 
     /**
@@ -47,7 +59,10 @@ public class TestResultUpdater extends RunListener{
      * (generally a class and method name)
      */
     public void testStarted(Description description) throws Exception {
-    	// do nothing
+    	String key = getKeyFromDescription(description);
+    	TestRun testRun = new SuccesfullTestRun(new Date());
+    	
+    	successfulTestRuns.put(key, testRun);
     }
 
     /**
@@ -65,7 +80,7 @@ public class TestResultUpdater extends RunListener{
      * @param failure describes the test that failed and the exception that was thrown
      */
     public void testFailure(Failure failure) throws Exception {
-    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
+    	generalTestFailure(failure);
     }
 
     /**
@@ -76,7 +91,16 @@ public class TestResultUpdater extends RunListener{
      * {@link AssumptionViolatedException} that was thrown
      */
     public void testAssumptionFailure(Failure failure) {
-    	// TODO: TestDatabase zeggen dat de test gefaald is, en wanneer
+    	generalTestFailure(failure);
+    }
+    
+    private void generalTestFailure(Failure failure) {
+    	TestRun testRun = new FailedTestRun(new Date());
+    	String key = getKeyFromDescription(failure.getDescription());
+    	Test test = getTestFromDescription(failure.getDescription());
+    	
+    	testDatabase.addTestRun(testRun, test);
+    	successfulTestRuns.remove(key);    	
     }
 
     /**
@@ -87,6 +111,16 @@ public class TestResultUpdater extends RunListener{
      */
     public void testIgnored(Description description) throws Exception {
     	// do nothing
+    }
+    
+    private Test getTestFromDescription(Description description) {
+    	String testClassName = description.getClassName();
+    	String testMethodName = description.getMethodName();
+    	return new Test(testClassName, testMethodName);
+    }
+    
+    private String getKeyFromDescription(Description description) {
+    	return description.getClassName() + ":" + description.getMethodName();
     }
 	
 }
