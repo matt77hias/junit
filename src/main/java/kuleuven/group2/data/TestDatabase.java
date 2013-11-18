@@ -11,7 +11,7 @@ import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.testrun.TestRun;
 
 /**
- * A class that has keepstrack of all tests (Test), tested methods
+ * A class that has keeps track of all tests (Test), tested methods
  * (TestedMethod) and links between them (TestMethodLink) for access by updaters
  * and users.
  * 

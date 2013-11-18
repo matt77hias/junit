@@ -1,4 +1,4 @@
-package kuleuven.group2.data.methodlink;
+package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.assertTrue;
 
