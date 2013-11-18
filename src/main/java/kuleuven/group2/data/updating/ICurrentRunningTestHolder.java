@@ -1,4 +1,6 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
+
+import kuleuven.group2.data.Test;
 
 
 /**

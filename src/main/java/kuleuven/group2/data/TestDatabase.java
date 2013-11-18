@@ -11,7 +11,7 @@ import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.testrun.TestRun;
 
 /**
- * A class that has keepstrack of all tests (Test), tested methods
+ * A class that has keeps track of all tests (Test), tested methods
  * (TestedMethod) and links between them (TestMethodLink) for access by updaters
  * and users.
  * 
@@ -19,8 +19,7 @@ import kuleuven.group2.data.testrun.TestRun;
  */
 public class TestDatabase {
 
-	// TODO: synchronized gebruiken?
-	// TODO Use a Map with the signature as key?
+	// TODO: FASTER Use a Map with the signature as key?
 	protected Collection<TestMethodLink> testMethodLinks = Collections
 			.synchronizedCollection(new HashSet<TestMethodLink>());
 	protected Set<TestedMethod> methods = Collections.synchronizedSet(new HashSet<TestedMethod>());
@@ -28,7 +27,25 @@ public class TestDatabase {
 
 	// METHODS
 
-	protected TestedMethod getMethod(JavaSignature signature) {
+	public void addMethod(TestedMethod testedMethod) {
+		methods.add(testedMethod);
+	}
+
+	protected void removeMethod(TestedMethod testedMethod) {
+		methods.remove(testedMethod);
+	}
+	
+	public boolean containsMethod(JavaSignature signature) {
+		for (TestedMethod testedMethod : methods) {
+			if (testedMethod.getSignature().equals(signature)) {
+				return true;
+			}
+		}
+		return false;
+		//TODO: FASTER: cache result
+	}
+
+	public TestedMethod getMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
 				return testedMethod;
@@ -37,16 +54,24 @@ public class TestDatabase {
 		throw new IllegalArgumentException("Method with signature " + signature + " not in database.");
 	}
 
-	protected void addMethod(TestedMethod testedMethod) {
-		methods.add(testedMethod);
-	}
-
-	protected void removeMethod(TestedMethod testedMethod) {
-		methods.remove(testedMethod);
+	public Collection<TestedMethod> getMethodsIn(String className) {
+		Set<TestedMethod> foundMethods = new HashSet<TestedMethod>();
+		for(TestedMethod method : methods) {
+			if( method.getClass().getSimpleName().equals(className) ) foundMethods.add(method);
+		}
+		return foundMethods;
 	}
 
 	// TESTS
 
+	protected void addTest(Test test) {
+		tests.add(test);
+	}
+
+	protected void removeTest(Test test) {
+		tests.remove(test);
+	}
+	
 	protected Test getTest(String testClassName, String testMethodName) {
 		for (Test test : tests) {
 			if (test.equalName(testClassName, testMethodName)) {
@@ -60,16 +85,17 @@ public class TestDatabase {
 		return tests;
 	}
 
-	protected void addTest(Test test) {
-		tests.add(test);
-	}
-
-	protected void removeTest(Test test) {
-		tests.remove(test);
+	public Collection<Test> getTestsIn(String testClassName) {
+		Set<Test> foundTests = new HashSet<Test>();
+		for(Test test : tests) {
+			if( test.getTestClassName().equals(testClassName) ) foundTests.add(test);
+		}
+		return foundTests;
 	}
 
 	// TESTRUNS
-	protected void addTestRun(TestRun testRun, Test test) {
+	
+	public void addTestRun(TestRun testRun, Test test) {
 		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
 	}
 
@@ -92,16 +118,16 @@ public class TestDatabase {
 
 	// METHOD-TEST LINKS
 
-	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
-		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
-	}
-
-	protected void addMethodTestLink(TestedMethod testedMethod, Test test) {
+	public void addMethodTestLink(TestedMethod testedMethod, Test test) {
 		testMethodLinks.add(new TestMethodLink(testedMethod, test));
 	}
 
-	protected void clearMethodLinks() {
+	public void clearMethodLinks() {
 		testMethodLinks.clear();
+	}
+	
+	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
+		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
 	}
 
 	public Collection<TestedMethod> getLinkedMethods(Test test) {
@@ -128,6 +154,10 @@ public class TestDatabase {
 		for (TestMethodLink testMethodLink : testMethodLinks) {
 			System.out.println(testMethodLink);
 		}
+	}
+
+	public int getNbLinks() {
+		return testMethodLinks.size();
 	}
 
 }

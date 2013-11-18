@@ -1,7 +1,9 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.updating.TestResultUpdater;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -50,7 +52,7 @@ public class TestResultUpdaterTest {
 		updater.testStarted(method1Description);
 		updater.testFinished(method1Description);
 		
-		// successfull tests are added when the run is finished
+		// Successful tests are added when the run is finished
 		assertEquals(0, database.getAllTestRuns().size());
 		
 		updater.testStarted(method2Description);
