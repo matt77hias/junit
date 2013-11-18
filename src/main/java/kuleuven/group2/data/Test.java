@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import kuleuven.group2.data.testrun.TestRun;
 
 /**
  * A class that represents a test method. It also keeps track of the running
@@ -69,7 +68,7 @@ public class Test {
 			TestRun testRun = iterator.next();
 			if (testRun.isFailedRun())
 				failed++;
-			if (testRun.isSuccesfulRun())
+			if (testRun.isSuccessfulRun())
 				succeeded++;
 			count++;
 		}

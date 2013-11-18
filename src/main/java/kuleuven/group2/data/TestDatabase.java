@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import kuleuven.group2.data.signature.JavaSignature;
-import kuleuven.group2.data.testrun.TestRun;
 
 /**
  * A class that has keepstrack of all tests (Test), tested methods
