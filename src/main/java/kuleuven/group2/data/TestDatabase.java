@@ -28,6 +28,16 @@ public class TestDatabase {
 
 	// METHODS
 
+	protected boolean containsMethod(JavaSignature signature) {
+		for (TestedMethod testedMethod : methods) {
+			if (testedMethod.getSignature().equals(signature)) {
+				return true;
+			}
+		}
+		return false;
+		//TODO: cache result
+	}
+	
 	protected TestedMethod getMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {

@@ -33,10 +33,8 @@ public class MethodTestLinkUpdater extends Monitor {
 	@Override
 	public void enterMethod(String methodName) {
 		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
-		TestedMethod enteredMethod = testDatabase.getMethod(signature);
-		// if the entered method is null, the method does not occur in the testDatabase
-		// and no link will be added
-		if (enteredMethod != null) {
+		if (testDatabase.containsMethod(signature)) {
+			TestedMethod enteredMethod = testDatabase.getMethod(signature);
 			Test currentTest = currentTestHolder.getCurrentRunningTest();
 			testDatabase.addMethodTestLink(enteredMethod, currentTest);
 		}
