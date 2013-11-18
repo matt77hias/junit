@@ -2,15 +2,9 @@ package kuleuven.group2;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import kuleuven.group2.compile.CompilationResult;
-import kuleuven.group2.compile.EclipseCompiler;
-import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.MethodChangeUpdater;
 import kuleuven.group2.deferredrunner.DeferredConsumer;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
