@@ -72,6 +72,8 @@ public class Pipeline {
 		// Remove resources
 		for (String removedResourceName : toRemove) {
 			binaryStore.remove(removedResourceName);
+			// TODO Remove methods from class in database?
+			// TODO Remove tests from test class in database?
 		}
 		return toCompile;
 	}
