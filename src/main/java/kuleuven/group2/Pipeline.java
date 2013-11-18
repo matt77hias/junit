@@ -10,7 +10,7 @@ import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.updating.MethodChangeUpdater;
+import kuleuven.group2.data.MethodChangeUpdater;
 import kuleuven.group2.deferredrunner.DeferredConsumer;
 import kuleuven.group2.filewatch.SourceEvent;
 import kuleuven.group2.filewatch.SourceWatcher;
