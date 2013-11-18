@@ -11,6 +11,7 @@ import java.util.Map;
 public class MemoryStore extends AbstractStore {
 
 	protected final Map<String, byte[]> store = new HashMap<String, byte[]>();
+	protected volatile boolean isListening = false;
 
 	@Override
 	public boolean contains(String resourceName) {
@@ -64,6 +65,21 @@ public class MemoryStore extends AbstractStore {
 			it.remove();
 			fireRemoved(resourceName);
 		}
+	}
+
+	@Override
+	public boolean isListening() {
+		return isListening;
+	}
+
+	@Override
+	public void startListening() {
+		isListening = true;
+	}
+
+	@Override
+	public void stopListening() {
+		isListening = false;
 	}
 
 }

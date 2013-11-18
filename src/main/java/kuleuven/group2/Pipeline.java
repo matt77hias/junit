@@ -12,10 +12,11 @@ import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.MethodChangeUpdater;
 import kuleuven.group2.deferredrunner.DeferredConsumer;
-import kuleuven.group2.filewatch.SourceEvent;
-import kuleuven.group2.filewatch.SourceWatcher;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreClassLoader;
+import kuleuven.group2.store.StoreEvent;
+import kuleuven.group2.store.StoreFilter;
+import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
 public class Pipeline {
@@ -26,8 +27,9 @@ public class Pipeline {
 	protected final TestDatabase testDatabase;
 
 	protected final PipelineTask task;
-	protected final DeferredConsumer<SourceEvent> deferredTask;
-	protected final SourceWatcher sourceWatcher;
+	protected final DeferredConsumer<StoreEvent> deferredTask;
+	protected final StoreWatcher classSourceWatcher;
+	protected final StoreWatcher testSourceWatcher;
 
 	protected final StoreClassLoader testClassLoader;
 
@@ -40,7 +42,8 @@ public class Pipeline {
 
 		this.task = new PipelineTask();
 		this.deferredTask = new DeferredConsumer<>(task);
-		this.sourceWatcher = new SourceWatcher();
+		this.classSourceWatcher = new StoreWatcher(classSourceStore, StoreFilter.SOURCE);
+		this.testSourceWatcher = new StoreWatcher(testSourceStore, StoreFilter.SOURCE);
 
 		this.testDatabase = new TestDatabase();
 		this.testClassLoader = new StoreClassLoader(binaryStore, getClass().getClassLoader());
@@ -48,20 +51,28 @@ public class Pipeline {
 	}
 
 	public void start() {
-		sourceWatcher.registerConsumer(deferredTask);
-		// TODO Start listening on source store?
+		// Start listening
+		classSourceWatcher.registerConsumer(deferredTask);
+		testSourceWatcher.registerConsumer(deferredTask);
+		classSourceStore.startListening();
+		testSourceStore.startListening();
 	}
 
 	public void stop() {
-		sourceWatcher.unregisterConsumer(deferredTask);
+		// Stop listening
+		classSourceWatcher.unregisterConsumer(deferredTask);
+		testSourceWatcher.unregisterConsumer(deferredTask);
+		classSourceStore.stopListening();
+		testSourceStore.stopListening();
+		// TODO Stop current test run as well?
 	}
 
-	protected Set<String> handleSourceEvents(List<SourceEvent> events) {
+	protected Set<String> handleSourceEvents(List<StoreEvent> events) {
 		Set<String> toCompile = new HashSet<String>();
 		Set<String> toRemove = new HashSet<String>();
 		// Collect resources to compile and remove
-		for (SourceEvent event : events) {
-			if (event.getType() == SourceEvent.Type.REMOVED) {
+		for (StoreEvent event : events) {
+			if (event.getType() == StoreEvent.Type.REMOVED) {
 				toRemove.add(event.getResourceName());
 				toCompile.remove(event.getResourceName());
 			} else {
@@ -78,10 +89,10 @@ public class Pipeline {
 		return toCompile;
 	}
 
-	protected class PipelineTask implements Consumer<List<SourceEvent>> {
+	protected class PipelineTask implements Consumer<List<StoreEvent>> {
 
 		@Override
-		public void consume(List<SourceEvent> events) {
+		public void consume(List<StoreEvent> events) {
 			// TODO Distinguish between class and test source events?
 			Set<String> classesToCompile = handleSourceEvents(events);
 			Set<String> testsToCompile = handleSourceEvents(events);
