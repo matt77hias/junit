@@ -2,6 +2,7 @@ package kuleuven.group2.data;
 
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
 import kuleuven.group2.data.signature.JavaSignature;
@@ -15,18 +16,19 @@ import be.kuleuven.cs.ossrewriter.Monitor;
  */
 public class MethodTestLinkUpdater extends Monitor {
 
-	protected TestDatabase testDatabase;
+	protected final TestDatabase testDatabase;
 	protected ICurrentRunningTestHolder currentTestHolder;
+	protected final OssRewriterLoader ossRewriterLoader;
 
 	public MethodTestLinkUpdater(TestDatabase testDatabase, OssRewriterLoader ossRewriterLoader, JUnitCore core) {
-		new MethodTestLinkUpdater(testDatabase, ossRewriterLoader, new MethodTestLinkRunListener(core));
+		this.testDatabase = testDatabase;
+		this.ossRewriterLoader = ossRewriterLoader;
+		this.currentTestHolder = new MethodTestLinkRunListener(core);
 	}
 	
 	public MethodTestLinkUpdater(TestDatabase testDatabase, OssRewriterLoader ossRewriterLoader, ICurrentRunningTestHolder currentTestHolder) {
-		super();
 		this.testDatabase = testDatabase;
-
-		ossRewriterLoader.registerMonitor(this);
+		this.ossRewriterLoader = ossRewriterLoader;
 		this.currentTestHolder = currentTestHolder;
 	}
 
@@ -61,6 +63,8 @@ public class MethodTestLinkUpdater extends Monitor {
 		@Override
 	    public void testRunStarted(Description description) throws Exception {
 			testDatabase.clearMethodLinks();
+
+			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
 	    }
 
 	    /**
@@ -75,8 +79,13 @@ public class MethodTestLinkUpdater extends Monitor {
 	    	String testMethodName = description.getMethodName();
 	    	currentTest = new Test(testClassName, testMethodName);
 	    }
+		
+	    @Override
+		public void testRunFinished(Result result) throws Exception {
+			ossRewriterLoader.unregisterMonitor(MethodTestLinkUpdater.this);
+		}
 
-	    /**
+		/**
 	     * Called when an atomic test has finished, whether the test succeeds or fails.
 	     *
 	     * @param description the description of the test that just ran
