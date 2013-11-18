@@ -44,11 +44,6 @@ public class MethodTestLinkUpdater extends Monitor {
 			testDatabase.addMethodTestLink(enteredMethod, currentTest);
 		}
 	}
-
-	public void printMethodLinks() {
-		System.out.println("Method-test links:");
-		testDatabase.printMethodLinks();
-	}
 	
 	private class MethodTestLinkRunListener extends RunListener implements ICurrentRunningTestHolder{
 		

@@ -31,7 +31,7 @@ public class TestDatabase {
 		methods.add(testedMethod);
 	}
 
-	protected void removeMethod(TestedMethod testedMethod) {
+	public void removeMethod(TestedMethod testedMethod) {
 		methods.remove(testedMethod);
 	}
 	
@@ -64,15 +64,15 @@ public class TestDatabase {
 
 	// TESTS
 
-	protected void addTest(Test test) {
+	public void addTest(Test test) {
 		tests.add(test);
 	}
 
-	protected void removeTest(Test test) {
+	public void removeTest(Test test) {
 		tests.remove(test);
 	}
 	
-	protected Test getTest(String testClassName, String testMethodName) {
+	public Test getTest(String testClassName, String testMethodName) {
 		for (Test test : tests) {
 			if (test.equalName(testClassName, testMethodName)) {
 				return test;
@@ -148,12 +148,6 @@ public class TestDatabase {
 			}
 		}
 		return linkedTests;
-	}
-
-	public void printMethodLinks() {
-		for (TestMethodLink testMethodLink : testMethodLinks) {
-			System.out.println(testMethodLink);
-		}
 	}
 
 	public int getNbLinks() {

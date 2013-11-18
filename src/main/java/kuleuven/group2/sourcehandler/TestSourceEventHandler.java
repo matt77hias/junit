@@ -7,7 +7,7 @@ import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.TestRemoveUpdater;
+import kuleuven.group2.data.updating.TestRemoveUpdater;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreClassLoader;
 import kuleuven.group2.store.StoreEvent;

@@ -1,10 +1,11 @@
-package kuleuven.group2.data;
+package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+
+import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 public class TestRemoveUpdater {
 
@@ -22,9 +23,7 @@ public class TestRemoveUpdater {
 	 */
 	public void removeTestClasses(Collection<String> removedTestClassNames) {
 		for (String testClassName : removedTestClassNames) {
-			// TODO
-			// Set<Test> classTests = database.getTestsIn(testClassName);
-			Set<Test> classTests = new HashSet<>();
+			Collection<Test> classTests = database.getTestsIn(testClassName);
 			for (Test test : classTests) {
 				database.removeTest(test);
 			}

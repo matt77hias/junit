@@ -2,6 +2,7 @@ package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -104,9 +105,7 @@ public class MethodChangeUpdater {
 	 *            The set of new method signatures.
 	 */
 	protected void removeOldMethods(String className, Set<JavaSignature> newSignatures) {
-		// TODO
-		// Set<TestedMethod> oldMethods = database.getMethodsIn(className);
-		Set<TestedMethod> oldMethods = new HashSet<>();
+		Collection<TestedMethod> oldMethods = database.getMethodsIn(className);
 		for (TestedMethod method : oldMethods) {
 			if (!newSignatures.contains(method.getSignature())) {
 				database.removeMethod(method);
