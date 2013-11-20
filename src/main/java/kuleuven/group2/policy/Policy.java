@@ -1,6 +1,6 @@
 package kuleuven.group2.policy;
 
-import java.util.List;
+import java.util.Collection;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -29,7 +29,7 @@ public interface Policy {
 	 * 			The test database which contains the given tests.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestAccordingToPolicy(TestDatabase testDatabase);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase);
 	
 	/**
 	 * Sorts the given tests according to this policy.
@@ -38,8 +38,10 @@ public interface Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given array may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, Test[] tests);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests);
 		
 	/**
 	 * Sorts the given tests according to this policy.
@@ -48,6 +50,8 @@ public interface Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given collection may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, List<Test> tests);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests);
 }
