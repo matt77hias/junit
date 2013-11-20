@@ -18,7 +18,7 @@ import kuleuven.group2.util.ArrayUtils;
  * @version	17 November 2013
  * 
  */
-public abstract class DistinctFailureFirstPolicy implements Policy {
+public class DistinctFailureFirst implements Policy {
 	
 	/**
 	 * The default depth of the level of history that's
@@ -39,7 +39,7 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	 * Creates a new distinct failure first policy
 	 * with default depth.
 	 */
-	public DistinctFailureFirstPolicy() {
+	public DistinctFailureFirst() {
 		this(DEFAULT_DEPTH);
 	}
 	
@@ -53,7 +53,7 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	 * 			test runs before the 'depth' last test runs
 	 * 			are not taken into account.
 	 */
-	public DistinctFailureFirstPolicy(int depth) {
+	public DistinctFailureFirst(int depth) {
 		setDepth(depth);
 	}
 	
