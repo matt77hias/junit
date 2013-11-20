@@ -1,29 +1,20 @@
 package kuleuven.group2.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import kuleuven.group2.data.testrun.FailedTestRun;
-import kuleuven.group2.data.testrun.SuccesfullTestRun;
-
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 
 public class TestTest {
-	
+
 	protected kuleuven.group2.data.Test test;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+	protected final Failure failure = new Failure(Description.EMPTY, new Exception());
 
 	@Before
 	public void setUp() throws Exception {
@@ -36,62 +27,61 @@ public class TestTest {
 
 	@Test
 	public void lastFailureTimeTest() {
-		test.addTestRun(new FailedTestRun(new Date(1)));
-		test.addTestRun(new FailedTestRun(new Date(2)));
-		test.addTestRun(new FailedTestRun(new Date(3)));
-		test.addTestRun(new SuccesfullTestRun(new Date(4)));
-		
+		test.addTestRun(TestRun.createFailed(new Date(1), failure));
+		test.addTestRun(TestRun.createFailed(new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(new Date(3), failure));
+		test.addTestRun(TestRun.createSuccessful(new Date(4)));
+
 		assertEquals(new Date(3), test.getLastFailureTime());
 	}
 
 	@Test
 	public void lastFailureTimeTestNoFailures() {
-		test.addTestRun(new SuccesfullTestRun(new Date(3)));
-		
+		test.addTestRun(TestRun.createSuccessful(new Date(3)));
+
 		assertEquals(new Date(0), test.getLastFailureTime());
 	}
 
 	@Test
-	public void lastFailureTimeTestNoTestRuns() {		
+	public void lastFailureTimeTestNoTestRuns() {
 		assertEquals(new Date(0), test.getLastFailureTime());
 	}
-
 
 	@Test
 	public void failurePercentageTest() {
-		test.addTestRun(new SuccesfullTestRun(new Date(1)));
-		test.addTestRun(new FailedTestRun(new Date(2)));
-		test.addTestRun(new FailedTestRun(new Date(3)));
-		test.addTestRun(new FailedTestRun(new Date(4)));
-		test.addTestRun(new SuccesfullTestRun(new Date(5)));
-		test.addTestRun(new SuccesfullTestRun(new Date(6)));
-		test.addTestRun(new FailedTestRun(new Date(7)));
-		
+		test.addTestRun(TestRun.createSuccessful(new Date(1)));
+		test.addTestRun(TestRun.createFailed(new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(new Date(6)));
+		test.addTestRun(TestRun.createFailed(new Date(7), failure));
+
 		assertEquals(0.5f, test.getFailurePercentage(4), 0.001f);
 	}
 
 	@Test
 	public void failurePercentageTestTooHighDepth() {
-		test.addTestRun(new SuccesfullTestRun(new Date(1)));
-		test.addTestRun(new FailedTestRun(new Date(2)));
-		test.addTestRun(new FailedTestRun(new Date(3)));
-		test.addTestRun(new FailedTestRun(new Date(4)));
-		test.addTestRun(new SuccesfullTestRun(new Date(5)));
-		test.addTestRun(new SuccesfullTestRun(new Date(6)));
-		
+		test.addTestRun(TestRun.createSuccessful(new Date(1)));
+		test.addTestRun(TestRun.createFailed(new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(new Date(6)));
+
 		assertEquals(0.5f, test.getFailurePercentage(20), 0.001f);
 	}
 
 	@Test
 	public void failurePercentageTestTooLowDepth() {
-		test.addTestRun(new SuccesfullTestRun(new Date(1)));
-		test.addTestRun(new FailedTestRun(new Date(2)));
-		test.addTestRun(new FailedTestRun(new Date(3)));
-		test.addTestRun(new FailedTestRun(new Date(4)));
-		test.addTestRun(new SuccesfullTestRun(new Date(5)));
-		test.addTestRun(new SuccesfullTestRun(new Date(6)));
-		test.addTestRun(new FailedTestRun(new Date(7)));
-		
+		test.addTestRun(TestRun.createSuccessful(new Date(1)));
+		test.addTestRun(TestRun.createFailed(new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(new Date(6)));
+		test.addTestRun(TestRun.createFailed(new Date(7), failure));
+
 		assertEquals(0f, test.getFailurePercentage(-1), 0.001f);
 	}
 }

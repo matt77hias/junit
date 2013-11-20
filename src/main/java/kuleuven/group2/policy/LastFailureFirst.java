@@ -1,10 +1,11 @@
 package kuleuven.group2.policy;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.Comparator;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the last failure first policy.
@@ -13,7 +14,7 @@ import kuleuven.group2.data.Test;
  * @version	17 November 2013
  * 
  */
-public class LastFailureFirst implements Policy {
+public class LastFailureFirst implements Policy, Comparator<Test> {
 	
 	/**
 	 * Creates a new last failure first policy.
@@ -23,25 +24,47 @@ public class LastFailureFirst implements Policy {
 	}
 	
 	/**
-	 * Sorts the given tests according to this last failure first policy.
+	 * Sorts the tests of the given test database according to this last failure policy.
 	 * 
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
+	 * @return	The tests of the given test database according to this
+	 * 			last failure policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(Test[] tests) {
-		Arrays.sort(tests, 0, tests.length, this);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
+		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 	
 	/**
 	 * Sorts the given tests according to this last failure first policy.
 	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(List<Test> tests) {
-		Collections.sort(tests, this);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+		Test[] results = tests.clone();
+		Arrays.sort(results, 0, results.length, this);
+		return results;
+	}
+	
+	/**
+	 * Sorts the given tests according to this last failure first policy.
+	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
+	 * @param 	tests
+	 * 			The tests that needs to be sorted.
+	 * @return	The tests of the given test database according to this policy.
+	 */
+	@Override
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 
 	/**
