@@ -110,7 +110,7 @@ public class Pipeline {
 			}
 
 			// Sort tests
-			Test[] tests = sortPolicy.getSortedTestAccordingToPolicy(testDatabase);
+			Test[] tests = sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
 
 			// Run tests and monitor method calls
 			rewriterLoader.registerMonitor(methodTestLinkUpdater);
