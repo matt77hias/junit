@@ -1,4 +1,4 @@
-package kuleuven.group2.data.methodlink;
+package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.assertTrue;
 
@@ -41,7 +41,7 @@ public class OssRewriterTest {
 
 		try {
 			VirtualMachine vm = VirtualMachine.attach(pid);
-			vm.loadAgent("D:\\DLS\\ossrewriter-1.0.jar", "");
+	        vm.loadAgent("res\\ossrewriter-1.0.jar", "");
 			vm.detach();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -109,7 +109,7 @@ public class OssRewriterTest {
 
 		a.visit();
 		
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/testtomethodlink/OssRewriterTest$A.visit()V"));
+		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterTest$A.visit()V"));
 	}
 
 }

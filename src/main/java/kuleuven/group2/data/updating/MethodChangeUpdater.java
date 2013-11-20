@@ -2,8 +2,11 @@ package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
@@ -12,6 +15,12 @@ import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 
+/**
+ * A MethodChangeUpdater detects method changes (using hashes) and updates the
+ * test database accordingly.
+ * 
+ * @author Mattias Buelens
+ */
 public class MethodChangeUpdater {
 
 	protected final TestDatabase database;
@@ -59,11 +68,48 @@ public class MethodChangeUpdater {
 	public void detectChanges(String className, byte[] classBytes, Date timestamp) {
 		// Calculate all method hashes
 		Map<String, MethodHash> methodHashes = new MethodHasher(classBytes).getHashes();
+		// Remove old methods
+		removeOldMethodNames(className, methodHashes.keySet());
+		// Update hashes
 		for (Map.Entry<String, MethodHash> entry : methodHashes.entrySet()) {
 			String methodName = entry.getKey();
 			MethodHash methodHash = entry.getValue();
 			JavaSignature signature = new JavaSignatureParser(className + "." + methodName).parseSignature();
 			updateMethodHash(signature, methodHash, timestamp);
+		}
+	}
+
+	/**
+	 * Remove old methods in the given class from the database.
+	 * 
+	 * @param className
+	 *            The class name.
+	 * @param newMethodNames
+	 *            The set of new method names.
+	 */
+	protected void removeOldMethodNames(String className, Set<String> newMethodNames) {
+		Set<JavaSignature> newSignatures = new HashSet<>();
+		for (String methodName : newMethodNames) {
+			JavaSignature signature = new JavaSignatureParser(className + "." + methodName).parseSignature();
+			newSignatures.add(signature);
+		}
+		removeOldMethods(className, newSignatures);
+	}
+
+	/**
+	 * Remove old methods in the given class from the database.
+	 * 
+	 * @param className
+	 *            The class name.
+	 * @param newMethodNames
+	 *            The set of new method signatures.
+	 */
+	protected void removeOldMethods(String className, Set<JavaSignature> newSignatures) {
+		Collection<TestedMethod> oldMethods = database.getMethodsIn(className);
+		for (TestedMethod method : oldMethods) {
+			if (!newSignatures.contains(method.getSignature())) {
+				database.removeMethod(method);
+			}
 		}
 	}
 
@@ -79,11 +125,13 @@ public class MethodChangeUpdater {
 	 */
 	protected void updateMethodHash(JavaSignature signature, MethodHash newHash, Date timestamp) {
 		// Get or create method
-		TestedMethod method = database.getMethod(signature);
-		if (method == null) {
+		TestedMethod method;
+		if(!database.containsMethod(signature)) {
 			method = new TestedMethod(signature);
 			database.addMethod(method);
 		}
+		else method = database.getMethod(signature);
+
 		// Update hash
 		if (!newHash.equals(method.getHash())) {
 			method.setHash(newHash);

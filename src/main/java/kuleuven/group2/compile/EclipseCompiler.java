@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreFilter;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.ClassFile;
@@ -29,31 +28,14 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
 import com.google.common.io.ByteStreams;
 
-public class EclipseCompiler implements JavaCompiler {
+public class EclipseCompiler extends JavaCompiler {
 
-	protected final Store sourceStore;
-	protected final Store binaryStore;
-
-	public EclipseCompiler(Store sourceStore, Store binaryStore) {
-		this.sourceStore = sourceStore;
-		this.binaryStore = binaryStore;
-	}
-
-	public Store getSourceStore() {
-		return sourceStore;
-	}
-
-	public Store getBinaryStore() {
-		return binaryStore;
+	public EclipseCompiler(Store sourceStore, Store binaryStore, ClassLoader classLoader) {
+		super(sourceStore, binaryStore, classLoader);
 	}
 
 	@Override
-	public CompilationResult compile(ClassLoader classLoader) {
-		return compile(getSourceStore().getFiltered(StoreFilter.SOURCE), classLoader);
-	}
-
-	@Override
-	public CompilationResult compile(final Collection<String> sourceNames, final ClassLoader classLoader) {
+	public CompilationResult compile(final Collection<String> sourceNames) {
 		final Map<String, byte[]> compiled = new HashMap<String, byte[]>();
 		final List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
 
@@ -76,7 +58,7 @@ public class EclipseCompiler implements JavaCompiler {
 		// Setup compiler environment
 		final IErrorHandlingPolicy policy = DefaultErrorHandlingPolicies.proceedWithAllProblems();
 		final IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
-		final INameEnvironment nameEnvironment = new NameEnvironment(classLoader);
+		final INameEnvironment nameEnvironment = new NameEnvironment();
 		final ICompilerRequestor compilerRequestor = new CompilerRequestor(problems, compiled);
 
 		// Compile
@@ -93,12 +75,6 @@ public class EclipseCompiler implements JavaCompiler {
 	 * loader and the binary store.
 	 */
 	protected class NameEnvironment implements INameEnvironment {
-
-		private final ClassLoader classLoader;
-
-		private NameEnvironment(ClassLoader classLoader) {
-			this.classLoader = classLoader;
-		}
 
 		public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
 			return findType(NameUtils.getClassName(compoundTypeName));
@@ -122,7 +98,7 @@ public class EclipseCompiler implements JavaCompiler {
 			}
 
 			// Find in class loader
-			try (InputStream is = classLoader.getResourceAsStream(classResourceName)) {
+			try (InputStream is = getClassLoader().getResourceAsStream(classResourceName)) {
 				if (is != null) {
 					// Found, produce answer
 					return createFindTypeAnswer(className, ByteStreams.toByteArray(is));
@@ -156,7 +132,7 @@ public class EclipseCompiler implements JavaCompiler {
 
 			// Check for loaded class
 			String classResourceName = NameUtils.toBinaryName(className);
-			try (InputStream is = classLoader.getResourceAsStream(classResourceName)) {
+			try (InputStream is = getClassLoader().getResourceAsStream(classResourceName)) {
 				if (is != null) {
 					// Class found, not a package
 					return false;

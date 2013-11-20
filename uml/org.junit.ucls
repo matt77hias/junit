@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <package id="1" language="java" name="org.junit.internal" project="junit" 
+    file="/junit/src/main/java/org/junit/internal" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1142" y="58"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="org.junit.internal.requests" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/requests" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1189" y="206"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="org.junit.internal.runners" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/runners" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1377" y="205"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="org.junit.internal.matchers" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/matchers" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="995" y="202"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="org.junit.internal.builders" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/builders" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="810" y="205"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="org.junit.internal.runners.model" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/runners/model" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1171" y="308"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="org.junit.internal.runners.rules" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/runners/rules" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1391" y="307"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="8" language="java" name="org.junit.internal.runners.statements" project="junit" 
+    file="/junit/src/main/java/org/junit/internal/runners/statements" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1634" y="312"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="9" language="java" name="org.junit.matchers" project="junit" 
+    file="/junit/src/main/java/org/junit/matchers" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="923" y="65"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="10" language="java" name="org.junit.rules" project="junit" file="/junit/src/main/java/org/junit/rules" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="694" y="75"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="11" language="java" name="org.junit.runner.manipulation" project="junit" 
+    file="/junit/src/main/java/org/junit/runner/manipulation" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="271" y="168"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="12" language="java" name="org.junit.runner" project="junit" file="/junit/src/main/java/org/junit/runner" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="382" y="76"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="13" language="java" name="org.junit.runner.notification" project="junit" 
+    file="/junit/src/main/java/org/junit/runner/notification" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="478" y="169"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="14" language="java" name="org.junit.runners.model" project="junit" 
+    file="/junit/src/main/java/org/junit/runners/model" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="54" y="173"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="15" language="java" name="org.junit.runners" project="junit" 
+    file="/junit/src/main/java/org/junit/runners" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="54" y="62"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

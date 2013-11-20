@@ -18,6 +18,12 @@ public interface Store {
 
 	public void clear();
 
+	public boolean isListening();
+
+	public void startListening();
+
+	public void stopListening();
+
 	public void addStoreListener(StoreListener listener);
 
 	public void removeStoreListener(StoreListener listener);

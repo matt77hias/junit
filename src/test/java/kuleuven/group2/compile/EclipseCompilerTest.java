@@ -24,8 +24,8 @@ public class EclipseCompilerTest {
 	public void setup() {
 		sourceStore = new MemoryStore();
 		binaryStore = new MemoryStore();
-		compiler = new EclipseCompiler(sourceStore, binaryStore);
 		classLoader = new StoreClassLoader(binaryStore);
+		compiler = new EclipseCompiler(sourceStore, binaryStore, classLoader);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class EclipseCompilerTest {
 		//@formatter:on
 		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
 
-		CompilationResult result = compiler.compile(classLoader);
+		CompilationResult result = compiler.compileAll();
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getCompiledClasses().size());
 		assertNotNull(result.getCompiledClass(className));
@@ -62,7 +62,7 @@ public class EclipseCompilerTest {
 		sourceStore.write(NameUtils.toSourceName("A"), sourceA.getBytes());
 		sourceStore.write(NameUtils.toSourceName("B"), sourceB.getBytes());
 
-		CompilationResult result = compiler.compile(classLoader);
+		CompilationResult result = compiler.compileAll();
 		assertTrue(result.isSuccess());
 		assertEquals(2, result.getCompiledClasses().size());
 
@@ -82,7 +82,7 @@ public class EclipseCompilerTest {
 		//@formatter:on
 		sourceStore.write(NameUtils.toSourceName("A"), source.getBytes());
 
-		CompilationResult result = compiler.compile(classLoader);
+		CompilationResult result = compiler.compileAll();
 		assertTrue(result.isSuccess());
 		assertEquals(2, result.getCompiledClasses().size());
 

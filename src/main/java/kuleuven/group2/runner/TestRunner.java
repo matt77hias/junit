@@ -152,7 +152,7 @@ public class TestRunner {
 				Class<?> klass = classLoader.loadClass(tests[i].getTestClassName());
 				// Create a request for a single test method
 				Request request = requestTestMethod(klass, tests[i].getTestMethodName());
-				// Run the request and obtain the request.
+				// Run the request and obtain the result.
 				Result result = runTestMethod(request);
 				// Store the result.
 				results[i] = result;

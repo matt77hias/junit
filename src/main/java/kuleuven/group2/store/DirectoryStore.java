@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import kuleuven.group2.filewatch.DirectoryWatchListener;
 import kuleuven.group2.filewatch.DirectoryWatcher;
@@ -20,6 +23,8 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 
 	protected final Path root;
 	protected final DirectoryWatcher watcher;
+	protected final ExecutorService executor;
+	protected Future<?> watchTask;
 
 	public DirectoryStore(Path root) throws IllegalArgumentException, IOException {
 		if (root == null) {
@@ -34,7 +39,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		}
 		this.root = root;
 		this.watcher = new DirectoryWatcher(root);
-		watcher.addWatchListener(this);
+		this.executor = Executors.newSingleThreadExecutor();
 	}
 
 	public DirectoryStore(String root) throws IllegalArgumentException, IOException {
@@ -115,6 +120,28 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		}
 	}
 
+	@Override
+	public boolean isListening() {
+		return watchTask != null && !watchTask.isDone();
+	}
+
+	@Override
+	public void startListening() {
+		if (!isListening()) {
+			watcher.addWatchListener(this);
+			watchTask = executor.submit(new WatchTask());
+		}
+	}
+
+	@Override
+	public void stopListening() {
+		if (isListening()) {
+			watcher.removeWatchListener(this);
+			watchTask.cancel(true);
+			watchTask = null;
+		}
+	}
+
 	protected boolean isResource(Path filePath) {
 		return Files.isRegularFile(filePath);
 	}
@@ -140,6 +167,15 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	@Override
 	public void fileDeleted(Path path) {
 		if (isResource(path)) fireRemoved(getResourceName(path));
+	}
+
+	protected class WatchTask implements Runnable {
+		@Override
+		public void run() {
+			while (!Thread.interrupted()) {
+				watcher.processEvents();
+			}
+		}
 	}
 
 }

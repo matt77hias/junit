@@ -16,20 +16,26 @@ public abstract class AbstractStore implements Store {
 	}
 
 	protected void fireAdded(String resourceName) {
-		for (StoreListener listener : listeners) {
-			listener.resourceAdded(resourceName);
+		if (isListening()) {
+			for (StoreListener listener : listeners) {
+				listener.resourceAdded(resourceName);
+			}
 		}
 	}
 
 	protected void fireChanged(String resourceName) {
-		for (StoreListener listener : listeners) {
-			listener.resourceChanged(resourceName);
+		if (isListening()) {
+			for (StoreListener listener : listeners) {
+				listener.resourceChanged(resourceName);
+			}
 		}
 	}
 
 	protected void fireRemoved(String resourceName) {
-		for (StoreListener listener : listeners) {
-			listener.resourceRemoved(resourceName);
+		if (isListening()) {
+			for (StoreListener listener : listeners) {
+				listener.resourceRemoved(resourceName);
+			}
 		}
 	}
 
