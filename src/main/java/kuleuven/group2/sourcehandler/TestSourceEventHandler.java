@@ -7,7 +7,7 @@ import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.updating.TestRemoveUpdater;
+import kuleuven.group2.data.updating.TestChangeUpdater;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreClassLoader;
 import kuleuven.group2.store.StoreEvent;
@@ -19,7 +19,7 @@ public class TestSourceEventHandler extends SourceEventHandler {
 	protected final TestDatabase testDatabase;
 	protected final StoreClassLoader testClassLoader;
 
-	protected final TestRemoveUpdater testRemoveUpdater;
+	protected final TestChangeUpdater testChangeUpdater;
 
 	public TestSourceEventHandler(Store testSourceStore, Store binaryStore, TestDatabase testDatabase,
 			StoreClassLoader testClassLoader) {
@@ -28,7 +28,7 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		this.testDatabase = testDatabase;
 		this.testClassLoader = testClassLoader;
 
-		this.testRemoveUpdater = new TestRemoveUpdater(testDatabase);
+		this.testChangeUpdater = new TestChangeUpdater(testDatabase, testClassLoader);
 	}
 
 	@Override
@@ -45,7 +45,8 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		}
 
 		// Update database
-		testRemoveUpdater.removeTestClasses(NameUtils.toClassNames(changes.getRemovedResources()));
+		testChangeUpdater.removeTests(NameUtils.toClassNames(changes.getRemovedResources()));
+		testChangeUpdater.updateTestClasses(NameUtils.toClassNames(changes.getAddedOrChangedResources()));
 	}
 
 }

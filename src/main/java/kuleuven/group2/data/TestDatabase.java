@@ -34,7 +34,7 @@ public class TestDatabase {
 	public void removeMethod(TestedMethod testedMethod) {
 		methods.remove(testedMethod);
 	}
-	
+
 	public boolean containsMethod(JavaSignature signature) {
 		for (TestedMethod testedMethod : methods) {
 			if (testedMethod.getSignature().equals(signature)) {
@@ -42,7 +42,7 @@ public class TestDatabase {
 			}
 		}
 		return false;
-		//TODO: FASTER: cache result
+		// TODO: FASTER: cache result
 	}
 
 	public TestedMethod getMethod(JavaSignature signature) {
@@ -56,8 +56,8 @@ public class TestDatabase {
 
 	public Collection<TestedMethod> getMethodsIn(String className) {
 		Set<TestedMethod> foundMethods = new HashSet<TestedMethod>();
-		for(TestedMethod method : methods) {
-			if( method.getClass().getSimpleName().equals(className) ) foundMethods.add(method);
+		for (TestedMethod method : methods) {
+			if (method.getClass().getSimpleName().equals(className)) foundMethods.add(method);
 		}
 		return foundMethods;
 	}
@@ -71,7 +71,7 @@ public class TestDatabase {
 	public void removeTest(Test test) {
 		tests.remove(test);
 	}
-	
+
 	public Test getTest(String testClassName, String testMethodName) {
 		for (Test test : tests) {
 			if (test.equalName(testClassName, testMethodName)) {
@@ -81,20 +81,29 @@ public class TestDatabase {
 		return null;
 	}
 
+	public boolean containsTest(String testClassName, String testMethodName) {
+		for (Test test : tests) {
+			if (test.equalName(testClassName, testMethodName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Collection<Test> getAllTests() {
 		return tests;
 	}
 
 	public Collection<Test> getTestsIn(String testClassName) {
 		Set<Test> foundTests = new HashSet<Test>();
-		for(Test test : tests) {
-			if( test.getTestClassName().equals(testClassName) ) foundTests.add(test);
+		for (Test test : tests) {
+			if (test.getTestClassName().equals(testClassName)) foundTests.add(test);
 		}
 		return foundTests;
 	}
 
 	// TESTRUNS
-	
+
 	public void addTestRun(TestRun testRun, Test test) {
 		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
 	}
@@ -125,7 +134,7 @@ public class TestDatabase {
 	public void clearMethodLinks() {
 		testMethodLinks.clear();
 	}
-	
+
 	public boolean containsMethodTestLink(TestedMethod testedMethod, Test test) {
 		return testMethodLinks.contains(new TestMethodLink(testedMethod, test));
 	}
