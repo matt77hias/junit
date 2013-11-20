@@ -1,7 +1,7 @@
 package kuleuven.group2.policy;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -132,8 +132,7 @@ public class ChangedCodeFirst implements Policy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
-		Test[] result = tests.toArray(new Test[0]);
-		return getSortedTestsAccordingToPolicy(testDatabase, result);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 }

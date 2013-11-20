@@ -1,6 +1,6 @@
 package kuleuven.group2.policy;
 
-import java.util.List;
+import java.util.Collection;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -53,5 +53,5 @@ public interface Policy {
 	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests);
 }

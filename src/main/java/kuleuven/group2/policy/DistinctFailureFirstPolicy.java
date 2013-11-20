@@ -1,6 +1,7 @@
 package kuleuven.group2.policy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,8 +103,7 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		getSortedTestsAccordingToPolicy(testDatabase, result);
-		return result;
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 	
 	/**
@@ -163,8 +163,7 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
-		Test[] result = tests.toArray(new Test[0]);
-		return getSortedTestsAccordingToPolicy(testDatabase, result);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 }

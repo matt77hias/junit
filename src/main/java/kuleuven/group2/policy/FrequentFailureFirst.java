@@ -1,9 +1,8 @@
 package kuleuven.group2.policy;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -124,7 +123,7 @@ public class FrequentFailureFirst implements Policy, Comparator<Test> {
 	 * 
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
 		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 
