@@ -17,7 +17,7 @@ import kuleuven.group2.util.ArrayUtils;
  * @version	17 November 2013
  * 
  */
-public class DistinctFailureFirstPolicy implements Policy {
+public abstract class DistinctFailureFirstPolicy implements Policy {
 	
 	/**
 	 * The default depth of the level of history that's
