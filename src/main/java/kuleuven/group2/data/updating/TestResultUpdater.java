@@ -10,7 +10,6 @@ import kuleuven.group2.data.TestRun;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
-import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
@@ -27,15 +26,6 @@ public class TestResultUpdater extends RunListener {
 
 	public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
-	}
-
-	/**
-	 * Creates a new testResultUpdater and registers it to the given JUnitCore
-	 * as a listener.
-	 */
-	public TestResultUpdater(TestDatabase testDatabase, JUnitCore core) {
-		this.testDatabase = testDatabase;
-		core.addListener(this);
 	}
 
 	/**
