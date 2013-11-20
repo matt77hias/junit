@@ -96,7 +96,7 @@ public class OssRewriterTest {
 	}
 
 	@Test
-	public void test() {
+	public void methodIsVisitedTest() {
 		final VisitedMethodsTracker visitedMethodsTracker = new VisitedMethodsTracker();
 		MonitorEntrypoint.register(new Monitor() {
 
@@ -109,6 +109,13 @@ public class OssRewriterTest {
 		a.visit();
 		
 		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterTest$A.visit()V"));
+	}
+	
+	@Test
+	public void retransformClassesAfterReloadTest() throws ClassNotFoundException {
+		getClass().getClassLoader().loadClass(OssRewriterTest.A.class.getName());
+		
+		methodIsVisitedTest();
 	}
 
 }
