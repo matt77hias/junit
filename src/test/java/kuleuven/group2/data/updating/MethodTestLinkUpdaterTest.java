@@ -44,7 +44,8 @@ public class MethodTestLinkUpdaterTest {
 		database.addMethod(getTrue);
 		OssRewriterLoader loader = new OssRewriterLoader();
 		currentTestHolder = new CurrentTestHolder();
-		updater = new MethodTestLinkUpdater(database, loader, currentTestHolder);
+		updater = new MethodTestLinkUpdater(database, loader);
+		updater.registerTestHolder(currentTestHolder);
 	}
 
 	@After
