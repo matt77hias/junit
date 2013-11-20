@@ -1,42 +1,49 @@
 package kuleuven.group2.policy;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
+import kuleuven.group2.data.TestRun;
+import kuleuven.group2.util.ArrayUtils;
 
 /**
- * A class representing the frequent failure first policy.
+ * A class representing the distinct failure first policy.
  * 
  * @author	Group 2
  * @version	17 November 2013
  * 
  */
-public class FrequentFailureFirst implements Policy, Comparator<Test> {
+public class DistinctFailureFirstPolicy implements Policy {
 	
 	/**
 	 * The default depth of the level of history that's
-	 * still taken into account for frequent failure
+	 * still taken into account for distinct failure
 	 * first policies. 
 	 * 
 	 * The history of test runs before the 'depth' last test
 	 * runs are not taken into account.
+	 * 
+	 * @note	The level of history refers only
+	 * 			to the history for the test runs
+	 * 			assosciated with a single test.
+	 * 			Not the history of all test runs.
 	 */
 	public static final int DEFAULT_DEPTH = 20;
 	
 	/**
-	 * Creates a new frequent failure first policy
+	 * Creates a new distinct failure first policy
 	 * with default depth.
 	 */
-	public FrequentFailureFirst() {
+	public DistinctFailureFirstPolicy() {
 		this(DEFAULT_DEPTH);
 	}
 	
 	/**
-	 * Creates a new frequent failure first policy
+	 * Creates a new distinct failure first policy
 	 * with given depth.
 	 * 
 	 * @param	depth
@@ -45,17 +52,17 @@ public class FrequentFailureFirst implements Policy, Comparator<Test> {
 	 * 			test runs before the 'depth' last test runs
 	 * 			are not taken into account.
 	 */
-	public FrequentFailureFirst(int depth) {
+	public DistinctFailureFirstPolicy(int depth) {
 		setDepth(depth);
 	}
 	
 	/**
 	 * Returns the depth of the level of history that's
-	 * still taken into account of this frequent failure
+	 * still taken into account of this distinct failure
 	 * first policy. 
 	 * 
 	 * @return 	The depth of the level of history that's
-	 * 			still taken into account of this frequent failure
+	 * 			still taken into account of this distinct failure
 	 * 			first policy. 
 	 */
 	public int getDepth() {
@@ -64,7 +71,7 @@ public class FrequentFailureFirst implements Policy, Comparator<Test> {
 	
 	/**
 	 * Sets the depth of the level of history that's
-	 * still taken into account of this frequent failure
+	 * still taken into account of this distinct failure
 	 * first policy to the given depth.
 	 * 
 	 * @param	depth
@@ -76,31 +83,31 @@ public class FrequentFailureFirst implements Policy, Comparator<Test> {
 	
 	/**
 	 * The depth of the level of history that's
-	 * still taken into account of this frequent failure
+	 * still taken into account of this distinct failure
 	 * first policy. 
 	 * 
 	 * The history of test runs before the 'depth' last test
 	 * runs are not taken into account.
 	 */
 	private int depth;
-	
+
 	/**
-	 * Sorts the tests of the given test database according to this
-	 * frequent failure first policy.
+	 * Sorts the tests of the given test database according to this distinct failure first policy.
 	 * 
 	 * @param	testDatabase
 	 * 			The test database which contains the given tests.
 	 * @return	The tests of the given test database according to this
-	 * 			frequent failure first policy.
+	 * 			distinct failure first policy.
 	 */
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTestsAccordingToPolicy(testDatabase, result);
+		getSortedTestsAccordingToPolicy(testDatabase, result);
+		return result;
 	}
 	
 	/**
-	 * Sorts the given tests according to this frequent failure first policy.
+	 * Sorts the given tests according to this changed code first policy.
 	 * 
 	 * @param	testDatabase
 	 * 			The test database which contains the given tests.
@@ -111,43 +118,55 @@ public class FrequentFailureFirst implements Policy, Comparator<Test> {
 	 */
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
-		Arrays.sort(tests, 0, tests.length, this);
-		return tests;
+		Set<StackTraceElement> currentTraceElements = new HashSet<StackTraceElement>();
+		List<Test> priority = new ArrayList<Test>();
+		List<Test> postponed = new ArrayList<Test>();
+		
+		int nb = tests.length;
+		for (int i=0; i<nb; i++) {
+			Test current = tests[i];
+			
+			int d = 0;
+			for (TestRun testRun : current.getTestRuns()) {
+				
+				if (d == getDepth()) {
+					break;
+				}
+				
+				if (testRun.isFailedRun()) {
+					StackTraceElement e = testRun.getTrace()[0];
+					if (!currentTraceElements.contains(e)) {
+						currentTraceElements.add(e);
+						if (!priority.contains(current)) {
+							priority.add(current);
+						}
+					}
+				}
+				
+				d++;
+			}
+			
+			if (!priority.contains(current) && !postponed.contains(current)) {
+				postponed.add(current);
+			}
+		}
+		
+		return ArrayUtils.concat(priority.toArray(new Test[0]), postponed.toArray(new Test[0]));
 	}
 	
 	/**
-	 * Sorts the given tests according to this frequent failure first policy.
+	 * Sorts the given tests according to this changed code first policy.
 	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
 	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
-	 * 
 	 */
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
-		Collections.sort(tests, this);
-		return tests.toArray(new Test[0]);
-	}
-
-	/**
-	 * Compares the two given tests according to the frequent failure first policy.
-	 * 
-	 * @pre		The given Test objects may not refer the null reference.
-	 * @param	o1
-	 * 			The first test.
-	 * @param	o2
-	 * 			The second test.
-	 * @return	The result is less than zero if o1 failed 
-	 * 			more frequently than o2.
-	 * @return	The result is equal to zero if o1 and o2 have
-	 * 			the same frequency of failure.
-	 * @return	The result is greater than zero if o2 failed
-	 * 			more frequently than o2.
-	 */
-	@Override
-	public int compare(Test o1, Test o2) {
-		// If mathematics is our concern we can write our own floating point value compare method.
-		return Float.compare(o2.getFailurePercentage(getDepth()), o1.getFailurePercentage(getDepth()));
+		Test[] result = tests.toArray(new Test[0]);
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 }

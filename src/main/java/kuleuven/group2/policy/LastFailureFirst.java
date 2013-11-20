@@ -33,9 +33,9 @@ public class LastFailureFirst implements Policy, Comparator<Test> {
 	 * 			last failure policy.
 	 */
 	@Override
-	public Test[] getSortedTestAccordingToPolicy(TestDatabase testDatabase) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		getSortedTestAccordingToPolicy(testDatabase, result);
+		getSortedTestsAccordingToPolicy(testDatabase, result);
 		return result;
 	}
 	
@@ -46,10 +46,13 @@ public class LastFailureFirst implements Policy, Comparator<Test> {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given array may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
 		Arrays.sort(tests, 0, tests.length, this);
+		return tests;
 	}
 	
 	/**
@@ -59,10 +62,13 @@ public class LastFailureFirst implements Policy, Comparator<Test> {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given collection may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
 		Collections.sort(tests, this);
+		return tests.toArray(new Test[0]);
 	}
 
 	/**

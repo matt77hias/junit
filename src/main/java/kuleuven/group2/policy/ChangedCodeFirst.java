@@ -32,10 +32,9 @@ public class ChangedCodeFirst implements Policy {
 	 * 			last failure policy.
 	 */
 	@Override
-	public Test[] getSortedTestAccordingToPolicy(TestDatabase testDatabase) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		getSortedTestAccordingToPolicy(testDatabase, result);
-		return result;
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 	
 	/**
@@ -45,9 +44,11 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given array may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
 		int nb = tests.length;
 		Tuple[] tuples = new Tuple[nb];
 		for (int i=0; i<nb; i++) {
@@ -65,6 +66,7 @@ public class ChangedCodeFirst implements Policy {
 		for (int i=0; i<nb; i++) {
 			tests[i] = tuples[i].test;
 		}
+		return tests;
 	}
 	
 	/**
@@ -127,11 +129,12 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @post	The given collection may be modified.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
 		Test[] result = tests.toArray(new Test[0]);
-		getSortedTestAccordingToPolicy(testDatabase, result);
-		tests = Arrays.asList(result);
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 }
