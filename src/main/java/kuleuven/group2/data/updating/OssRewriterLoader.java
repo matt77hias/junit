@@ -16,8 +16,7 @@ import com.sun.tools.attach.VirtualMachine;
  */
 public class OssRewriterLoader {
 	/**
-	 * Loads the ossrewriter to the current VM, enables it, sets a filter (for exclusion of org/junit code)
-	 * and finally, lets it retransform all classes.
+	 * Loads the ossrewriter to the current VM, enables it then retransforms all classes.
 	 */
 	public void launchOssRewriter() {
 	    String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
