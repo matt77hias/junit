@@ -33,8 +33,7 @@ public class TestRunnerTest {
 	public void setUp() throws Exception {
 		junitCore = new JUnitCore();
 		
-		testRunner = new TestRunner();
-		testRunner.setClassLoader(getClass().getClassLoader());
+		testRunner = new TestRunner(getClass().getClassLoader(), junitCore);
 		
 		testMethod2Arg = new kuleuven.group2.data.Test(
 				kuleuven.group2.data.signature.JavaSignatureParserTest.class.getName(),
@@ -84,11 +83,6 @@ public class TestRunnerTest {
 			@Override
 			public void testStarted(Description description) throws Exception {
 				TestRunnerTest.this.listenerVisited();
-				System.out.println("teststarted");
-		    }
-			@Override
-		    public void testRunFinished(Result result) throws Exception {
-				System.out.println("testrunfinished");
 		    }
 		});
 
