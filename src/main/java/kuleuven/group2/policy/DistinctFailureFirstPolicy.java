@@ -113,7 +113,6 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given array may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
@@ -161,7 +160,6 @@ public abstract class DistinctFailureFirstPolicy implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override

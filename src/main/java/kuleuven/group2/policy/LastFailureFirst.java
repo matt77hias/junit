@@ -1,7 +1,6 @@
 package kuleuven.group2.policy;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,13 +45,13 @@ public class LastFailureFirst implements Policy, Comparator<Test> {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given array may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
-		Arrays.sort(tests, 0, tests.length, this);
-		return tests;
+		Test[] results = tests.clone();
+		Arrays.sort(results, 0, results.length, this);
+		return results;
 	}
 	
 	/**
@@ -62,13 +61,11 @@ public class LastFailureFirst implements Policy, Comparator<Test> {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
 	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
-		Collections.sort(tests, this);
-		return tests.toArray(new Test[0]);
+		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 
 	/**

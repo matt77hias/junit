@@ -44,7 +44,6 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given array may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
@@ -63,10 +62,11 @@ public class ChangedCodeFirst implements Policy {
 			tuples[i] = new Tuple(current, optimal);
 		}
 		Arrays.sort(tuples);
+		Test[] result = new Test[nb];
 		for (int i=0; i<nb; i++) {
-			tests[i] = tuples[i].test;
+			result[i] = tuples[i].test;
 		}
-		return tests;
+		return result;
 	}
 	
 	/**
@@ -129,7 +129,6 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
-	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
