@@ -2,17 +2,25 @@ package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
+import kuleuven.group2.data.signature.JavaSignature;
+import kuleuven.group2.data.signature.JavaSignatureParser;
+import kuleuven.group2.data.signature.JavaSignatureParserTest;
 import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
+import kuleuven.group2.runner.TestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 public class MethodTestLinkUpdaterTest {
 	
@@ -74,7 +82,24 @@ public class MethodTestLinkUpdaterTest {
 	
 	@Test
 	public void testWithOssRewriter() {
-		//TODO: make test with ossRewriter
+		OssRewriterLoader ossRewriterLoader = new OssRewriterLoader();
+		
+		TestRunner testRunner = new TestRunner(getClass().getClassLoader());
+		updater.registerTestHolder(testRunner);
+		
+		String signature = "kuleuven/group2/data/signature/JavaSignatureParser.parseSignature()Lkuleuven/group2/data/signature/JavaSignature;";
+		database.addMethod(new TestedMethod(new JavaSignatureParser(signature).parseSignature()));
+		
+		ossRewriterLoader.launchOssRewriter();
+		ossRewriterLoader.registerMonitor(updater);
+		
+		testRunner.runTestMethods(new kuleuven.group2.data.Test(JavaSignatureParserTest.class.getName(), "testMethod2Arg"));
+		
+		ossRewriterLoader.unregisterMonitor(updater);
+		
+		assertTrue(database.containsMethodTestLink(
+				database.getMethod(new JavaSignatureParser(signature).parseSignature()),
+				new kuleuven.group2.data.Test("kuleuven.group2.data.signature.JavaSignatureParserTest", "testMethod2Arg")));
 	}
 	
 	@SuppressWarnings("unused")

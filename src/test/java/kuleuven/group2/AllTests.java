@@ -8,6 +8,7 @@ import kuleuven.group2.data.hash.MethodHasherTest;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
 import kuleuven.group2.data.updating.MethodChangeUpdaterTest;
 import kuleuven.group2.data.updating.MethodTestLinkUpdaterTest;
+import kuleuven.group2.data.updating.TestChangeUpdaterTest;
 import kuleuven.group2.data.updating.TestResultUpdaterTest;
 import kuleuven.group2.filewatch.FolderWatcherTest;
 import kuleuven.group2.policy.PolicyTest;
@@ -33,6 +34,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	PolicyTest.class,
 	TestRunnerTest.class,
 	DirectoryStoreTest.class,
+	TestChangeUpdaterTest.class,
 	})
 public class AllTests {
 	
