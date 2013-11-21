@@ -36,6 +36,9 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		// Collect changes in test sources
 		Changes changes = collectChanges(events, testSourceStore);
 
+		// Remove test methods in old test classes
+		testChangeUpdater.removeTests(NameUtils.toClassNames(changes.getRemovedResources()));
+
 		// Compile changed test sources
 		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
@@ -44,9 +47,8 @@ public class TestSourceEventHandler extends SourceEventHandler {
 			throw new Exception("Compilation of test sources failed: " + result.getErrors());
 		}
 
-		// Update database
-		testChangeUpdater.removeTests(NameUtils.toClassNames(changes.getRemovedResources()));
-		testChangeUpdater.updateTestClasses(NameUtils.toClassNames(changes.getAddedOrChangedResources()));
+		// Update test methods
+		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 	}
 
 }
