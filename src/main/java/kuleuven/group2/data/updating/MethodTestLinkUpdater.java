@@ -5,7 +5,7 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
-import kuleuven.group2.runner.TestRunner;
+import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;

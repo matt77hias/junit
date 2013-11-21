@@ -11,7 +11,6 @@ import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.deferredrunner.DeferredConsumer;
 import kuleuven.group2.policy.Policy;
-import kuleuven.group2.runner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
 import kuleuven.group2.sourcehandler.TestSourceEventHandler;
@@ -20,6 +19,7 @@ import kuleuven.group2.store.StoreClassLoader;
 import kuleuven.group2.store.StoreEvent;
 import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
+import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.util.Consumer;
 
 public class Pipeline {
