@@ -10,7 +10,7 @@ public class MethodHash {
 		this.hash = hash;
 	}
 
-	protected byte[] getHash() {
+	public byte[] getHash() {
 		return hash;
 	}
 
