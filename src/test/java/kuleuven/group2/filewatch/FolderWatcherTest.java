@@ -36,6 +36,7 @@ public class FolderWatcherTest {
 		testFile = testFolder.resolve("helloworld.txt");
 		testSubFolder = testFolder.resolve("testfolder");
 		testSubFile = testSubFolder.resolve("helloworld.txt");
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		registeredChangeList.put("modify", new ArrayList<Path>());
 		registeredChangeList.put("create", new ArrayList<Path>());
