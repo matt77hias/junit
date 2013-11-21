@@ -3,12 +3,9 @@ package kuleuven.group2.filewatch;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,19 +24,18 @@ public class FolderWatcherTest {
 	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
 
 	private static final int FILEWATCHER_TIMEOUT = 30;
-	private static final String SAND_BOX_PATH = "U:\\Vital D'haveloose\\SkyDrive\\Documenten\\Studies\\Master_Computerwetenschappen\\Ontwerp van software systemen\\project\\sandbox"; // Vital
-	// private static final String SAND_BOX_PATH = "D:"; //Ruben
-	private static final String MAIN_TEST_FOLDER_PATH = SAND_BOX_PATH + "\\filewatchertest";
-	
-	private static final File MAIN_TEST_FOLDER = new File(MAIN_TEST_FOLDER_PATH);
-	private static final File MAIN_TEST_FILE = new File(MAIN_TEST_FOLDER + "\\helloworld.txt");
-	
-	private static final File RECURSIVE_TEST_FOLDER = new File(MAIN_TEST_FOLDER +"\\testfolder");
-	private static final File RECURSIVE_TEST_FILE = new File(RECURSIVE_TEST_FOLDER + "\\helloworld.txt");
+
+	private static Path testFolder;
+	private static Path testFile;
+	private static Path testSubFolder;
+	private static Path testSubFile;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Files.createDirectory(Paths.get(MAIN_TEST_FOLDER_PATH));
+		testFolder = Files.createTempDirectory(FolderWatcherTest.class.getSimpleName());
+		testFile = testFolder.resolve("helloworld.txt");
+		testSubFolder = testFolder.resolve("testfolder");
+		testSubFile = testSubFolder.resolve("helloworld.txt");
 
 		registeredChangeList.put("modify", new ArrayList<Path>());
 		registeredChangeList.put("create", new ArrayList<Path>());
@@ -48,7 +44,7 @@ public class FolderWatcherTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		FileUtils.deleteRecursively(MAIN_TEST_FOLDER.toPath(), false);
+		FileUtils.deleteRecursively(testFolder, true);
 	}
 
 	@Before
@@ -60,7 +56,7 @@ public class FolderWatcherTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FileUtils.deleteRecursively(MAIN_TEST_FOLDER.toPath(), true);
+		FileUtils.deleteRecursively(testFolder, false);
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 	}
 
@@ -88,33 +84,29 @@ public class FolderWatcherTest {
 
 		public void fileModified(Path filePath) {
 			registeredChangeList.get("modify").add(filePath);
-			System.out.println("modify " + filePath);
 		}
 
 		public void fileDeleted(Path filePath) {
 			registeredChangeList.get("delete").add(filePath);
-			System.out.println("delete " + filePath);
 		}
 
 		public void fileCreated(Path filePath) {
 			registeredChangeList.get("create").add(filePath);
-			System.out.println("create " + filePath);
 		}
 	}
 
 	@Test
 	public void createFileTest() throws IOException, InterruptedException {
 		// Setup
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
-		Path filePath = MAIN_TEST_FILE.toPath();
 
 		// Action
 		folderWatcherThread.start();
 
-		Files.createFile(filePath);
+		Files.createFile(testFile);
 
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
@@ -128,10 +120,9 @@ public class FolderWatcherTest {
 	@Test
 	public void modifyFileTest() throws IOException, InterruptedException {
 		// Setup
-		Path filePath = MAIN_TEST_FILE.toPath();
-		Files.createFile(filePath);
+		Files.createFile(testFile);
 
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -139,14 +130,7 @@ public class FolderWatcherTest {
 		// Action
 		folderWatcherThread.start();
 
-		FileWriter writer = new FileWriter(new File(filePath.toUri()));
-		;
-		try {
-			writer.append("hello world");
-		} finally {
-			writer.close();
-		}
-
+		Files.write(testFile, "hello world".getBytes());
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
 		folderWatcherThread.stopFolderWatcher();
@@ -159,10 +143,9 @@ public class FolderWatcherTest {
 	@Test
 	public void deleteFileTest() throws IOException, InterruptedException {
 		// Setup
-		Path filePath = MAIN_TEST_FILE.toPath();
-		Files.createFile(filePath);
+		Files.createFile(testFile);
 
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -170,7 +153,7 @@ public class FolderWatcherTest {
 		// Action
 		folderWatcherThread.start();
 
-		Files.delete(filePath);
+		Files.delete(testFile);
 
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
@@ -184,10 +167,9 @@ public class FolderWatcherTest {
 	@Test
 	public void recursiveCreateTest() throws IOException, InterruptedException {
 		// Setup
-		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
-		Files.createDirectory(folderPath);
+		Files.createDirectory(testSubFolder);
 
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -195,8 +177,7 @@ public class FolderWatcherTest {
 		// Action
 		folderWatcherThread.start();
 
-		Path filePath = RECURSIVE_TEST_FILE.toPath();
-		Files.createFile(filePath);
+		Files.createFile(testSubFile);
 
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
@@ -216,13 +197,10 @@ public class FolderWatcherTest {
 	@Test
 	public void recursiveModifyTest() throws IOException, InterruptedException {
 		// Setup
-		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
-		Files.createDirectory(folderPath);
+		Files.createDirectory(testSubFolder);
+		Files.createFile(testSubFile);
 
-		Path filePath = RECURSIVE_TEST_FILE.toPath();
-		Files.createFile(filePath);
-
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
@@ -230,14 +208,7 @@ public class FolderWatcherTest {
 		// Action
 		folderWatcherThread.start();
 
-		FileWriter writer = new FileWriter(new File(filePath.toUri()));
-		;
-		try {
-			writer.append("hello world");
-		} finally {
-			writer.close();
-		}
-
+		Files.write(testSubFile, "hello world".getBytes());
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
 		folderWatcherThread.stopFolderWatcher();
@@ -250,21 +221,17 @@ public class FolderWatcherTest {
 	@Test
 	public void recursiveDeleteTest() throws IOException, InterruptedException {
 		// Setup
-		Path folderPath = RECURSIVE_TEST_FOLDER.toPath();
-		Files.createDirectory(folderPath);
+		Files.createDirectory(testSubFolder);
+		Files.createFile(testSubFile);
 
-		Path filePath = RECURSIVE_TEST_FILE.toPath();
-		Files.createFile(filePath);
-
-		DirectoryWatcher folderWatcher = new DirectoryWatcher(MAIN_TEST_FOLDER.toPath());
+		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
 		folderWatcher.addWatchListener(watchListener);
 		TestFolderWatcherThread folderWatcherThread = new TestFolderWatcherThread(folderWatcher);
 
 		// Action
 		folderWatcherThread.start();
-
-		Files.delete(filePath);
+		Files.delete(testSubFile);
 
 		Thread.sleep(FILEWATCHER_TIMEOUT);
 
