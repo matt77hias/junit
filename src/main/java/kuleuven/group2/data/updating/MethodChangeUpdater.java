@@ -109,7 +109,7 @@ public class MethodChangeUpdater {
 	protected void removeOldMethods(String className, Set<JavaSignature> newSignatures) {
 		Collection<TestedMethod> oldMethods = database.getMethodsIn(className);
 		for (TestedMethod method : oldMethods) {
-			if (!newSignatures.contains(method.getSignature())) {
+			if (! newSignatures.contains(method.getSignature())) {
 				database.removeMethod(method);
 			}
 		}

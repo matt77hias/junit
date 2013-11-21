@@ -33,6 +33,11 @@ public class MethodChangeUpdaterTest {
 	private static JavaSignature testSignature
 		= new JavaSignatureParser(testSignatureString)
 		.parseSignature();
+	
+	private static String testSignature2String = testClassName + ".foo2()Z";
+	private static JavaSignature testSignature2
+		= new JavaSignatureParser(testSignature2String)
+		.parseSignature();
 
 	protected Store sourceStore;
 	protected Store binaryStore;
@@ -86,6 +91,36 @@ public class MethodChangeUpdaterTest {
 						"public boolean foo() { return true; }\n" +
 						"}";
 		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
+		CompilationResult oldResult = compiler.compileAll();
+		methodChangeUpdater.detectChanges(testClassName, oldResult.getCompiledClass(testClassName), new Date(1));
+		
+		MethodHasher methodHasherOld = new MethodHasher(oldResult.getCompiledClass(testClassName));
+
+		String source2 =
+				"public class A {\n" +
+						"public boolean foo() { return false; }\n" +
+						"}";
+		sourceStore.write(NameUtils.toSourceName(className), source2.getBytes());
+		CompilationResult editedResult = compiler.compileAll();
+		methodChangeUpdater.detectChanges(testClassName, editedResult.getCompiledClass(testClassName), new Date(2));
+		
+		MethodHasher methodHasherEdited = new MethodHasher(editedResult.getCompiledClass(testClassName));
+		
+		assertTrue(testDatabase.containsMethod(testSignature));
+		assertEquals(new Date(2), testDatabase.getMethod(testSignature).getLastChange());
+		assertEquals(methodHasherEdited.getHashes().get("foo()Z"), testDatabase.getMethod(testSignature).getMethodHash());
+		assertNotEquals(methodHasherOld.getHashes().get("foo()Z"), testDatabase.getMethod(testSignature).getMethodHash());
+	}
+
+	@Test
+	public void removeOldMethodTest() {
+		String className = "A";
+		String source =
+				"public class A {\n" +
+						"public boolean foo() { return true; }\n" +
+						"public boolean foo2() { return false; }\n" +
+						"}";
+		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
 		CompilationResult result = compiler.compileAll();
 		methodChangeUpdater.detectChanges(testClassName, result.getCompiledClass(testClassName), new Date(1));
 
@@ -96,12 +131,9 @@ public class MethodChangeUpdaterTest {
 		sourceStore.write(NameUtils.toSourceName(className), source2.getBytes());
 		result = compiler.compileAll();
 		methodChangeUpdater.detectChanges(testClassName, result.getCompiledClass(testClassName), new Date(2));
-		
-		MethodHasher methodHasher = new MethodHasher(result.getCompiledClass(testClassName));
-		
-		assertTrue(testDatabase.containsMethod(testSignature));
-		assertEquals(new Date(2), testDatabase.getMethod(testSignature).getLastChange());
-		assertEquals(methodHasher.getHashes().get("foo()Z"), testDatabase.getMethod(testSignature).getMethodHash());
-	}
 
+		assertTrue(testDatabase.containsMethod(testSignature));
+		assertFalse(testDatabase.containsMethod(testSignature2));
+	}
+	
 }

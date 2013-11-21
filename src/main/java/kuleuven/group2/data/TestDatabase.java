@@ -53,10 +53,12 @@ public class TestDatabase {
 		throw new IllegalArgumentException("Method with signature " + signature + " not in database.");
 	}
 
-	public Collection<TestedMethod> getMethodsIn(String className) {
+	public Collection<TestedMethod> getMethodsIn(String fullClassName) {
 		Set<TestedMethod> foundMethods = new HashSet<TestedMethod>();
 		for(TestedMethod method : methods) {
-			if( method.getClass().getSimpleName().equals(className) ) foundMethods.add(method);
+			if( method.getSignature().getFullClassName().equals(fullClassName) ) {
+				foundMethods.add(method);
+			}
 		}
 		return foundMethods;
 	}
