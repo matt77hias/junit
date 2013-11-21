@@ -23,7 +23,7 @@ public class FolderWatcherTest {
 
 	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
 
-	private static final int FILEWATCHER_TIMEOUT = 30;
+	private static final int FILE_SYSTEM_TIMEOUT = 30;
 
 	private static Path testFolder;
 	private static Path testFile;
@@ -57,7 +57,7 @@ public class FolderWatcherTest {
 	@After
 	public void tearDown() throws Exception {
 		FileUtils.deleteRecursively(testFolder, false);
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 	}
 
 	public class TestFolderWatchListener implements DirectoryWatchListener {
@@ -86,8 +86,7 @@ public class FolderWatcherTest {
 		folderWatcher.startWatching();
 
 		Files.createFile(testFile);
-
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
@@ -100,6 +99,7 @@ public class FolderWatcherTest {
 	public void modifyFileTest() throws IOException, InterruptedException {
 		// Setup
 		Files.createFile(testFile);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
@@ -109,7 +109,7 @@ public class FolderWatcherTest {
 		folderWatcher.startWatching();
 
 		Files.write(testFile, "hello world".getBytes());
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
@@ -122,6 +122,7 @@ public class FolderWatcherTest {
 	public void deleteFileTest() throws IOException, InterruptedException {
 		// Setup
 		Files.createFile(testFile);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
@@ -131,8 +132,7 @@ public class FolderWatcherTest {
 		folderWatcher.startWatching();
 
 		Files.delete(testFile);
-
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
@@ -145,6 +145,7 @@ public class FolderWatcherTest {
 	public void recursiveCreateTest() throws IOException, InterruptedException {
 		// Setup
 		Files.createDirectory(testSubFolder);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
@@ -154,8 +155,7 @@ public class FolderWatcherTest {
 		folderWatcher.startWatching();
 
 		Files.createFile(testSubFile);
-
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
@@ -175,6 +175,7 @@ public class FolderWatcherTest {
 		// Setup
 		Files.createDirectory(testSubFolder);
 		Files.createFile(testSubFile);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
@@ -184,7 +185,7 @@ public class FolderWatcherTest {
 		folderWatcher.startWatching();
 
 		Files.write(testSubFile, "hello world".getBytes());
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
@@ -198,6 +199,7 @@ public class FolderWatcherTest {
 		// Setup
 		Files.createDirectory(testSubFolder);
 		Files.createFile(testSubFile);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		DirectoryWatcher folderWatcher = new DirectoryWatcher(testFolder);
 		DirectoryWatchListener watchListener = new TestFolderWatchListener();
@@ -205,9 +207,9 @@ public class FolderWatcherTest {
 
 		// Action
 		folderWatcher.startWatching();
-		Files.delete(testSubFile);
 
-		Thread.sleep(FILEWATCHER_TIMEOUT);
+		Files.delete(testSubFile);
+		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
 		folderWatcher.removeWatchListener(watchListener);
 		folderWatcher.stopWatching();
