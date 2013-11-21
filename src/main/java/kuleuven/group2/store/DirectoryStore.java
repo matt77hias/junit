@@ -123,7 +123,12 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	public void startListening() {
 		if (!isListening()) {
 			watcher.addWatchListener(this);
-			watcher.startWatching();
+			try {
+				watcher.startWatching();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -131,7 +136,12 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	public void stopListening() {
 		if (isListening()) {
 			watcher.removeWatchListener(this);
-			watcher.stopWatching();
+			try {
+				watcher.stopWatching();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
