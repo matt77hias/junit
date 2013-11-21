@@ -125,12 +125,7 @@ public class MethodChangeUpdater {
 	 */
 	protected void updateMethodHash(JavaSignature signature, MethodHash newHash, Date timestamp) {
 		// Get or create method
-		TestedMethod method;
-		if (!database.containsMethod(signature)) {
-			method = new TestedMethod(signature);
-			database.addMethod(method);
-		} else
-			method = database.getMethod(signature);
+		TestedMethod method = database.getOrCreateMethod(signature);
 
 		// Update hash
 		if (!newHash.equals(method.getHash())) {

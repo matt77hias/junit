@@ -40,8 +40,8 @@ public class MethodTestLinkUpdater extends Monitor {
 	@Override
 	public void enterMethod(String methodName) {
 		JavaSignature signature = new JavaSignatureParser(methodName).parseSignature();
-		if (testDatabase.containsMethod(signature)) {
-			TestedMethod enteredMethod = testDatabase.getMethod(signature);
+		TestedMethod enteredMethod = testDatabase.getMethod(signature);
+		if (enteredMethod != null) {
 			Test currentTest = currentTestHolder.getCurrentRunningTest();
 			testDatabase.addMethodTestLink(enteredMethod, currentTest);
 		}
@@ -63,7 +63,7 @@ public class MethodTestLinkUpdater extends Monitor {
 		 */
 		@Override
 		public void testRunStarted(Description description) throws Exception {
-			testDatabase.clearMethodLinks();
+			testDatabase.clearMethodTestLinks();
 
 			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
 		}

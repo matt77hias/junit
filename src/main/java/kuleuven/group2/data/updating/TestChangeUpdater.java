@@ -90,10 +90,7 @@ public class TestChangeUpdater {
 		}
 		// Add new tests
 		for (String testMethodName : newTestNames) {
-			if (!database.containsTest(testClassName, testMethodName)) {
-				Test test = new Test(testClassName, testMethodName);
-				database.addTest(test);
-			}
+			database.getOrCreateTest(testClassName, testMethodName);
 		}
 	}
 
