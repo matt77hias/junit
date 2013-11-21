@@ -5,7 +5,7 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
-import kuleuven.group2.runner.TestRunner;
+import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -21,7 +21,7 @@ import be.kuleuven.cs.ossrewriter.Monitor;
 public class MethodTestLinkUpdater extends Monitor {
 
 	protected final TestDatabase testDatabase;
-	protected ICurrentRunningTestHolder currentTestHolder;
+	protected CurrentRunningTestHolder currentTestHolder;
 	protected final OssRewriterLoader ossRewriterLoader;
 
 	public MethodTestLinkUpdater(TestDatabase testDatabase, OssRewriterLoader ossRewriterLoader) {
@@ -29,7 +29,7 @@ public class MethodTestLinkUpdater extends Monitor {
 		this.ossRewriterLoader = ossRewriterLoader;
 	}
 
-	public void registerTestHolder(ICurrentRunningTestHolder currentTestHolder) {
+	public void registerTestHolder(CurrentRunningTestHolder currentTestHolder) {
 		this.currentTestHolder = currentTestHolder;
 	}
 
@@ -47,7 +47,7 @@ public class MethodTestLinkUpdater extends Monitor {
 		}
 	}
 
-	private class MethodTestLinkRunListener extends RunListener implements ICurrentRunningTestHolder {
+	private class MethodTestLinkRunListener extends RunListener implements CurrentRunningTestHolder {
 
 		private Test currentTest = null;
 

@@ -1,6 +1,7 @@
-package kuleuven.group2.runner;
+package kuleuven.group2.testrunner;
 
 import static org.junit.Assert.*;
+import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,7 +42,7 @@ public class TestRunnerTest {
 				);
 		
 		testMethodFail = new kuleuven.group2.data.Test(
-				kuleuven.group2.runner.TestRunnerTest.class.getName(),
+				kuleuven.group2.testrunner.TestRunnerTest.class.getName(),
 				"fail"
 				);
 		

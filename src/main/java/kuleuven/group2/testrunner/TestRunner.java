@@ -1,4 +1,4 @@
-package kuleuven.group2.runner;
+package kuleuven.group2.testrunner;
 
 import java.util.List;
 
