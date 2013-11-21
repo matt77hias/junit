@@ -61,11 +61,12 @@ public class FolderWatcherTest {
 	}
 
 	public class TestFolderWatcherThread extends Thread {
-		private boolean stopped = false;
 		private DirectoryWatcher folderWatcher;
 
-		public void stopFolderWatcher() {
-			stopped = true;
+		public void stopFolderWatcher() throws InterruptedException {
+			// Interrupt and wait until killed
+			interrupt();
+			join();
 		}
 
 		public TestFolderWatcherThread(DirectoryWatcher folderWatcher) {
@@ -74,8 +75,12 @@ public class FolderWatcherTest {
 
 		@Override
 		public void run() {
-			while (!stopped) {
-				folderWatcher.processEvents();
+			try {
+				while (true) {
+					folderWatcher.processEvents();
+				}
+			} catch (InterruptedException e) {
+				// Killed
 			}
 		}
 	}

@@ -172,8 +172,12 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	protected class WatchTask implements Runnable {
 		@Override
 		public void run() {
-			while (!Thread.interrupted()) {
-				watcher.processEvents();
+			try {
+				while (true) {
+					watcher.processEvents();
+				}
+			} catch (InterruptedException e) {
+				// Killed
 			}
 		}
 	}

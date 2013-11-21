@@ -70,14 +70,9 @@ public class DirectoryWatcher {
 		listeners.remove(listener);
 	}
 
-	public void processEvents() {
+	public void processEvents() throws InterruptedException {
 		for (;;) {
-			WatchKey key;
-			try {
-				key = waitTillNextKey();
-			} catch (InterruptedException e) {
-				return;
-			}
+			WatchKey key = waitTillNextKey();
 
 			if (!isRegisteredKey(key)) {
 				System.err.println("WatchKey not recognized!!");
