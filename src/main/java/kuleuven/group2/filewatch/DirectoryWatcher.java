@@ -27,7 +27,6 @@ import java.util.Map;
  * create, modify and delete.
  * 
  * @author Ruben
- * 
  */
 public class DirectoryWatcher {
 
@@ -37,6 +36,8 @@ public class DirectoryWatcher {
 
 	protected final Collection<DirectoryWatchListener> listeners = new HashSet<DirectoryWatchListener>();
 	protected Path watchedFolderPath;
+
+	protected Thread watchThread;
 
 	public DirectoryWatcher(Path folderPath) throws IOException {
 		this.watchService = FileSystems.getDefault().newWatchService();
@@ -62,6 +63,30 @@ public class DirectoryWatcher {
 		keys.put(key, directoryPath);
 	}
 
+	public boolean isWatching() {
+		return watchThread != null && watchThread.isAlive();
+	}
+
+	public void startWatching() {
+		if (!isWatching()) {
+			watchThread = new Thread(new WatchTask());
+			watchThread.start();
+		}
+	}
+
+	public void stopWatching() {
+		if (isWatching()) {
+			watchThread.interrupt();
+			try {
+				watchThread.join();
+			} catch (InterruptedException e) {
+				// We got interrupted ourselves...
+			} finally {
+				watchThread = null;
+			}
+		}
+	}
+
 	public void addWatchListener(DirectoryWatchListener listener) {
 		listeners.add(listener);
 	}
@@ -70,9 +95,15 @@ public class DirectoryWatcher {
 		listeners.remove(listener);
 	}
 
-	public void processEvents() throws InterruptedException {
-		for (;;) {
-			WatchKey key = waitTillNextKey();
+	protected void processEvents() {
+		while (!Thread.interrupted()) {
+			WatchKey key;
+			try {
+				key = waitTillNextKey();
+			} catch (InterruptedException e) {
+				// Killed
+				return;
+			}
 
 			if (!isRegisteredKey(key)) {
 				System.err.println("WatchKey not recognized!!");
@@ -86,9 +117,7 @@ public class DirectoryWatcher {
 				removeKeyFromRegisteredKeys(key);
 
 				// all directories are inaccessible
-				/*
-				 * if (keys.isEmpty()) { break; }
-				 */
+				// if (keys.isEmpty()) break;
 			}
 		}
 	}
@@ -176,4 +205,12 @@ public class DirectoryWatcher {
 		WatchEvent.Kind<?> eventKind = event.kind();
 		return eventKind == standardEventKind;
 	}
+
+	protected class WatchTask implements Runnable {
+		@Override
+		public void run() {
+			processEvents();
+		}
+	}
+
 }
