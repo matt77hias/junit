@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
@@ -22,14 +20,6 @@ import com.sun.tools.attach.VirtualMachine;
 public class OssRewriterTest {
 
 	A a;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -58,6 +48,7 @@ public class OssRewriterTest {
 
 	@After
 	public void tearDown() throws Exception {
+		OSSRewriter.disable();
 	}
 
 	public class A {
