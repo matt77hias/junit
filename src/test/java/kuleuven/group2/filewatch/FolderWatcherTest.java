@@ -1,15 +1,14 @@
 package kuleuven.group2.filewatch;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import kuleuven.group2.util.FileUtils;
 
@@ -21,7 +20,7 @@ import org.junit.Test;
 
 public class FolderWatcherTest {
 
-	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
+	private static final Map<String, Set<Path>> registeredChanges = new HashMap<String, Set<Path>>();
 
 	private static final int FILE_SYSTEM_TIMEOUT = 30;
 
@@ -38,9 +37,9 @@ public class FolderWatcherTest {
 		testSubFile = testSubFolder.resolve("helloworld.txt");
 		Thread.sleep(FILE_SYSTEM_TIMEOUT);
 
-		registeredChangeList.put("modify", new ArrayList<Path>());
-		registeredChangeList.put("create", new ArrayList<Path>());
-		registeredChangeList.put("delete", new ArrayList<Path>());
+		registeredChanges.put("modify", new HashSet<Path>());
+		registeredChanges.put("create", new HashSet<Path>());
+		registeredChanges.put("delete", new HashSet<Path>());
 	}
 
 	@AfterClass
@@ -51,9 +50,9 @@ public class FolderWatcherTest {
 
 	@Before
 	public void setUp() throws Exception {
-		registeredChangeList.get("modify").clear();
-		registeredChangeList.get("create").clear();
-		registeredChangeList.get("delete").clear();
+		registeredChanges.get("modify").clear();
+		registeredChanges.get("create").clear();
+		registeredChanges.get("delete").clear();
 	}
 
 	@After
@@ -65,15 +64,15 @@ public class FolderWatcherTest {
 	public class TestFolderWatchListener implements DirectoryWatchListener {
 
 		public void fileModified(Path filePath) {
-			registeredChangeList.get("modify").add(filePath);
+			registeredChanges.get("modify").add(filePath);
 		}
 
 		public void fileDeleted(Path filePath) {
-			registeredChangeList.get("delete").add(filePath);
+			registeredChanges.get("delete").add(filePath);
 		}
 
 		public void fileCreated(Path filePath) {
-			registeredChangeList.get("create").add(filePath);
+			registeredChanges.get("create").add(filePath);
 		}
 	}
 
@@ -94,7 +93,7 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-		correctChangesRegisteredCreateModifyDelete(1, 0, 0);
+		assertCreated(testFile);
 	}
 
 	@Test
@@ -117,7 +116,7 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-		assertTrue(atleastOneModifyChangeRegistered());
+		assertModified(testFile);
 	}
 
 	@Test
@@ -140,7 +139,7 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-		correctChangesRegisteredCreateModifyDelete(0, 0, 1);
+		assertDeleted(testFile);
 	}
 
 	@Test
@@ -163,13 +162,7 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-
-		// a modify entry is received on the recursive folder as well
-		// -> when a file is created the folder is considered modified
-		// this behavior is not present on the not recursive case because
-		// in the not recursive case we are not watching the folder above the
-		// test folder
-		correctChangesRegisteredCreateModifyDelete(1, 1, 0);
+		assertCreated(testSubFile);
 	}
 
 	@Test
@@ -193,7 +186,7 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-		assertTrue(atleastOneModifyChangeRegistered());
+		assertModified(testSubFile);
 	}
 
 	@Test
@@ -217,22 +210,21 @@ public class FolderWatcherTest {
 		folderWatcher.stopWatching();
 
 		// Test
-		correctChangesRegisteredCreateModifyDelete(0, 0, 1);
+		assertDeleted(testSubFile);
+	}
+	
+	private void assertModified(Path path) {
+		assertTrue( registeredChanges.get("modify").contains(path) );
+	}
+	
+	private void assertDeleted(Path path) {
+		assertTrue( registeredChanges.get("delete").contains(path) );
+		
 	}
 
-	private void correctChangesRegisteredCreateModifyDelete(int amountOfCreates, int amountOfModifies,
-			int amountOfDeletes) {
-		assertEquals(amountOfCreates, registeredChangeList.get("create").size());
-		// System.out.println("cr " + amountOfCreates + " " +
-		// registeredChangeList.get("create").size());
-		assertEquals(amountOfModifies, registeredChangeList.get("modify").size());
-		// System.out.println("mod " + amountOfModifies + " " +
-		// registeredChangeList.get("modify").size());
-		assertEquals(amountOfDeletes, registeredChangeList.get("delete").size());
-	}
-
-	private boolean atleastOneModifyChangeRegistered() {
-		return registeredChangeList.get("modify").size() >= 1;
+	private void assertCreated(Path path) {
+		assertTrue( registeredChanges.get("create").contains(path) );
+	
 	}
 
 }
