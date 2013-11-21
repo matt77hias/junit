@@ -129,13 +129,15 @@ public class TestRunner {
 	 * @param	tests
 	 * 			The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(Test[] tests) {
+	public Result[] runTestMethods(Test... tests) {
 		return runTestMethods(getClassLoader(), tests);
 	}
 	
 	/**
 	 * Runs the given tests. This means that all the methods referred to
 	 * in the Test objects will be ran separately.
+	 * 
+	 * If class cannot be found, a null reference is stored.
 	 * 
 	 * @param	ClassLoader
 	 * 			The class loader needed to obtain the class references.
