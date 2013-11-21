@@ -10,10 +10,10 @@ import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
-import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
+import kuleuven.group2.data.updating.CurrentRunningTestHolder;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
-import kuleuven.group2.runner.TestRunner;
+import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -119,7 +119,7 @@ public class MethodTestLinkUpdaterTest {
 		
 	}
 	
-	private class CurrentTestHolder implements ICurrentRunningTestHolder {
+	private class CurrentTestHolder implements CurrentRunningTestHolder {
 		
 		private kuleuven.group2.data.Test currentTest;
 		

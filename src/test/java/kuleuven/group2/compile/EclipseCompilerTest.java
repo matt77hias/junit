@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
+import kuleuven.group2.classloader.StoreClassLoader;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreClassLoader;
 
 import org.junit.Before;
 import org.junit.Test;
