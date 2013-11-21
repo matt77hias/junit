@@ -42,13 +42,14 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 		// Compile changed class sources
 		JavaCompiler classCompiler = new EclipseCompiler(classSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
+
+		// Detect changes in compiled classes
+		methodChangeUpdater.detectChanges(result.getCompiledClasses());
+
 		if (!result.isSuccess()) {
 			// TODO What exception should be thrown?
 			throw new Exception("Compilation of class sources failed: " + result.getErrors());
 		}
-
-		// Detect changes in updated classes
-		methodChangeUpdater.detectChanges(result.getCompiledClasses());
 	}
 
 }
