@@ -28,34 +28,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="kuleuven.group2.data.testrun.FailedTestRun" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/testrun/FailedTestRun.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="637" y="1253"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="kuleuven.group2.data.testrun.TestRun" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/testrun/TestRun.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="734" y="1083"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="6" language="java" name="kuleuven.group2.data.testrun.SuccesfullTestRun" project="junit" 
-    file="/junit/src/main/java/kuleuven/group2/data/testrun/SuccesfullTestRun.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="828" y="1253"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="7" language="java" name="kuleuven.group2.data.TestedMethod" project="junit" 
+  <class id="4" language="java" name="kuleuven.group2.data.TestedMethod" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/TestedMethod.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="966" y="813"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -64,7 +37,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="kuleuven.group2.data.updating.TestResultUpdater" project="junit" 
+  <class id="5" language="java" name="kuleuven.group2.data.updating.TestResultUpdater" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/updating/TestResultUpdater.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="337" y="968"/>    
@@ -74,7 +47,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater" project="junit" 
+  <class id="6" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/updating/MethodTestLinkUpdater.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="343" y="313"/>    
@@ -84,7 +57,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="kuleuven.group2.data.updating.MethodChangeUpdater" project="junit" 
+  <class id="7" language="java" name="kuleuven.group2.data.updating.MethodChangeUpdater" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/updating/MethodChangeUpdater.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="325" y="128"/>    
@@ -94,7 +67,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="11" language="java" name="kuleuven.group2.data.updating.ICurrentRunningTestHolder" project="junit" 
+  <interface id="8" language="java" name="kuleuven.group2.data.updating.ICurrentRunningTestHolder" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/updating/ICurrentRunningTestHolder.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-33" y="652"/>    
@@ -104,7 +77,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="12" language="java" name="kuleuven.group2.data.updating.OssRewriterLoader" project="junit" 
+  <class id="9" language="java" name="kuleuven.group2.data.updating.OssRewriterLoader" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/updating/OssRewriterLoader.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-33" y="499"/>    
@@ -114,7 +87,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="kuleuven.group2.data.signature.JavaSignatureParser" project="junit" 
+  <class id="10" language="java" name="kuleuven.group2.data.signature.JavaSignatureParser" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/signature/JavaSignatureParser.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-37" y="287"/>    
@@ -124,7 +97,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="kuleuven.group2.data.hash.MethodHasher" project="junit" 
+  <class id="11" language="java" name="kuleuven.group2.data.hash.MethodHasher" project="junit" 
     file="/junit/src/main/java/kuleuven/group2/data/hash/MethodHasher.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-47" y="77"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -133,7 +106,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="org.junit.runner.notification.RunListener" project="junit" 
+  <class id="12" language="java" name="org.junit.runner.notification.RunListener" project="junit" 
     file="/junit/src/main/java/org/junit/runner/notification/RunListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-42" y="836"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -142,7 +115,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater.MethodTestLinkRunListener" 
+  <class id="13" language="java" name="kuleuven.group2.data.updating.MethodTestLinkUpdater.MethodTestLinkRunListener" 
     project="junit" file="/junit/src/main/java/kuleuven/group2/data/updating/MethodTestLinkUpdater.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="343" y="483"/>    
@@ -152,146 +125,122 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="17">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="18" name="currentTest"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="20">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="15"/>  
-  </generalization>  
-  <association id="21">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="22" name="testRuns"/>      
-      <multiplicity id="23" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="24">    
+  <nesting id="14">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="13"/>  
+  </nesting>  
+  <association id="15">    
     <bendpoint x="663" y="522"/>    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="25" name="tests"/>      
-      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+      <attribute id="16" name="tests"/>      
+      <multiplicity id="17" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <association id="20">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="21" name="currentTestHolder"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="24" name="ossRewriterLoader"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="26">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
   <dependency id="27">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="13"/>  
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="10"/>  
   </dependency>  
   <association id="28">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="29" name="database"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <association id="32">    
+    <bendpoint x="975" y="508"/>    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="29" name="testMethodLinks"/>      
-      <multiplicity id="30" minimum="0" maximum="2147483647"/>    
+      <attribute id="33" name="methods"/>      
+      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="36" name="testDatabase"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="39" name="test"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="42" name="testMethodLinks"/>      
+      <multiplicity id="43" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="31">    
-    <bendpoint x="975" y="508"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="32" name="methods"/>      
-      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="34">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <dependency id="35">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="13"/>  
-  </dependency>  
-  <association id="36">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="37" name="testedMethod"/>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="39">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="14"/>  
-  </dependency>  
-  <generalization id="40">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="15"/>  
-  </generalization>  
-  <association id="41">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="42" name="database"/>      
-      <multiplicity id="43" minimum="0" maximum="1"/>    
+  <realization id="44">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <association id="45">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="46" name="testDatabase"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="44">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="45" name="currentTestHolder"/>      
-      <multiplicity id="46" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="47">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="48" name="testDatabase"/>      
-      <multiplicity id="49" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="50">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="51" name="successfulTestRuns"/>      
-      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="53">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="54" name="test"/>      
-      <multiplicity id="55" minimum="0" maximum="1"/>    
+  <association id="48">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="49" name="currentTest"/>      
+      <multiplicity id="50" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="56">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="16"/>  
-  </nesting>  
-  <association id="57">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="58" name="ossRewriterLoader"/>      
-      <multiplicity id="59" minimum="0" maximum="1"/>    
+  <association id="51">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="52" name="testedMethod"/>      
+      <multiplicity id="53" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="60">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <realization id="61">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="11"/>  
-  </realization>  
-  <association id="62">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="63" name="testDatabase"/>      
-      <multiplicity id="64" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
