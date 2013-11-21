@@ -27,14 +27,19 @@ public class FolderWatcherTest {
 	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
 
 	private static final int FILEWATCHER_TIMEOUT = 30;
-	private static final File MAIN_TEST_FOLDER = new File("D:\\filewatchertest");
-	private static final File MAIN_TEST_FILE = new File("D:\\filewatchertest\\helloworld.txt");
-	private static final File RECURSIVE_TEST_FOLDER = new File("D:\\filewatchertest\\testfolder");
-	private static final File RECURSIVE_TEST_FILE = new File("D:\\filewatchertest\\testfolder\\helloworld.txt");
+	private static final String SAND_BOX_PATH = "U:\\Vital D'haveloose\\SkyDrive\\Documenten\\Studies\\Master_Computerwetenschappen\\Ontwerp van software systemen\\project\\sandbox"; // Vital
+	// private static final String SAND_BOX_PATH = "D:"; //Ruben
+	private static final String MAIN_TEST_FOLDER_PATH = SAND_BOX_PATH + "\\filewatchertest";
+	
+	private static final File MAIN_TEST_FOLDER = new File(MAIN_TEST_FOLDER_PATH);
+	private static final File MAIN_TEST_FILE = new File(MAIN_TEST_FOLDER + "\\helloworld.txt");
+	
+	private static final File RECURSIVE_TEST_FOLDER = new File(MAIN_TEST_FOLDER +"\\testfolder");
+	private static final File RECURSIVE_TEST_FILE = new File(RECURSIVE_TEST_FOLDER + "\\helloworld.txt");
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Files.createDirectory(Paths.get("D:\\filewatchertest"));
+		Files.createDirectory(Paths.get(MAIN_TEST_FOLDER_PATH));
 
 		registeredChangeList.put("modify", new ArrayList<Path>());
 		registeredChangeList.put("create", new ArrayList<Path>());
