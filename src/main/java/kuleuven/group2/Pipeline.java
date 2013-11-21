@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import kuleuven.group2.classloader.ReloadingStoreClassLoader;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
@@ -11,15 +12,14 @@ import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.deferredrunner.DeferredConsumer;
 import kuleuven.group2.policy.Policy;
+import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
 import kuleuven.group2.sourcehandler.TestSourceEventHandler;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreClassLoader;
 import kuleuven.group2.store.StoreEvent;
 import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
-import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.util.Consumer;
 
 public class Pipeline {
@@ -30,7 +30,7 @@ public class Pipeline {
 	protected Policy sortPolicy;
 
 	protected final TestDatabase testDatabase;
-	protected final StoreClassLoader testClassLoader;
+	protected final ReloadingStoreClassLoader testClassLoader;
 
 	protected final TestRunner testRunner;
 	protected final OssRewriterLoader rewriterLoader;
@@ -52,7 +52,7 @@ public class Pipeline {
 		this.sortPolicy = checkNotNull(sortPolicy);
 
 		this.testDatabase = new TestDatabase();
-		this.testClassLoader = new StoreClassLoader(binaryStore, getClass().getClassLoader());
+		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
 		this.testRunner = new TestRunner(testClassLoader);
 		this.rewriterLoader = new OssRewriterLoader();
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
@@ -100,6 +100,9 @@ public class Pipeline {
 
 		@Override
 		public void consume(List<StoreEvent> events) {
+			// Reload classes
+			testClassLoader.reload();
+
 			// Handle events
 			try {
 				classSourceEventHandler.handleEvents(events);

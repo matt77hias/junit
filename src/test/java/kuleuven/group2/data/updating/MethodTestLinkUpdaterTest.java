@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
-import kuleuven.group2.data.updating.ICurrentRunningTestHolder;
+import kuleuven.group2.data.updating.CurrentRunningTestHolder;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
 
@@ -94,7 +94,7 @@ public class MethodTestLinkUpdaterTest {
 		
 	}
 	
-	private class CurrentTestHolder implements ICurrentRunningTestHolder {
+	private class CurrentTestHolder implements CurrentRunningTestHolder {
 		
 		private kuleuven.group2.data.Test currentTest;
 		

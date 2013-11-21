@@ -1,8 +1,9 @@
-package kuleuven.group2.store;
+package kuleuven.group2.classloader;
 
 import java.security.SecureClassLoader;
 
 import kuleuven.group2.compile.NameUtils;
+import kuleuven.group2.store.Store;
 
 public class StoreClassLoader extends SecureClassLoader {
 

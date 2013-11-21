@@ -9,7 +9,6 @@ import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.MethodChangeUpdater;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreClassLoader;
 import kuleuven.group2.store.StoreEvent;
 
 public class ClassSourceEventHandler extends SourceEventHandler {
@@ -17,12 +16,12 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 	protected final Store classSourceStore;
 	protected final Store binaryStore;
 	protected final TestDatabase testDatabase;
-	protected final StoreClassLoader testClassLoader;
+	protected final ClassLoader testClassLoader;
 
 	protected final MethodChangeUpdater methodChangeUpdater;
 
 	public ClassSourceEventHandler(Store classSourceStore, Store binaryStore, TestDatabase testDatabase,
-			StoreClassLoader testClassLoader) {
+			ClassLoader testClassLoader) {
 		this.classSourceStore = classSourceStore;
 		this.binaryStore = binaryStore;
 		this.testDatabase = testDatabase;
