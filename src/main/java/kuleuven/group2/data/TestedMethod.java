@@ -30,11 +30,11 @@ public class TestedMethod {
 		return signature;
 	}
 
-	public MethodHash getHash() {
+	public MethodHash getMethodHash() {
 		return hash;
 	}
 
-	public void setHash(MethodHash hash) {
+	public void setMethodHash(MethodHash hash) {
 		this.hash = hash;
 	}
 
