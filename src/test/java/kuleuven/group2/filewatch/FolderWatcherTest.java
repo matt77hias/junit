@@ -117,7 +117,8 @@ public class FolderWatcherTest {
 
 		// Test
 		assertModified(testFile);
-		// TODO: perhaps we want to test things that shouldn't have happened as well?
+		// TODO: perhaps we want to test things that shouldn't have happened as
+		// well?
 	}
 
 	@Test
@@ -213,19 +214,17 @@ public class FolderWatcherTest {
 		// Test
 		assertDeleted(testSubFile);
 	}
-	
+
 	private void assertModified(Path path) {
-		assertTrue( registeredChanges.get("modify").contains(path) );
+		assertTrue(registeredChanges.get("modify").contains(path));
 	}
-	
+
 	private void assertDeleted(Path path) {
-		assertTrue( registeredChanges.get("delete").contains(path) );
-		
+		assertTrue(registeredChanges.get("delete").contains(path));
 	}
 
 	private void assertCreated(Path path) {
-		assertTrue( registeredChanges.get("create").contains(path) );
-	
+		assertTrue(registeredChanges.get("create").contains(path));
 	}
 
 }
