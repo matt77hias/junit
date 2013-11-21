@@ -102,7 +102,6 @@ public class OssRewriterTest {
 
 			@Override
 			public void enterMethod(String arg0) {
-				System.out.println(arg0);
 				visitedMethodsTracker.addVisitedMethod(arg0);
 			}
 		});
