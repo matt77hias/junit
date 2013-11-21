@@ -9,7 +9,7 @@ import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreClassLoader;
+import kuleuven.group2.classloader.StoreClassLoader;
 
 import org.junit.After;
 import org.junit.AfterClass;

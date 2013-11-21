@@ -1,21 +1,22 @@
 package kuleuven.group2.data.updating;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
-import java.util.Map;
 
+import kuleuven.group2.classloader.StoreClassLoader;
 import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.hash.MethodHash;
 import kuleuven.group2.data.hash.MethodHasher;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreClassLoader;
 
 import org.junit.After;
 import org.junit.AfterClass;
