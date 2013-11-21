@@ -8,7 +8,7 @@ import kuleuven.group2.data.Test;
  * 
  * @author Ruben Pieters
  */
-public interface ICurrentRunningTestHolder {
+public interface CurrentRunningTestHolder {
 
         public Test getCurrentRunningTest();
         
