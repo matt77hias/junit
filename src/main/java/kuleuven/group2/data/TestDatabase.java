@@ -60,6 +60,10 @@ public class TestDatabase {
 		}
 		return foundMethods;
 	}
+	
+	public int getNbMethods() {
+		return methods.size();
+	}
 
 	// TESTS
 

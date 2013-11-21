@@ -22,6 +22,8 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
  * @author Mattias Buelens
  */
 public class MethodChangeUpdater {
+	
+	private final static String CLASS_METHOD_DELIMITER = ".";
 
 	protected final TestDatabase database;
 
@@ -74,7 +76,7 @@ public class MethodChangeUpdater {
 		for (Map.Entry<String, MethodHash> entry : methodHashes.entrySet()) {
 			String methodName = entry.getKey();
 			MethodHash methodHash = entry.getValue();
-			JavaSignature signature = new JavaSignatureParser(className + "." + methodName).parseSignature();
+			JavaSignature signature = new JavaSignatureParser(className + CLASS_METHOD_DELIMITER + methodName).parseSignature();
 			updateMethodHash(signature, methodHash, timestamp);
 		}
 	}
@@ -90,7 +92,7 @@ public class MethodChangeUpdater {
 	protected void removeOldMethodNames(String className, Set<String> newMethodNames) {
 		Set<JavaSignature> newSignatures = new HashSet<>();
 		for (String methodName : newMethodNames) {
-			JavaSignature signature = new JavaSignatureParser(className + "." + methodName).parseSignature();
+			JavaSignature signature = new JavaSignatureParser(className + CLASS_METHOD_DELIMITER + methodName).parseSignature();
 			newSignatures.add(signature);
 		}
 		removeOldMethods(className, newSignatures);
@@ -133,8 +135,8 @@ public class MethodChangeUpdater {
 		else method = database.getMethod(signature);
 
 		// Update hash
-		if (!newHash.equals(method.getHash())) {
-			method.setHash(newHash);
+		if (!newHash.equals(method.getMethodHash())) {
+			method.setMethodHash(newHash);
 			method.setLastChange(timestamp);
 		}
 	}
