@@ -23,7 +23,7 @@ public class FolderWatcherTest {
 
 	private static final Map<String, List<Path>> registeredChangeList = new HashMap<String, List<Path>>();
 
-	private static final int FILE_SYSTEM_TIMEOUT = 50;
+	private static final int FILE_SYSTEM_TIMEOUT = 30;
 
 	private static Path testFolder;
 	private static Path testFile;
