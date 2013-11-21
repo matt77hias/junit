@@ -1,6 +1,8 @@
 package kuleuven.group2.data;
 
+import kuleuven.group2.data.hash.MethodHasherTest;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
+import kuleuven.group2.data.updating.MethodChangeUpdaterTest;
 import kuleuven.group2.data.updating.MethodTestLinkUpdaterTest;
 import kuleuven.group2.data.updating.OssRewriterTest;
 import kuleuven.group2.data.updating.TestResultUpdaterTest;
@@ -11,7 +13,14 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-		TestDatabaseTest.class, TestResultUpdaterTest.class, TestTest.class, JavaSignatureParserTest.class, MethodTestLinkUpdaterTest.class, OssRewriterTest.class
+		MethodHasherTest.class,
+		JavaSignatureParserTest.class,
+		MethodChangeUpdaterTest.class,
+		MethodTestLinkUpdaterTest.class,
+		OssRewriterTest.class,
+		TestResultUpdaterTest.class,
+		TestDatabaseTest.class,
+		TestTest.class
 })
 public class DatabaseTests {
 

@@ -49,7 +49,7 @@ public class TestDatabaseTest {
 	public void clearLinksTestSimple() {
 		testDatabase.addMethodTestLink(TESTED_METHOD, TEST);
 
-		testDatabase.clearMethodLinks();
+		testDatabase.clearMethodTestLinks();
 
 		assertFalse(testDatabase.containsMethodTestLink(TESTED_METHOD, TEST));
 	}

@@ -7,6 +7,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.IOException;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -27,26 +28,29 @@ import java.util.Map;
  * create, modify and delete.
  * 
  * @author Ruben
- * 
  */
 public class DirectoryWatcher {
 
-	private final WatchService watchService;
 	private final Map<WatchKey, Path> keys;
 	private static final boolean recursiveWatching = true;
 
 	protected final Collection<DirectoryWatchListener> listeners = new HashSet<DirectoryWatchListener>();
 	protected Path watchedFolderPath;
 
-	public DirectoryWatcher(Path folderPath) throws IOException {
-		this.watchService = FileSystems.getDefault().newWatchService();
+	private WatchService watchService;
+	protected Thread watchThread;
+
+	public DirectoryWatcher(Path folderPath) {
 		this.keys = new HashMap<WatchKey, Path>();
 		this.watchedFolderPath = folderPath;
+	}
 
+	protected void createWatchService() throws IOException {
+		this.watchService = FileSystems.getDefault().newWatchService();
 		registerAllDirectoriesInPath(watchedFolderPath);
 	}
 
-	private void registerAllDirectoriesInPath(final Path startingPath) throws IOException {
+	protected void registerAllDirectoriesInPath(final Path startingPath) throws IOException {
 		Files.walkFileTree(startingPath, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(Path directoryPath, BasicFileAttributes attributes)
@@ -57,9 +61,35 @@ public class DirectoryWatcher {
 		});
 	}
 
-	private void registerDirectory(Path directoryPath) throws IOException {
+	protected void registerDirectory(Path directoryPath) throws IOException {
 		WatchKey key = directoryPath.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 		keys.put(key, directoryPath);
+	}
+
+	public boolean isWatching() {
+		return watchService != null && watchThread != null && watchThread.isAlive();
+	}
+
+	public void startWatching() throws IOException {
+		if (!isWatching()) {
+			createWatchService();
+			watchThread = new Thread(new WatchTask());
+			watchThread.start();
+		}
+	}
+
+	public void stopWatching() throws IOException {
+		if (isWatching()) {
+			watchService.close();
+			watchService = null;
+			try {
+				watchThread.join();
+			} catch (InterruptedException e) {
+				// We got interrupted ourselves...
+			} finally {
+				watchThread = null;
+			}
+		}
 	}
 
 	public void addWatchListener(DirectoryWatchListener listener) {
@@ -70,31 +100,35 @@ public class DirectoryWatcher {
 		listeners.remove(listener);
 	}
 
-	public void processEvents() {
-		for (;;) {
-			WatchKey key;
-			try {
-				key = waitTillNextKey();
-			} catch (InterruptedException e) {
-				return;
-			}
+	protected boolean processEvent() {
+		WatchKey key;
+		try {
+			key = waitTillNextKey();
+		} catch (ClosedWatchServiceException e) {
+			// Closed
+			return false;
+		} catch (InterruptedException e) {
+			// Killed
+			return false;
+		}
 
-			if (!isRegisteredKey(key)) {
-				System.err.println("WatchKey not recognized!!");
-				continue;
-			}
+		assert isRegisteredKey(key);
+		handleEventsInKey(key);
 
-			handleEventsInKey(key);
+		boolean accessible = checkIfDirectoryIsAccessible(key);
+		if (!accessible) {
+			removeKeyFromRegisteredKeys(key);
 
-			boolean accessible = checkIfDirectoryIsAccessible(key);
-			if (!accessible) {
-				removeKeyFromRegisteredKeys(key);
+			// all directories are inaccessible
+			// if (keys.isEmpty()) return false;
+		}
 
-				// all directories are inaccessible
-				/*
-				 * if (keys.isEmpty()) { break; }
-				 */
-			}
+		return true;
+	}
+
+	protected void processEvents() {
+		while (true) {
+			if (!processEvent()) break;
 		}
 	}
 
@@ -181,4 +215,12 @@ public class DirectoryWatcher {
 		WatchEvent.Kind<?> eventKind = event.kind();
 		return eventKind == standardEventKind;
 	}
+
+	protected class WatchTask implements Runnable {
+		@Override
+		public void run() {
+			processEvents();
+		}
+	}
+
 }

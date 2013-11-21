@@ -127,17 +127,27 @@ public class MethodChangeUpdater {
 	 */
 	protected void updateMethodHash(JavaSignature signature, MethodHash newHash, Date timestamp) {
 		// Get or create method
-		TestedMethod method;
-		if(!database.containsMethod(signature)) {
-			method = new TestedMethod(signature);
-			database.addMethod(method);
-		}
-		else method = database.getMethod(signature);
+		TestedMethod method = database.getOrCreateMethod(signature);
 
 		// Update hash
 		if (!newHash.equals(method.getMethodHash())) {
 			method.setMethodHash(newHash);
 			method.setLastChange(timestamp);
+		}
+	}
+
+	/**
+	 * Remove all methods from the given classes in the database.
+	 * 
+	 * @param removedClassNames
+	 *            The names of removed classes.
+	 */
+	public void removeClasses(Collection<String> removedClassNames) {
+		for (String className : removedClassNames) {
+			Collection<TestedMethod> classMethods = database.getMethodsIn(className);
+			for (TestedMethod method : classMethods) {
+				database.removeMethod(method);
+			}
 		}
 	}
 

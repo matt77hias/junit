@@ -1,7 +1,7 @@
 package kuleuven.group2.policy;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -32,10 +32,9 @@ public class ChangedCodeFirst implements Policy {
 	 * 			last failure policy.
 	 */
 	@Override
-	public Test[] getSortedTestAccordingToPolicy(TestDatabase testDatabase) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		getSortedTestAccordingToPolicy(testDatabase, result);
-		return result;
+		return getSortedTestsAccordingToPolicy(testDatabase, result);
 	}
 	
 	/**
@@ -45,9 +44,10 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
 		int nb = tests.length;
 		Tuple[] tuples = new Tuple[nb];
 		for (int i=0; i<nb; i++) {
@@ -62,9 +62,11 @@ public class ChangedCodeFirst implements Policy {
 			tuples[i] = new Tuple(current, optimal);
 		}
 		Arrays.sort(tuples);
+		Test[] result = new Test[nb];
 		for (int i=0; i<nb; i++) {
-			tests[i] = tuples[i].test;
+			result[i] = tuples[i].test;
 		}
+		return result;
 	}
 	
 	/**
@@ -127,11 +129,10 @@ public class ChangedCodeFirst implements Policy {
 	 * 			The test database which contains the given tests.
 	 * @param 	tests
 	 * 			The tests that needs to be sorted.
+	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public void getSortedTestAccordingToPolicy(TestDatabase testDatabase, List<Test> tests) {
-		Test[] result = tests.toArray(new Test[0]);
-		getSortedTestAccordingToPolicy(testDatabase, result);
-		tests = Arrays.asList(result);
+	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
 	}
 }
