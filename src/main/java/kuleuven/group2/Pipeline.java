@@ -85,6 +85,7 @@ public class Pipeline {
 		testSourceWatcher.registerConsumer(deferredTask);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
+		// TODO Enable rewriter!
 	}
 
 	public void stop() {
@@ -93,6 +94,7 @@ public class Pipeline {
 		testSourceWatcher.unregisterConsumer(deferredTask);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
+		// TODO Disable rewriter!
 		// TODO Stop current test run as well?
 	}
 
@@ -115,10 +117,13 @@ public class Pipeline {
 			// Sort tests
 			Test[] tests = sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
 
-			// Run tests and monitor method calls
-			rewriterLoader.registerMonitor(methodTestLinkUpdater);
-			testRunner.runTestMethods(tests);
-			rewriterLoader.unregisterMonitor(methodTestLinkUpdater);
+			// Run tests
+			try {
+				testRunner.runTestMethods(tests);
+			} catch (Exception e) {
+				// TODO Show in GUI?
+				e.printStackTrace();
+			}
 		}
 	}
 
