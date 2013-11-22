@@ -6,6 +6,7 @@ import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.testrunner.TestRunner;
+import kuleuven.group2.testrunner.TestRunnerListener;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -47,12 +48,12 @@ public class MethodTestLinkUpdater extends Monitor {
 		}
 	}
 
-	private class MethodTestLinkRunListener extends RunListener implements CurrentRunningTestHolder {
+	private class MethodTestLinkRunListener implements TestRunnerListener, CurrentRunningTestHolder {
 
 		private Test currentTest = null;
 
 		protected MethodTestLinkRunListener(TestRunner testRunner) {
-			testRunner.addRunListener(this);
+			testRunner.registerTestRunnerListener(this);
 		}
 
 		/**
