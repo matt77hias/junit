@@ -1,166 +1,133 @@
 package kuleuven.group2.testrunner;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import kuleuven.group2.data.Test;
 
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
- * A class of test runners used for running single test methods
- * in a predefined order. This only violates the JUnit's fixed
- * order execution. Set-ups and tear-downs of test methods and
- * test fixture are executed properly.
+ * A class of test runners used for running single test methods in a predefined
+ * order. This only violates the JUnit's fixed order execution. Set-ups and
+ * tear-downs of test methods and test fixture are executed properly.
  * 
- * @author	Group 2
- * @version	16 November 2013
+ * @author Group 2
+ * @version 16 November 2013
  */
 public class TestRunner {
-	
-	private Set<TestRunnerListener> listeners = new HashSet<TestRunnerListener>();
-	
+
+	private final JUnitCore junitCore;
+	private final ClassLoader classLoader;
+	private final List<RunListener> listeners = new ArrayList<RunListener>();
+
 	/**
 	 * Creates a new test runner with no class loader.
 	 */
 	public TestRunner() {
 		this(null);
 	}
-	
+
 	/**
-	 * Creates a new test runner with the given class loader
-	 * as its class loader.
+	 * Creates a new test runner with the given class loader as its class
+	 * loader.
 	 * 
-	 * @param	classLoader
-	 * 			The new class loader of this test runner.
+	 * @param classLoader
+	 *            The new class loader of this test runner.
 	 */
 	public TestRunner(ClassLoader classLoader) {
 		this(classLoader, new JUnitCore());
 	}
-	
+
 	/**
-	 * Creates a new test runner with the given class loader
-	 * as its class loader.
+	 * Creates a new test runner with the given class loader as its class
+	 * loader.
 	 * 
-	 * @param	classLoader
-	 * 			The new class loader of this test runner.
-	 * @param	jUnitCore
-	 * 			The JUnitCore for this test runner.
-	 * 			You can give your own JUnitCore so
-	 * 			that you don't need to regsiter to
-	 * 			another JUnitCore.
+	 * @param classLoader
+	 *            The new class loader of this test runner.
+	 * @param jUnitCore
+	 *            The JUnitCore for this test runner. You can give your own
+	 *            JUnitCore so that you don't need to register to another
+	 *            JUnitCore.
 	 */
 	public TestRunner(ClassLoader classLoader, JUnitCore jUnitCore) {
 		this.classLoader = classLoader;
 		this.junitCore = jUnitCore;
+		getJUnitCore().addListener(new TestRunListener());
 	}
-	
+
 	/**
-	 * Returns the class loader of this test runner.
-	 * 
-	 * @return	The class loader of this test runner.
+	 * Get the class loader used by this test runner.
 	 */
-	public ClassLoader getClassLoader() {
+	protected final ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
-	
+
 	/**
-	 * Sets the class loader of this test runner
-	 * to the given class loader.
-	 * 
-	 * @param	classLoader
-	 * 			The class loader that has the class
-	 * 			loader of this test runner to be set to.
+	 * Get the JUnit instance used by this test runner.
 	 */
-	public void setClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
+	protected final JUnitCore getJUnitCore() {
+		return this.junitCore;
 	}
-	
+
 	/**
-	 * The class loader of this test runner.
+	 * Runs the given tests. This means that all the methods referred to in the
+	 * Test objects will be ran separately.
+	 * 
+	 * @param tests
+	 *            The tests that has to be ran.
 	 */
-	private ClassLoader classLoader;
-	
-//	/**
-//	 * Returns the default test runner.
-//	 */
-//	public static TestRunner getDefaultRunner() {
-//		return DEFAULT_RUNNER;
-//	}
-//	
-//	/**
-//	 * The default runner used for running tests.
-//	 * In this way object creation can be decreased.
-//	 */
-//	private static final TestRunner DEFAULT_RUNNER = new TestRunner();
-//	
-//	/**
-//	 * Runs the given tests. This means that all the methods referred to
-//	 * in the Test objects will be ran separately.
-//	 * 
-//	 * @param	ClassLoader
-//	 * 			The class loader needed to obtain the class references.
-//	 * @param	tests
-//	 * 			The tests that has to be ran.
-//	 */
-//	public static Result[] runTests(ClassLoader classLoader, Test[] tests) {
-//		return DEFAULT_RUNNER.runTestMethods(classLoader, tests);
-//	}
-	
-	/**
-	 * Runs the given tests. This means that all the methods referred to
-	 * in the Test objects will be ran separately.
-	 * @param	tests
-	 * 			The tests that has to be ran.
-	 */
-	public Result[] runTestMethods(List<Test> tests) {
+	public Result[] runTestMethods(List<Test> tests) throws Exception {
 		return runTestMethods(getClassLoader(), tests.toArray(new Test[tests.size()]));
 	}
-	
+
 	/**
-	 * Runs the given tests. This means that all the methods referred to
-	 * in the Test objects will be ran separately.
+	 * Runs the given tests. This means that all the methods referred to in the
+	 * Test objects will be ran separately.
 	 * 
-	 * @param	ClassLoader
-	 * 			The class loader needed to obtain the class references.
-	 * @param	tests
-	 * 			The tests that has to be ran.
+	 * @param ClassLoader
+	 *            The class loader needed to obtain the class references.
+	 * @param tests
+	 *            The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(Test... tests) {
+	public Result[] runTestMethods(Test... tests) throws Exception {
 		return runTestMethods(getClassLoader(), tests);
 	}
-	
+
 	/**
-	 * Runs the given tests. This means that all the methods referred to
-	 * in the Test objects will be ran separately.
+	 * Runs the given tests. This means that all the methods referred to in the
+	 * Test objects will be ran separately.
 	 * 
 	 * If class cannot be found, a null reference is stored.
 	 * 
-	 * @param	ClassLoader
-	 * 			The class loader needed to obtain the class references.
-	 * @param	tests
-	 * 			The tests that has to be ran.
+	 * @param ClassLoader
+	 *            The class loader needed to obtain the class references.
+	 * @param tests
+	 *            The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(ClassLoader classLoader, Test[] tests) {
-		// inform the listeners of the start of the pipeline test run
-		firePipelineTestRunStarted(tests);
+	public Result[] runTestMethods(ClassLoader classLoader, Test[] tests) throws Exception {
+		// Test run started
+		fireTestRunStarted(createDescription(getClass().getSimpleName(), tests));
+		// Collect total result
+		Result totalResult = new Result();
+		RunListener totalResultListener = totalResult.createListener();
+		addRunListener(totalResultListener);
+		// Collect individual results
 		Result[] results = new Result[tests.length];
-		for (int i=0; i<tests.length; i++) {
+		for (int i = 0; i < tests.length; i++) {
 			try {
-				// Obtain the class with the specified binary name in the test object.
+				// Obtain the class with the specified binary name in the test
+				// object.
 				Class<?> klass = classLoader.loadClass(tests[i].getTestClassName());
 				// Create a request for a single test method
 				Request request = requestTestMethod(klass, tests[i].getTestMethodName());
-				// inform the listeners of the start of the test
-				fireTestStarted(tests[i]);
 				// Run the request and obtain the result.
 				Result result = runTestMethod(request);
-				// inform the listenerd of the stop of the test
-				fireTestStopped(result);
 				// Store the result.
 				results[i] = result;
 			} catch (ClassNotFoundException e) {
@@ -168,120 +135,164 @@ public class TestRunner {
 				// results[i] == null;
 			}
 		}
-		// inform the listeners of the stop of the pipeline test run
-		firePipelineTestRunStopped(results);
+		// Total result collected
+		removeRunListener(totalResultListener);
+		// Test run stopped
+		fireTestRunFinished(totalResult);
 		return results;
 	}
-	
+
 	/**
-	 * The JUnitCore object (facade) used for running tests.
-	 */
-	private JUnitCore junitCore;
-	
-	/**
-	 * Create a Request that, when processed, will run a single test.
-	 * This is done by filtering out all other tests.
-	 * This method is used to support rerunning single tests.
+	 * Create a Request that, when processed, will run a single test. This is
+	 * done by filtering out all other tests. This method is used to support
+	 * rerunning single tests.
 	 * 
-	 * @param	clazz
-	 * 			The class of the test.
-	 * @param	methodName
-	 * 			The name of the test
-	 * @return	A Request that will cause a single test be run
+	 * @param clazz
+	 *            The class of the test.
+	 * @param methodName
+	 *            The name of the test
+	 * @return A Request that will cause a single test be run
 	 */
 	public static Request requestTestMethod(Class<?> clazz, String methodName) {
 		return Request.method(clazz, methodName);
 	}
-	
-	/**
-	 * Returns the JUnitCore of this test runner.
-	 */
-	protected JUnitCore getJUnitCore() {
-		return this.junitCore;
-	}
-	
+
 	/**
 	 * Runs all the tests contained in request.
 	 * 
-	 * @param	request
-	 * 			The request describing tests.
-	 * @return	A Result describing the details of
-	 * 			the test run and the failed tests.
+	 * @param request
+	 *            The request describing tests.
+	 * @return A {@link Result} describing the details of the test run and the
+	 *         failed tests.
 	 */
 	public Result runTestMethod(Request request) {
 		return getJUnitCore().run(request);
 	}
-	
+
 	/**
 	 * Adds a listener to be notified as the tests run.
 	 * 
-	 * @param	runListener
-	 * 			The listener to add.
+	 * @param runListener
+	 *            The listener to add.
 	 */
-	// TODO: delete this method, it can be confused with adding a listener to this testrunner
 	public void addRunListener(RunListener runListener) {
-		getJUnitCore().addListener(runListener);
+		listeners.add(runListener);
 	}
-	
+
 	/**
-	 * Adds a listener to be notified as the tests run.
-	 * @param listener
-	 * 			the listener to add
+	 * Removes a listener which should no longer be notified as the tests run.
+	 * 
+	 * @param runListener
+	 *            The listener to remove.
 	 */
-	public void registerTestRunnerListener(TestRunnerListener listener) {
-		listeners.add(listener);
+	public void removeRunListener(RunListener runListener) {
+		listeners.remove(runListener);
 	}
-	
+
 	/**
-	 * Remove a listener.
-	 * @param listener
-	 * 			the listener to be removed
-	 */
-	public void unregisterTestRunnerListener(TestRunnerListener listener) {
-		listeners.remove(listener);
-	}
-	
-	/**
-	 * Informs the listeners that a pipeline test run has been started.
+	 * Creates a description for the given tests.
+	 * 
+	 * @param name
+	 *            The name for the returned description.
 	 * @param tests
-	 * 			the tests of the pipeline test run
+	 *            The tests to describe.
+	 * @return A description describing all given tests.
 	 */
-	private void firePipelineTestRunStarted(Test[] tests) {
-		for(TestRunnerListener listener : listeners) {
-			listener.pipelineTestRunStarted(tests);
+	protected Description createDescription(String name, Test[] tests) {
+		Description description = Description.createSuiteDescription(name);
+		for (Test test : tests) {
+			Description testDescription = Description.createTestDescription(test.getTestClassName(),
+					test.getTestMethodName());
+			description.addChild(testDescription);
+		}
+		return description;
+	}
+
+	protected void fireTestRunStarted(Description description) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testRunStarted(description);
 		}
 	}
-	
+
+	protected void fireTestRunFinished(Result result) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testRunFinished(result);
+		}
+	}
+
+	protected void fireTestStarted(Description description) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testStarted(description);
+		}
+	}
+
+	protected void fireTestFinished(Description description) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testFinished(description);
+		}
+	}
+
+	protected void fireTestFailure(Failure failure) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testFailure(failure);
+		}
+	}
+
+	protected void fireTestAssumptionFailure(Failure failure) {
+		for (RunListener listener : listeners) {
+			listener.testAssumptionFailure(failure);
+		}
+	}
+
+	protected void fireTestIgnored(Description description) throws Exception {
+		for (RunListener listener : listeners) {
+			listener.testIgnored(description);
+		}
+	}
+
 	/**
-	 * Informs the listeners that a test has been started.
-	 * @param test
-	 * 			the test that was started
+	 * This {@link RunListener} forwards all calls to the registered listeners
+	 * on the {@link TestRunner} expect for the
+	 * {@link #testRunStarted(Description)} and {@link #testRunFinished(Result)}
+	 * calls, as those are called by the {@link TestRunner} itself.
 	 */
-	private void fireTestStarted(Test test) {
-		for(TestRunnerListener listener : listeners) {
-			listener.testStarted(test);
+	protected class TestRunListener extends RunListener {
+
+		@Override
+		public void testRunStarted(Description description) throws Exception {
+			// Ignore
 		}
-	}
-	
-	/**
-	 * Informs the listeners that a test has been stopped.
-	 * @param result
-	 * 			the result of the test that was stopped
-	 */
-	private void fireTestStopped(Result result) {
-		for(TestRunnerListener listener : listeners) {
-			listener.testStopped(result);
+
+		@Override
+		public void testRunFinished(Result result) throws Exception {
+			// Ignore
 		}
-	}
-	
-	/**
-	 * Informs the listeners that a pipeline test run has been stopped.
-	 * @param results
-	 * 			the results of the tests of the pipeline test run that finished
-	 */
-	private void firePipelineTestRunStopped(Result[] results) {
-		for(TestRunnerListener listener : listeners) {
-			listener.pipelineTestRunStopped(results);
+
+		@Override
+		public void testStarted(Description description) throws Exception {
+			fireTestStarted(description);
 		}
+
+		@Override
+		public void testFinished(Description description) throws Exception {
+			fireTestFinished(description);
+		}
+
+		@Override
+		public void testFailure(Failure failure) throws Exception {
+			fireTestFailure(failure);
+		}
+
+		@Override
+		public void testAssumptionFailure(Failure failure) {
+			fireTestAssumptionFailure(failure);
+		}
+
+		@Override
+		public void testIgnored(Description description) throws Exception {
+			fireTestIgnored(description);
+		}
+
 	}
+
 }
