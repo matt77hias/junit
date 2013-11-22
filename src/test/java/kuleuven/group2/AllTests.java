@@ -1,5 +1,6 @@
 package kuleuven.group2;
 
+import kuleuven.group2.classloader.ReloadingStoreClassLoader;
 import kuleuven.group2.compile.EclipseCompilerTest;
 import kuleuven.group2.data.TestDatabaseTest;
 import kuleuven.group2.data.TestTest;
@@ -24,6 +25,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+	ReloadingStoreClassLoader.class,
 	EclipseCompilerTest.class,
 	MethodHasherTest.class,
 	JavaSignatureParserTest.class,

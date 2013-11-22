@@ -1,4 +1,4 @@
-package classloader;
+package kuleuven.group2.classloader;
 
 import static org.junit.Assert.assertEquals;
 
