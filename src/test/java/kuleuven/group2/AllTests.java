@@ -1,6 +1,6 @@
 package kuleuven.group2;
 
-import kuleuven.group2.classloader.ReloadingStoreClassLoader;
+import kuleuven.group2.classloader.ReloadingStoreClassLoaderTest;
 import kuleuven.group2.compile.EclipseCompilerTest;
 import kuleuven.group2.data.DatabaseTests;
 import kuleuven.group2.filewatch.FolderWatcherTest;
@@ -14,7 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	ReloadingStoreClassLoader.class,
+	ReloadingStoreClassLoaderTest.class,
 	EclipseCompilerTest.class,
 	DatabaseTests.class,
 	FolderWatcherTest.class,
