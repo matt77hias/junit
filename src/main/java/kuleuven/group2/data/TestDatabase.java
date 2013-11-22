@@ -204,7 +204,7 @@ public class TestDatabase {
 	}
 
 	public Collection<TestedMethod> getLinkedMethods(Test test) {
-		System.out.println(testToMethodLinks);
+		//System.out.println(testToMethodLinks);
 		Collection<TestedMethod> linkedMethods = testToMethodLinks.get(test);
 		if (linkedMethods == null) {
 			return Collections.emptySet();
