@@ -10,7 +10,7 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
-import kuleuven.group2.deferredrunner.DeferredConsumer;
+import kuleuven.group2.defer.DeferredConsumer;
 import kuleuven.group2.policy.Policy;
 import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;

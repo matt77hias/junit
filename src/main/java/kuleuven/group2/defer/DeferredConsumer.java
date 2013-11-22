@@ -1,4 +1,4 @@
-package kuleuven.group2.deferredrunner;
+package kuleuven.group2.defer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -13,18 +13,18 @@ import kuleuven.group2.util.Consumer;
 
 public class DeferredConsumer<T> implements Consumer<T> {
 
-	protected final DeferredRunner runner;
+	protected final DeferredTaskRunner runner;
 	protected final Deque<T> queue = new ConcurrentLinkedDeque<T>();
 
 	public DeferredConsumer(Consumer<? super List<T>> batchConsumer) throws IllegalArgumentException {
 		checkNotNull(batchConsumer);
-		this.runner = new DeferredRunner(createRunnable(batchConsumer));
+		this.runner = new DeferredTaskRunner(createRunnable(batchConsumer));
 	}
 
 	public DeferredConsumer(Consumer<? super List<T>> batchConsumer, long delay, TimeUnit timeUnit)
 			throws IllegalArgumentException {
 		checkNotNull(batchConsumer);
-		this.runner = new DeferredRunner(createRunnable(batchConsumer), delay, timeUnit);
+		this.runner = new DeferredTaskRunner(createRunnable(batchConsumer), delay, timeUnit);
 	}
 
 	/**

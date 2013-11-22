@@ -1,4 +1,4 @@
-package kuleuven.group2.deferredrunner;
+package kuleuven.group2.defer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Group 2
  * @version 9 November 2013
  */
-public class DeferredRunner {
+public class DeferredTaskRunner {
 
 	/**
 	 * Returns the scheduler of this deferred runner.
@@ -67,7 +67,7 @@ public class DeferredRunner {
 	 *             The given runnable factory must be a valid runnable factory.
 	 *             | !isValidRunnableFactory(runnableFactory)
 	 */
-	public DeferredRunner(Runnable runnable) throws IllegalArgumentException {
+	public DeferredTaskRunner(Runnable runnable) throws IllegalArgumentException {
 		this(runnable, DEFAULT_DELAY, DEFAULT_TIME_UNIT);
 	}
 
@@ -88,7 +88,7 @@ public class DeferredRunner {
 	 *             The given runnable must be a valid runnable.
 	 *             | !isValidRunnable(runnable)
 	 */
-	public DeferredRunner(Runnable runnable, long delay, TimeUnit timeUnit) throws IllegalArgumentException {
+	public DeferredTaskRunner(Runnable runnable, long delay, TimeUnit timeUnit) throws IllegalArgumentException {
 		if (!isValidRunnable(runnable)) {
 			throw new IllegalArgumentException("The given runnable must be valid.");
 		}
