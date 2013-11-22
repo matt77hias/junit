@@ -23,18 +23,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 	EclipseCompilerTest.class,
 	DatabaseTests.class,
-	TestDatabaseTest.class,
-	TestTest.class,
-	MethodHasherTest.class,
-	JavaSignatureParserTest.class,
-	MethodChangeUpdaterTest.class,
-	MethodTestLinkUpdaterTest.class,
-	TestResultUpdaterTest.class,
 	FolderWatcherTest.class,
 	PolicyTest.class,
-	TestRunnerTest.class,
 	DirectoryStoreTest.class,
-	TestChangeUpdaterTest.class,
+	TestRunnerTest.class
 	})
 public class AllTests {
 	
