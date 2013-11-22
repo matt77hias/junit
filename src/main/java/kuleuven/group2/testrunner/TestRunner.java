@@ -1,13 +1,15 @@
 package kuleuven.group2.testrunner;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import kuleuven.group2.data.Test;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
-
-import kuleuven.group2.data.Test;
 
 /**
  * A class of test runners used for running single test methods
@@ -19,6 +21,8 @@ import kuleuven.group2.data.Test;
  * @version	16 November 2013
  */
 public class TestRunner {
+	
+	private Set<TestRunnerListener> listeners = new HashSet<TestRunnerListener>();
 	
 	/**
 	 * Creates a new test runner with no class loader.
@@ -142,6 +146,8 @@ public class TestRunner {
 	 * 			The tests that has to be ran.
 	 */
 	public Result[] runTestMethods(ClassLoader classLoader, Test[] tests) {
+		// inform the listeners of the start of the pipeline test run
+		firePipelineTestRunStarted(tests);
 		Result[] results = new Result[tests.length];
 		for (int i=0; i<tests.length; i++) {
 			try {
@@ -149,8 +155,12 @@ public class TestRunner {
 				Class<?> klass = classLoader.loadClass(tests[i].getTestClassName());
 				// Create a request for a single test method
 				Request request = requestTestMethod(klass, tests[i].getTestMethodName());
+				// inform the listeners of the start of the test
+				fireTestStarted(tests[i]);
 				// Run the request and obtain the result.
 				Result result = runTestMethod(request);
+				// inform the listenerd of the stop of the test
+				fireTestStopped(result);
 				// Store the result.
 				results[i] = result;
 			} catch (ClassNotFoundException e) {
@@ -158,6 +168,8 @@ public class TestRunner {
 				// results[i] == null;
 			}
 		}
+		// inform the listeners of the stop of the pipeline test run
+		firePipelineTestRunStopped(results);
 		return results;
 	}
 	
@@ -206,7 +218,70 @@ public class TestRunner {
 	 * @param	runListener
 	 * 			The listener to add.
 	 */
+	// TODO: delete this method, it can be confused with adding a listener to this testrunner
 	public void addRunListener(RunListener runListener) {
 		getJUnitCore().addListener(runListener);
+	}
+	
+	/**
+	 * Adds a listener to be notified as the tests run.
+	 * @param listener
+	 * 			the listener to add
+	 */
+	public void registerTestRunnerListener(TestRunnerListener listener) {
+		listeners.add(listener);
+	}
+	
+	/**
+	 * Remove a listener.
+	 * @param listener
+	 * 			the listener to be removed
+	 */
+	public void unregisterTestRunnerListener(TestRunnerListener listener) {
+		listeners.remove(listener);
+	}
+	
+	/**
+	 * Informs the listeners that a pipeline test run has been started.
+	 * @param tests
+	 * 			the tests of the pipeline test run
+	 */
+	private void firePipelineTestRunStarted(Test[] tests) {
+		for(TestRunnerListener listener : listeners) {
+			listener.pipelineTestRunStarted(tests);
+		}
+	}
+	
+	/**
+	 * Informs the listeners that a test has been started.
+	 * @param test
+	 * 			the test that was started
+	 */
+	private void fireTestStarted(Test test) {
+		for(TestRunnerListener listener : listeners) {
+			listener.testStarted(test);
+		}
+	}
+	
+	/**
+	 * Informs the listeners that a test has been stopped.
+	 * @param result
+	 * 			the result of the test that was stopped
+	 */
+	private void fireTestStopped(Result result) {
+		for(TestRunnerListener listener : listeners) {
+			listener.testStopped(result);
+		}
+	}
+	
+	/**
+	 * Informs the listeners that a pipeline test run has been stopped.
+	 * @param results
+	 * 			the results of the tests of the pipeline test run that finished
+	 */
+	private void firePipelineTestRunStopped(Result[] results) {
+		for(TestRunnerListener listener : listeners) {
+			listener.pipelineTestRunStopped(results);
+		}
 	}
 }
