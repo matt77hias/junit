@@ -17,7 +17,7 @@ public abstract class ReloadingClassLoader extends ClassLoader {
 	private volatile ClassLoader delegate;
 
 	public ReloadingClassLoader() {
-		this(null);
+		this(ClassLoader.getSystemClassLoader());
 	}
 
 	public ReloadingClassLoader(ClassLoader parent) {
@@ -54,7 +54,7 @@ public abstract class ReloadingClassLoader extends ClassLoader {
 	 * Create a new class loader to load updated classes.
 	 * 
 	 * @param parent
-	 *            The parent class loader. May be {@code null}.
+	 *            The parent class loader.
 	 * @return The newly created class loader.
 	 */
 	protected abstract ClassLoader createClassLoader(ClassLoader parent);
