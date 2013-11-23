@@ -22,7 +22,7 @@ public abstract class SourceEventHandler {
 		Set<String> changed = new HashSet<String>();
 		Set<String> removed = new HashSet<String>();
 		for (StoreEvent event : events) {
-			if (owningStore != null && event.getStore().equals(owningStore)) {
+			if (owningStore == null || event.getStore().equals(owningStore)) {
 				String name = event.getResourceName();
 				switch (event.getType()) {
 				case ADDED:
