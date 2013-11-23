@@ -22,6 +22,13 @@ import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
+/**
+ * Brings all parts of the program together to form a pipeline.
+ * TODO [DOC] vervolledig beschrijving can de klasse Pipeline
+ * 
+ * @author Group2
+ * @version 19 November 2013
+ */
 public class Pipeline {
 
 	protected final Store classSourceStore;
