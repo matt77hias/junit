@@ -60,7 +60,7 @@ public class DeferredTaskRunnerTest {
 		
 		Thread.sleep(150);
 
-		// task should still be delayed for 500ms
+		// task should still be delayed for 50ms
 		assertFalse(taskDone);
 		
 		Thread.sleep(200);
