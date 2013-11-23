@@ -130,7 +130,7 @@ public class Pipeline {
 	}
 	
 	private Test[] sortTests() {
-		return sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
+		return sortPolicy.getSortedTests(testDatabase);
 	}
 	
 	private void runTests(Test[] tests) {

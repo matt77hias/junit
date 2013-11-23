@@ -32,9 +32,9 @@ public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
 	 * 			last failure policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
+	public Test[] getSortedTests(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTestsAccordingToPolicy(testDatabase, result);
+		return getSortedTests(testDatabase, result);
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
 		Test[] results = tests.clone();
 		Arrays.sort(results, 0, results.length, this);
 		return results;
@@ -63,8 +63,8 @@ public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
+	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
 	}
 
 	/**

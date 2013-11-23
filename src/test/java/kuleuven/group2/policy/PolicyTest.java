@@ -137,7 +137,7 @@ public class PolicyTest {
 	@Test
 	public void distinctFailureFirstTest() {
 		TestSortingPolicy policy = new DistinctFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
+		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
 		
 		if (result[0] == test1) {
 			if (result[1] == test2) {
@@ -161,7 +161,7 @@ public class PolicyTest {
 			fail();
 		}
 		
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
+		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
 		
 		if (result[0] == test2) {
 			assertTrue(result[1] == test3);
@@ -177,7 +177,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		result = policy.getSortedTests(testDatabase, list);
 		
 		if (result[0] == test2) {
 			assertTrue(result[1] == test3);
@@ -193,14 +193,14 @@ public class PolicyTest {
 	@Test
 	public void frequentFailureFirstTest() {
 		TestSortingPolicy policy = new FrequentFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
+		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test1);
 		assertTrue(result[2] == test2);
 		assertTrue(result[3] == test4);
 		
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
+		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test2);
@@ -210,7 +210,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		result = policy.getSortedTests(testDatabase, list);
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test2);
@@ -220,14 +220,14 @@ public class PolicyTest {
 	@Test
 	public void lastFailureFirstTest() {
 		TestSortingPolicy policy = new LastFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
+		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test2);
 		assertTrue(result[2] == test1);
 		assertTrue(result[3] == test4);
 		
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
+		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test2);
@@ -237,7 +237,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		result = policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		result = policy.getSortedTests(testDatabase, list);
 		
 		assertTrue(result[0] == test3);
 		assertTrue(result[1] == test2);
@@ -249,7 +249,7 @@ public class PolicyTest {
 		TestSortingPolicy policy = new DistinctFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
+		policy.getSortedTests(testDatabase, input);
 		assertTrue(input[0] == test2);
 		assertTrue(input[1] == test3);
 		assertTrue(input[2] == test4);
@@ -259,7 +259,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		policy.getSortedTests(testDatabase, list);
 		assertTrue(list.get(0) == test2);
 		assertTrue(list.get(1) == test3);
 		assertTrue(list.get(2) == test4);
@@ -271,7 +271,7 @@ public class PolicyTest {
 		TestSortingPolicy policy = new FrequentFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
+		policy.getSortedTests(testDatabase, input);
 		assertTrue(input[0] == test2);
 		assertTrue(input[1] == test3);
 		assertTrue(input[2] == test4);
@@ -281,7 +281,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		policy.getSortedTests(testDatabase, list);
 		assertTrue(list.get(0) == test2);
 		assertTrue(list.get(1) == test3);
 		assertTrue(list.get(2) == test4);
@@ -293,7 +293,7 @@ public class PolicyTest {
 		TestSortingPolicy policy = new LastFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
+		policy.getSortedTests(testDatabase, input);
 		assertTrue(input[0] == test2);
 		assertTrue(input[1] == test3);
 		assertTrue(input[2] == test4);
@@ -303,7 +303,7 @@ public class PolicyTest {
 		list.add(test2);
 		list.add(test3);
 		list.add(test4);
-		policy.getSortedTestsAccordingToPolicy(testDatabase, list);
+		policy.getSortedTests(testDatabase, list);
 		assertTrue(list.get(0) == test2);
 		assertTrue(list.get(1) == test3);
 		assertTrue(list.get(2) == test4);

@@ -29,7 +29,7 @@ public interface TestSortingPolicy {
 	 * 			The test database which contains the given tests.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase);
+	public Test[] getSortedTests(TestDatabase testDatabase);
 	
 	/**
 	 * Sorts the given tests according to this policy.
@@ -41,7 +41,7 @@ public interface TestSortingPolicy {
 	 * @post	The given array may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests);
+	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests);
 		
 	/**
 	 * Sorts the given tests according to this policy.
@@ -53,5 +53,5 @@ public interface TestSortingPolicy {
 	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests);
+	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
 }
