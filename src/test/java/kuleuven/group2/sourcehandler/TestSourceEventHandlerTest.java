@@ -77,9 +77,15 @@ public class TestSourceEventHandlerTest {
 
 	@Test
 	public void test() throws Exception {
+		String source =
+				"import org.junit.Test;" + 
+						"public class A {\n" +
+						"@Test public boolean foo() { return true; }\n" +
+						"}";
+
 		classSourceStore.startListening();
 		
-		classSourceStore.write("A", "public class A { @Test public void a() {} }".getBytes());
+		classSourceStore.write("A", source.getBytes());
 		
 		classSourceStore.stopListening();
 		
