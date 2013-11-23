@@ -92,16 +92,16 @@ public class TestChangeUpdaterTest {
 	public void testUpdateWithStoreClassLoader() throws ClassNotFoundException {
 		String className = "A";
 		String source =
-				"import org.junit.Test;" + 
+				"import org.junit.Test; \n" + 
 						"public class A {\n" +
-						"@Test public boolean foo() { return true; }\n" +
+						"@Test\n" +
+						"public boolean foo() { return true; }\n" +
 						"}";
-
 
 		MemoryStore classSourceStore = new MemoryStore();
 		MemoryStore binaryStore = new MemoryStore();
 		
-		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore);
+		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore, getClass().getClassLoader());
 		
 		EclipseCompiler compiler = new EclipseCompiler(classSourceStore, binaryStore, binaryLoader);
 		
