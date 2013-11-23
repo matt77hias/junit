@@ -93,6 +93,7 @@ public class EclipseCompilerTest {
 	public void compileTestAnnotation() throws Exception {
 		//@formatter:off
 		String source =
+				"import org.junit.Test;" + 
 				"public class A {\n" +
 						"@Test public boolean foo() { return true; }\n" +
 				"}";
