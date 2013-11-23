@@ -120,6 +120,15 @@ public class Pipeline {
 		}
 	}
 	
+	private void handleTestSourceEvents(List<StoreEvent> events) {
+		try {
+			testSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+	
 	private Test[] sortTests() {
 		return sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
 	}
@@ -130,15 +139,6 @@ public class Pipeline {
 		} catch (Exception e) {
 			// TODO Show in GUI?
 			e.printStackTrace();
-		}
-	}
-	
-	private void handleTestSourceEvents(List<StoreEvent> events) {
-		try {
-			testSourceEventHandler.handleEvents(events);
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
 		}
 	}
 
