@@ -12,11 +12,11 @@ import org.junit.Test;
 
 public class DeferredTaskRunnerTest {
 	
-	boolean taskDone = false;
+	protected boolean taskDone = false;
 	
-	DeferredTaskRunner deferredTaskRunner200msDelay;
+	protected DeferredTaskRunner deferredTaskRunner200msDelay;
 	
-	Runnable task100ms = new Runnable() {
+	protected Runnable task100ms = new Runnable() {
 		
 		@Override
 		public void run() {
