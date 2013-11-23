@@ -24,7 +24,6 @@ import org.junit.runner.notification.Failure;
  */
 public class PolicyTest {
 	protected TestDatabase testDatabase;
-	// Who the hell calls a class Test anyway
 	protected kuleuven.group2.data.Test test1;
 	protected kuleuven.group2.data.Test test2;
 	protected kuleuven.group2.data.Test test3;
@@ -61,7 +60,6 @@ public class PolicyTest {
 		testDatabase = new TestDatabase();
 		
 		// Create Test records
-		// Who the hell calls a class Test anyway
 		test1 = new kuleuven.group2.data.Test("C1", "M1");
 		test2 = new kuleuven.group2.data.Test("C2", "M2");
 		test3 = new kuleuven.group2.data.Test("C3", "M3");
