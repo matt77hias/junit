@@ -6,7 +6,7 @@ import kuleuven.group2.policy.ChangedCodeFirst;
 import kuleuven.group2.policy.DistinctFailureFirst;
 import kuleuven.group2.policy.FrequentFailureFirst;
 import kuleuven.group2.policy.LastFailureFirst;
-import kuleuven.group2.policy.Policy;
+import kuleuven.group2.policy.TestSortingPolicy;
 
 import com.google.common.collect.ImmutableList;
 
@@ -20,9 +20,9 @@ public class PolicyModel {
 	});
 
 	private final StringProperty name = new SimpleStringProperty();
-	private final Policy policy;
+	private final TestSortingPolicy policy;
 
-	public PolicyModel(String name, Policy policy) {
+	public PolicyModel(String name, TestSortingPolicy policy) {
 		this.name.set(name);
 		this.policy = policy;
 	}
@@ -39,7 +39,7 @@ public class PolicyModel {
 		nameProperty().set(name);
 	}
 
-	public Policy getPolicy() {
+	public TestSortingPolicy getPolicy() {
 		return policy;
 	}
 

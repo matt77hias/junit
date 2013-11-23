@@ -8,7 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import kuleuven.group2.Pipeline;
-import kuleuven.group2.policy.Policy;
+import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.ui.model.PolicyModel;
@@ -63,7 +63,7 @@ public class MainController {
 		Store classSourceStore = new DirectoryStore(classSourcesDirProperty().get());
 		Store testSourceStore = new DirectoryStore(testSourcesDirProperty().get());
 		Store binaryStore = new DirectoryStore(binariesDirProperty().get());
-		Policy sortPolicy = policyProperty().get().getPolicy();
+		TestSortingPolicy sortPolicy = policyProperty().get().getPolicy();
 		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
 	}
 
