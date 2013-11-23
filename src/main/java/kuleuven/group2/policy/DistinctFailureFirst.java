@@ -18,7 +18,7 @@ import kuleuven.group2.util.ArrayUtils;
  * @version	17 November 2013
  * 
  */
-public class DistinctFailureFirst implements Policy {
+public class DistinctFailureFirst implements TestSortingPolicy {
 	
 	/**
 	 * The default depth of the level of history that's

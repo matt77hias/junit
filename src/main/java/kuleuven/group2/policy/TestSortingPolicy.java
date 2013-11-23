@@ -13,7 +13,7 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  *
  */
-public interface Policy {
+public interface TestSortingPolicy {
 	
 	/*
 	 * Policy is not an abstract class for the same reason Comparator

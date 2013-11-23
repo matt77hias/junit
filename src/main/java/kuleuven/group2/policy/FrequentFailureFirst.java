@@ -14,7 +14,7 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  * 
  */
-public class FrequentFailureFirst implements Policy, Comparator<Test> {
+public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test> {
 	
 	/**
 	 * The default depth of the level of history that's

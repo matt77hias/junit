@@ -136,7 +136,7 @@ public class PolicyTest {
 
 	@Test
 	public void distinctFailureFirstTest() {
-		Policy policy = new DistinctFailureFirst();
+		TestSortingPolicy policy = new DistinctFailureFirst();
 		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
 		
 		if (result[0] == test1) {
@@ -192,7 +192,7 @@ public class PolicyTest {
 	
 	@Test
 	public void frequentFailureFirstTest() {
-		Policy policy = new FrequentFailureFirst();
+		TestSortingPolicy policy = new FrequentFailureFirst();
 		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
 		
 		assertTrue(result[0] == test3);
@@ -219,7 +219,7 @@ public class PolicyTest {
 	
 	@Test
 	public void lastFailureFirstTest() {
-		Policy policy = new LastFailureFirst();
+		TestSortingPolicy policy = new LastFailureFirst();
 		kuleuven.group2.data.Test[] result = policy.getSortedTestsAccordingToPolicy(testDatabase);
 		
 		assertTrue(result[0] == test3);
@@ -246,7 +246,7 @@ public class PolicyTest {
 	
 	@Test
 	public void distinctFailureFirstTest_immutable_input() {
-		Policy policy = new DistinctFailureFirst();
+		TestSortingPolicy policy = new DistinctFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
 		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
@@ -268,7 +268,7 @@ public class PolicyTest {
 	
 	@Test
 	public void frequentFailureFirstTest_immutable_input() {
-		Policy policy = new FrequentFailureFirst();
+		TestSortingPolicy policy = new FrequentFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
 		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
@@ -290,7 +290,7 @@ public class PolicyTest {
 	
 	@Test
 	public void lastFailureFirstTest_immutable_input() {
-		Policy policy = new LastFailureFirst();
+		TestSortingPolicy policy = new LastFailureFirst();
 		
 		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
 		policy.getSortedTestsAccordingToPolicy(testDatabase, input);
