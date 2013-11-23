@@ -2,6 +2,8 @@ package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.*;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +103,7 @@ public class TestChangeUpdaterTest {
 		MemoryStore classSourceStore = new MemoryStore();
 		MemoryStore binaryStore = new MemoryStore();
 		
-		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore, getClass().getClassLoader());
+		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore);
 		
 		EclipseCompiler compiler = new EclipseCompiler(classSourceStore, binaryStore, binaryLoader);
 		
@@ -114,6 +116,14 @@ public class TestChangeUpdaterTest {
 		compiler.compileAll();
 		
 		Class<?> a = binaryLoader.loadClass(className);
+		
+		for(Method method : a.getMethods()) {
+			System.out.println(a.getName());
+			System.out.println(method.getAnnotations().length);
+			for(Annotation annotation : method.getAnnotations()) {
+				System.out.println(annotation.toString());
+			}
+		}
 		
 		testChangeUpdater.updateTestClass(a);
 		

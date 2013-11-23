@@ -1,6 +1,10 @@
 package kuleuven.group2.classloader;
 
 import static org.junit.Assert.*;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
@@ -55,6 +59,31 @@ public class StoreClassLoaderTest {
 		Class<?> loadedClass = classLoader.loadClass(className);
 		
 		assertEquals(className, loadedClass.getName());
+	}
+
+	@Test
+	public void testLoadClassAnnotations() throws ClassNotFoundException {
+		String className = "ATest";
+		String source =
+				"import org.junit.Test; \n" + 
+						"public class " + className + " {\n" +
+						"@Test\n" +
+						"public void foo() { int i = 0; }\n" +
+						"}";
+		
+		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
+		
+		compiler.compileAll();
+	
+		Class<?> loadedClass = classLoader.loadClass(className);
+		
+		assertEquals(className, loadedClass.getName());
+		
+		for(Method method : loadedClass.getMethods()) {
+			if (method.getName().equals("foo")) {
+				assertTrue(method.getAnnotations().length == 1);
+			}
+		}
 	}
 
 }
