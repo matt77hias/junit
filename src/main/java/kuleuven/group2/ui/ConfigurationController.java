@@ -35,20 +35,11 @@ public class ConfigurationController {
 	public void initialize() {
 		policyField.itemsProperty().bind(policies);
 		policyField.valueProperty().bindBidirectional(selectedPolicy);
+		policyField.setButtonCell(new PolicyListCell());
 		policyField.setCellFactory(new Callback<ListView<PolicyModel>, ListCell<PolicyModel>>() {
 			@Override
 			public ListCell<PolicyModel> call(ListView<PolicyModel> arg0) {
-				return new ListCell<PolicyModel>() {
-					@Override
-					protected void updateItem(PolicyModel model, boolean bln) {
-						super.updateItem(model, bln);
-						if (model != null) {
-							setText(model.getName());
-						} else {
-							setText(null);
-						}
-					}
-				};
+				return new PolicyListCell();
 			}
 		});
 
@@ -69,6 +60,18 @@ public class ConfigurationController {
 
 	public ObjectProperty<PolicyModel> selectedPolicyProperty() {
 		return selectedPolicy;
+	}
+
+	protected static class PolicyListCell extends ListCell<PolicyModel> {
+		@Override
+		protected void updateItem(PolicyModel model, boolean empty) {
+			super.updateItem(model, empty);
+			if (model != null) {
+				setText(model.getName());
+			} else {
+				setText(null);
+			}
+		}
 	}
 
 }
