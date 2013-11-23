@@ -62,7 +62,6 @@ public class MethodTestLinkUpdaterTest {
 
 	@Test
 	public void testLinks() throws Exception {
-
 		assertEquals(0, database.getNbLinks());
 		
 		currentTestHolder.setCurrentTest(testMethod2F);
