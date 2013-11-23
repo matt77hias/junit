@@ -11,7 +11,7 @@ import javafx.stage.DirectoryChooser;
 
 public class DirectoryFieldController {
 
-	private final StringProperty title = new SimpleStringProperty("");
+	private final StringProperty dialogTitle = new SimpleStringProperty("");
 	private final StringProperty directory = new SimpleStringProperty();
 
 	@FXML
@@ -19,11 +19,11 @@ public class DirectoryFieldController {
 
 	@FXML
 	public void initialize() {
-		directoryText.textProperty().bind(directoryProperty());
+		directoryText.textProperty().bindBidirectional(directoryProperty());
 	}
 
-	public StringProperty titleProperty() {
-		return title;
+	public StringProperty dialogTitleProperty() {
+		return dialogTitle;
 	}
 
 	public StringProperty directoryProperty() {
@@ -41,7 +41,7 @@ public class DirectoryFieldController {
 		if (directory != null) {
 			chooser.setInitialDirectory(new File(directory));
 		}
-		chooser.titleProperty().bind(titleProperty());
+		chooser.titleProperty().bind(dialogTitleProperty());
 		File chosenDirectory = chooser.showDialog(directoryText.getScene().getWindow());
 		if (chosenDirectory != null) {
 			directoryProperty().set(chosenDirectory.getAbsolutePath());

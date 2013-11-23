@@ -6,6 +6,6 @@ import javafx.scene.layout.BorderPane
 
 component Main controlledby MainController {
 	BorderPane {
-		center : include Configuration
+		center : Configuration id configuration
 	}
 }

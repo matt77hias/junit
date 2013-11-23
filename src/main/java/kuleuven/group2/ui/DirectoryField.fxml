@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.DirectoryFieldController" hgap="5" vgap="5">
+<fx:root xmlns:fx="http://javafx.com/fxml" type="GridPane" fx:controller="kuleuven.group2.ui.DirectoryFieldController" hgap="5" vgap="5">
 
 	<columnConstraints>
 		<ColumnConstraints fillWidth="true" hgrow="ALWAYS"/> 
@@ -19,4 +19,4 @@
 		<TextField fx:id="directoryText" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="0"/> 
 		<Button text="Browse" onAction="#onBrowse" GridPane.rowIndex="0" GridPane.columnIndex="1"/> 
 	</children>
-</GridPane>
+</fx:root>

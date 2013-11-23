@@ -5,10 +5,11 @@
 
 <?import java.lang.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import kuleuven.group2.ui.Configuration?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.MainController">
 
 	<center>
-		<fx:include source="/kuleuven/group2/ui/Configuration.fxml" />
+		<Configuration fx:id="configuration"/> 
 	</center>
 </BorderPane>

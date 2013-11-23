@@ -6,8 +6,9 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.control.Button
 import kuleuven.group2.ui.DirectoryFieldController
+import javafx.beans.property.StringProperty
 
-component DirectoryField controlledby DirectoryFieldController {
+dynamic component DirectoryField controlledby DirectoryFieldController {
 	GridPane {
 		hgap : 5,
 		vgap : 5,

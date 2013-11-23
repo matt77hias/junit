@@ -6,8 +6,11 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.control.Button
 import kuleuven.group2.ui.DirectoryField
+import kuleuven.group2.ui.model.PolicyModel
+import kuleuven.group2.ui.ConfigurationController
+import javafx.scene.control.ComboBox
 
-component Configuration {
+component Configuration controlledby ConfigurationController {
 	GridPane {
 		hgap : 5,
 		vgap : 5,
@@ -26,17 +29,33 @@ component Configuration {
 				static rowIndex : 0, static columnIndex : 0,
 				text : "Class sources: "
 			},
-			include DirectoryField { static rowIndex : 0, static columnIndex : 1 },
+			DirectoryField id classSourceField {
+				static rowIndex : 0, static columnIndex : 1,
+				dialogTitle : "Class sources directory"
+			},
 			Label {
 				static rowIndex : 1, static columnIndex : 0,
 				text : "Test sources: "
 			},
-			include DirectoryField { static rowIndex : 1, static columnIndex : 1 },
+			DirectoryField id testSourceField {
+				static rowIndex : 1, static columnIndex : 1,
+				dialogTitle : "Test sources directory"
+			},
 			Label {
 				static rowIndex : 2, static columnIndex : 0,
 				text : "Binaries: "
 			},
-			include DirectoryField { static rowIndex : 2, static columnIndex : 1 }
+			DirectoryField id binaryField {
+				static rowIndex : 2, static columnIndex : 1,
+				dialogTitle : "Binaries directory"
+			},
+			Label {
+				static rowIndex : 3, static columnIndex : 0,
+				text : "Sorting policy: "
+			},
+			ComboBox < PolicyModel > id policyField {
+				static rowIndex : 3, static columnIndex : 1
+			}
 		]
 	}
 }
