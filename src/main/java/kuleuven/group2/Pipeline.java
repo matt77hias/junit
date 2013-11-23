@@ -94,6 +94,53 @@ public class Pipeline {
 		testSourceStore.startListening();
 		// TODO Enable rewriter!
 	}
+	
+	private void run(List<StoreEvent> events) {
+		reloadClasses();
+		
+		handleSourceEvents(events);
+		
+		handleTestSourceEvents(events);
+
+		Test[] tests = sortTests();
+
+		runTests(tests);
+	}
+	
+	private void reloadClasses() {
+		testClassLoader.reload();
+	}
+	
+	private void handleSourceEvents(List<StoreEvent> events) {
+		try {
+			classSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	private Test[] sortTests() {
+		return sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
+	}
+	
+	private void runTests(Test[] tests) {
+		try {
+			testRunner.runTestMethods(tests);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleTestSourceEvents(List<StoreEvent> events) {
+		try {
+			testSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
 
 	public void stop() {
 		// Stop listening
@@ -109,28 +156,7 @@ public class Pipeline {
 
 		@Override
 		public void consume(List<StoreEvent> events) {
-			// Reload classes
-			testClassLoader.reload();
-
-			// Handle events
-			try {
-				classSourceEventHandler.handleEvents(events);
-				testSourceEventHandler.handleEvents(events);
-			} catch (Exception e) {
-				// TODO Show in GUI?
-				System.err.println(e.getMessage());
-			}
-
-			// Sort tests
-			Test[] tests = sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
-
-			// Run tests
-			try {
-				testRunner.runTestMethods(tests);
-			} catch (Exception e) {
-				// TODO Show in GUI?
-				e.printStackTrace();
-			}
+			Pipeline.this.run(events);
 		}
 	}
 
