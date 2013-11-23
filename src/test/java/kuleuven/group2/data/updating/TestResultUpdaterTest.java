@@ -52,14 +52,11 @@ public class TestResultUpdaterTest {
 		updater.testStarted(method1Description);
 		updater.testFinished(method1Description);
 		
-		// Successful tests are added when the run is finished
-		assertEquals(0, database.getAllTestRuns().size());
+		// one successful run was added
+		assertEquals(1, database.getAllTestRuns().size());
 		
 		updater.testStarted(method2Description);
 		updater.testAssumptionFailure(method2Failure);
-		
-		// failures are added immediately
-		assertEquals(1, database.getAllTestRuns().size());
 		
 		updater.testRunFinished(null);
 		
