@@ -98,4 +98,24 @@ public class TestSourceEventHandlerTest {
 		assertNotNull(testDatabase.getTest(className, "foo"));
 	}
 
+	@Test
+	public void testHandleEventsNoTestMethods() throws Exception {
+		String className = "A";
+		String source =
+				"public class " + className + " {\n" +
+						"public void foo() { int i = 0; }\n" +
+						"}";
+
+		classSourceStore.startListening();
+		
+		classSourceStore.write(className, source.getBytes());
+		
+		classSourceStore.stopListening();
+		
+		sourceEventHandler.handleEvents(events);
+
+		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "initializationError")));
+		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "foo")));
+	}
+
 }
