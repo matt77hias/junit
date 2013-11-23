@@ -81,9 +81,10 @@ public class TestSourceEventHandlerTest {
 	public void test() throws Exception {
 		String className = "ATest";
 		String source =
-				"import org.junit.Test;" + 
+				"import org.junit.Test; \n" + 
 						"public class " + className + " {\n" +
-						"@Test public boolean foo() { return true; }\n" +
+						"@Test\n" +
+						"public void foo() { int i = 0; }\n" +
 						"}";
 
 		classSourceStore.startListening();
@@ -93,21 +94,8 @@ public class TestSourceEventHandlerTest {
 		classSourceStore.stopListening();
 		
 		sourceEventHandler.handleEvents(events);
-		
-		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
-		
-		Class<?> loadedClass = testClassLoader.loadClass(className);
 
-		assertEquals(className, loadedClass.getName());
-
-		for(Method method : loadedClass.getMethods()) {
-			if (method.getName().equals("foo")) {
-				// if this test fails, could also be problem with compiler
-				assertNotNull(method.getAnnotation(Test.class));
-			}
-		}
-
-		System.out.println(testDatabase.getAllTests());
+		assertNotNull(testDatabase.getTest(className, "foo"));
 	}
 
 }

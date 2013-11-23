@@ -1,7 +1,9 @@
 package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertNotNull;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
