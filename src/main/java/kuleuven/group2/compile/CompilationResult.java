@@ -11,6 +11,9 @@ import java.util.Map;
  * A {@code CompilationResult} represents the result of a compilation. It
  * contains either compilation errors (which caused the compilation to fail) or
  * warnings (which the compilation detected but ignored).
+ * 
+ * @author Group2
+ * @version 5 November 2013
  */
 public class CompilationResult {
 

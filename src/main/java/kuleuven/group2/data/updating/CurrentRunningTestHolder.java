@@ -6,7 +6,8 @@ import kuleuven.group2.data.Test;
 /**
  * An interface for classes that can give back the test currently being run.
  * 
- * @author Ruben Pieters
+ * @author Group2
+ * @version 9 November 2013
  */
 public interface CurrentRunningTestHolder {
 

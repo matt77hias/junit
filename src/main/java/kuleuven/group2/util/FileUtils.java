@@ -7,6 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
+/**
+ * Utilities for changing files and folders.
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public final class FileUtils {
 
 	private FileUtils() {

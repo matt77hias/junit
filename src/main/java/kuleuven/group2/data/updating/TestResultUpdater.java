@@ -11,9 +11,10 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
- * Updates the data with the latest results when tests are run.
+ * Updates the test database with the latest test results when tests are run.
  * 
- * @author Vital D'haveloose, Ruben Pieters, Mattias Buelens
+ * @author Group2
+ * @version 12 November 2013
  */
 public class TestResultUpdater extends RunListener {
 

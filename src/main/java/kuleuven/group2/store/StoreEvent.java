@@ -1,6 +1,11 @@
 package kuleuven.group2.store;
 
-
+/**
+ * An event in a store, such as a deletion, add or change.
+ * 
+ * @author Group2
+ * @version 11 November 2013
+ */
 public class StoreEvent {
 
 	public final Store store;

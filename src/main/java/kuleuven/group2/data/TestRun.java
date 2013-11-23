@@ -4,6 +4,12 @@ import java.util.Date;
 
 import org.junit.runner.notification.Failure;
 
+/**
+ * Represents the running of a certain test, at a particular time and with a particular result.
+ * 
+ * @author Group2
+ * @version 7 November 2013
+ */
 public class TestRun {
 
 	private final Date timestamp;
