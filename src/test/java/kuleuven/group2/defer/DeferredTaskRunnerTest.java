@@ -84,14 +84,14 @@ public class DeferredTaskRunnerTest {
 	public void test100msTaskRequestDuringExecution() throws InterruptedException {
 		deferredTaskRunner200msDelay.start();
 		
-		Thread.sleep(210);
+		Thread.sleep(220);
 
 		// task should be running after 200 ms
 		assertTrue(deferredTaskRunner200msDelay.isRunning());
 		
 		deferredTaskRunner200msDelay.start();
 		
-		Thread.sleep(110);
+		Thread.sleep(120);
 		
 		// task should be done after 200 + 100 ms, even though start was requested
 		assertTrue(taskDone);
@@ -101,7 +101,7 @@ public class DeferredTaskRunnerTest {
 	public void test100msTaskStoppedDuringExecution() throws InterruptedException {
 		deferredTaskRunner200msDelay.start();
 		
-		Thread.sleep(210);
+		Thread.sleep(220);
 
 		// task should be running after 200 ms
 		assertTrue(deferredTaskRunner200msDelay.isRunning());
@@ -110,7 +110,7 @@ public class DeferredTaskRunnerTest {
 		
 		assertFalse(taskDone);
 		
-		Thread.sleep(110);
+		Thread.sleep(120);
 		
 		// task should finish, stop does not abort a currently running task
 		assertTrue(taskDone);
@@ -120,19 +120,19 @@ public class DeferredTaskRunnerTest {
 	public void test100msTaskRequestedDuringExecution() throws InterruptedException {
 		deferredTaskRunner200msDelay.start();
 		
-		Thread.sleep(210);
+		Thread.sleep(220);
 
 		// task should be running after 200 ms
 		assertTrue(deferredTaskRunner200msDelay.isRunning());
 		
 		deferredTaskRunner200msDelay.start();
 		
-		Thread.sleep(110);
+		Thread.sleep(120);
 		
 		// busy with deferring second requested task
 		assertFalse(deferredTaskRunner200msDelay.isRunning());
 		
-		Thread.sleep(310);
+		Thread.sleep(320);
 		
 		// task has been executed twice
 		assertEquals(2, taskDoneCounter);
