@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.classloader.StoreClassLoader;
-import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.sourcehandler.SourceEventHandler.Changes;
 import kuleuven.group2.store.MemoryStore;
@@ -24,7 +23,6 @@ public class SourceEventHandlerTest {
 	
 	protected Store classSourceStore;
 	protected Store binaryStore;
-	protected EclipseCompiler compiler;
 	protected ClassLoader testClassLoader;
 	protected TestDatabase testDatabase;
 	
@@ -45,7 +43,6 @@ public class SourceEventHandlerTest {
 		classSourceStore = new MemoryStore();
 		binaryStore = new MemoryStore();
 		testClassLoader = new StoreClassLoader(binaryStore);
-		compiler = new EclipseCompiler(classSourceStore, binaryStore, testClassLoader);
 		testDatabase = new TestDatabase();
 		testStoreListener = new TestStoreListener();
 		
