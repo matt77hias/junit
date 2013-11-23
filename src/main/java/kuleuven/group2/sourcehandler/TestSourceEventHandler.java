@@ -52,7 +52,7 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 
 		if (!result.isSuccess()) {
-			// TODO What exception should be thrown?
+			// TODO What exception should be thrown when EclipseCompiler.compile returns false?
 			throw new Exception("Compilation of test sources failed: " + result.getErrors());
 		}
 	}
