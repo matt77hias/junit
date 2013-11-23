@@ -27,7 +27,8 @@ import java.util.Map;
  * The DirectoryWatcher class notifies its listeners of the file system events
  * create, modify and delete.
  * 
- * @author Ruben
+ * @author Group2
+ * @version 13 November 2013
  */
 public class DirectoryWatcher {
 

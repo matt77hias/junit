@@ -2,6 +2,13 @@ package kuleuven.group2.store;
 
 import java.util.Collection;
 
+/**
+ * An interface that represents a resource container. Both source code files and binaries
+ * are considered resources.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public interface Store {
 
 	public boolean contains(String resourceName);

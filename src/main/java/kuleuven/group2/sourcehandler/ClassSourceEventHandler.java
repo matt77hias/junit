@@ -11,6 +11,12 @@ import kuleuven.group2.data.updating.MethodChangeUpdater;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 
+/**
+ * Handles events in the (non test) source code, such as deletions, adds and changes.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public class ClassSourceEventHandler extends SourceEventHandler {
 
 	protected final Store classSourceStore;
@@ -46,7 +52,7 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 		methodChangeUpdater.detectChanges(result.getCompiledClasses());
 
 		if (!result.isSuccess()) {
-			// TODO What exception should be thrown?
+			// TODO What exception should be thrown when EclipseCompiler.compile returns false?
 			throw new Exception("Compilation of class sources failed: " + result.getErrors());
 		}
 	}

@@ -16,6 +16,12 @@ import kuleuven.group2.filewatch.DirectoryWatchListener;
 import kuleuven.group2.filewatch.DirectoryWatcher;
 import kuleuven.group2.util.FileUtils;
 
+/**
+ * A store that has its contents on disk in a file system.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public class DirectoryStore extends AbstractStore implements DirectoryWatchListener {
 
 	protected final Path root;
