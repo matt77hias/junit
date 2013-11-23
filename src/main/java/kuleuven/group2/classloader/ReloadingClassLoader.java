@@ -3,6 +3,12 @@ package kuleuven.group2.classloader;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * A class loader that allows the complete reloading of a class from disk.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public abstract class ReloadingClassLoader extends ClassLoader {
 
 	private final ClassLoader parent;

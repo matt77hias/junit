@@ -28,6 +28,12 @@ import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
 import com.google.common.io.ByteStreams;
 
+/**
+ * TODO [DOC] beschrijf klasse EclipseCompiler
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public class EclipseCompiler extends JavaCompiler {
 
 	public EclipseCompiler(Store sourceStore, Store binaryStore, ClassLoader classLoader) {

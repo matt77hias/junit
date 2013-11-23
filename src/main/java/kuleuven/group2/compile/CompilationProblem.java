@@ -1,5 +1,11 @@
 package kuleuven.group2.compile;
 
+/**
+ * Represents a problem that occured during compilation.
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public interface CompilationProblem {
 
 	/**

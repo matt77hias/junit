@@ -117,7 +117,7 @@ public class FolderWatcherTest {
 
 		// Test
 		assertModified(testFile);
-		// TODO: perhaps we want to test things that shouldn't have happened as
+		// TODO [TEST] perhaps we want to test things that shouldn't have happened as
 		// well?
 	}
 
