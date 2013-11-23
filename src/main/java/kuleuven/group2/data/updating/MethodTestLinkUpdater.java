@@ -14,9 +14,10 @@ import org.junit.runner.notification.RunListener;
 import be.kuleuven.cs.ossrewriter.Monitor;
 
 /**
- * This class updates the link between methods and tests when tests are run.
+ * Updates the link between methods and tests when tests are run.
  * 
- * @author Vital D'haveloose, Ruben Pieters
+ * @author Group2
+ * @version 15 November 2013
  */
 public class MethodTestLinkUpdater extends Monitor {
 

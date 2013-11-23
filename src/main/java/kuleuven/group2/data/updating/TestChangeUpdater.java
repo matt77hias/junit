@@ -17,7 +17,8 @@ import org.junit.runner.Runner;
  * A TestChangeUpdater detects additions or removal of test methods in a test
  * class and updates the database accordingly.
  * 
- * @author Mattias Buelens
+ * @author Group2
+ * @version 14 November 2013
  */
 public class TestChangeUpdater {
 
