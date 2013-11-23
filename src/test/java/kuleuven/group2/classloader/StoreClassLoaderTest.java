@@ -2,10 +2,8 @@ package kuleuven.group2.classloader;
 
 import static org.junit.Assert.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.store.MemoryStore;
@@ -81,7 +79,8 @@ public class StoreClassLoaderTest {
 		
 		for(Method method : loadedClass.getMethods()) {
 			if (method.getName().equals("foo")) {
-				assertTrue(method.getAnnotations().length == 1);
+				// if this test fails, could also be problem with compiler
+				assertNotNull(method.getAnnotation(Test.class));
 			}
 		}
 	}

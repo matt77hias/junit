@@ -65,6 +65,7 @@ public class EclipseCompiler extends JavaCompiler {
 		// Compile
 		Map<String, String> options = ImmutableMap.<String, String> builder()
 				.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7)
+				.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7)
 				.build();
 		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(options),
 				compilerRequestor, problemFactory);

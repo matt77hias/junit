@@ -2,10 +2,12 @@ package kuleuven.group2.sourcehandler;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.sourcehandler.SourceEventHandlerTest.TestStoreListener;
 import kuleuven.group2.store.MemoryStore;
@@ -77,20 +79,34 @@ public class TestSourceEventHandlerTest {
 
 	@Test
 	public void test() throws Exception {
+		String className = "ATest";
 		String source =
 				"import org.junit.Test;" + 
-						"public class A {\n" +
+						"public class " + className + " {\n" +
 						"@Test public boolean foo() { return true; }\n" +
 						"}";
 
 		classSourceStore.startListening();
 		
-		classSourceStore.write("A", source.getBytes());
+		classSourceStore.write(className, source.getBytes());
 		
 		classSourceStore.stopListening();
 		
 		sourceEventHandler.handleEvents(events);
 		
+		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
+		
+		Class<?> loadedClass = testClassLoader.loadClass(className);
+
+		assertEquals(className, loadedClass.getName());
+
+		for(Method method : loadedClass.getMethods()) {
+			if (method.getName().equals("foo")) {
+				// if this test fails, could also be problem with compiler
+				assertNotNull(method.getAnnotation(Test.class));
+			}
+		}
+
 		System.out.println(testDatabase.getAllTests());
 	}
 

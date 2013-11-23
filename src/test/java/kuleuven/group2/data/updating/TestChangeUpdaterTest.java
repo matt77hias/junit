@@ -104,6 +104,7 @@ public class TestChangeUpdaterTest {
 		MemoryStore binaryStore = new MemoryStore();
 		
 		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore);
+		testChangeUpdater = new TestChangeUpdater(testDatabase, binaryLoader);
 		
 		EclipseCompiler compiler = new EclipseCompiler(classSourceStore, binaryStore, binaryLoader);
 		
@@ -112,22 +113,11 @@ public class TestChangeUpdaterTest {
 		CompilationResult result = compiler.compileAll();
 		
 		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
-
-		compiler.compileAll();
 		
 		Class<?> a = binaryLoader.loadClass(className);
 		
-		for(Method method : a.getMethods()) {
-			System.out.println(a.getName());
-			System.out.println(method.getAnnotations().length);
-			for(Annotation annotation : method.getAnnotations()) {
-				System.out.println(annotation.toString());
-			}
-		}
-		
-		testChangeUpdater.updateTestClass(a);
-		
-		System.out.println(testDatabase.getAllTests());
+		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
+		//testChangeUpdater.updateTestClass(a);
 		
 		assertTrue(testDatabase.containsTest(className, "foo"));
 	}
