@@ -11,8 +11,8 @@ import com.sun.tools.attach.VirtualMachine;
 /**
  * Manages the loading of the OssRewriter agent in the current virtual machine.
  * 
- * @author Ruben, Vital
- *
+ * @author Group2
+ * @version 16 November 2013
  */
 public class OssRewriterLoader {
 	/**

@@ -1,5 +1,11 @@
 package kuleuven.group2.store;
 
+/**
+ * A filter that separates source code (.java) from binaries (.class).
+ * 
+ * @author Group2
+ * @version 11 November 2013
+ */
 public interface StoreFilter {
 
 	public boolean accept(String resourceName);

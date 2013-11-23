@@ -81,7 +81,7 @@ public class MethodTestLinkUpdaterTest {
 	}
 	
 	@Test
-	public void testWithOssRewriter() {
+	public void testWithOssRewriter() throws Exception {
 		OssRewriterLoader ossRewriterLoader = new OssRewriterLoader();
 		
 		TestRunner testRunner = new TestRunner(getClass().getClassLoader());

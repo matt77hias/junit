@@ -2,6 +2,12 @@ package kuleuven.group2.data.hash;
 
 import java.util.Arrays;
 
+/**
+ * A hash code for a method.
+ * 
+ * @author Group2
+ * @version 6 November 2013
+ */
 public class MethodHash {
 
 	private final byte[] hash;

@@ -54,7 +54,7 @@ public class TestRunnerTest {
 	}
 	
 	@Test
-	public void testSucceededSimple() {
+	public void testSucceededSimple() throws Exception {
 		Result[] result = testRunner.runTestMethods(testMethod2Arg);
 		Result testMethod2ArgResult = result[0];
 		
@@ -79,8 +79,8 @@ public class TestRunnerTest {
 	}*/
 	
 	@Test
-	public void testRunListener() {
-		junitCore.addListener(new RunListener() {
+	public void testRunListener() throws Exception {
+		testRunner.addRunListener(new RunListener() {
 			@Override
 			public void testStarted(Description description) throws Exception {
 				TestRunnerTest.this.listenerVisited();

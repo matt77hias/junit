@@ -11,10 +11,11 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 
 /**
- * A class that represents a test method. It also keeps track of the running of
- * this method, that is the timings and results.
+ * A class that represents a test method. It also keeps track of the runnings of
+ * this method.
  * 
- * @author Ruben Pieters, Vital D'haveloose
+ * @author Group2
+ * @version 13 November 2013
  */
 public class Test {
 
