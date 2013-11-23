@@ -89,6 +89,23 @@ public class EclipseCompilerTest {
 		assertEquals(Boolean.TRUE, invokeMethod("A", "foo"));
 	}
 
+	@Test
+	public void compileTestAnnotation() throws Exception {
+		//@formatter:off
+		String source =
+				"public class A {\n" +
+						"@Test public boolean foo() { return true; }\n" +
+				"}";
+		//@formatter:on
+		sourceStore.write(NameUtils.toSourceName("A"), source.getBytes());
+
+		CompilationResult result = compiler.compileAll();
+		assertTrue(result.isSuccess());
+		assertEquals(1, result.getCompiledClasses().size());
+
+		assertEquals(Boolean.TRUE, invokeMethod("A", "foo"));
+	}
+
 	protected Object invokeMethod(String className, String methodName) throws ReflectiveOperationException {
 		Class<?> loadedClass = classLoader.loadClass(className);
 		Method method = loadedClass.getMethod(methodName);
