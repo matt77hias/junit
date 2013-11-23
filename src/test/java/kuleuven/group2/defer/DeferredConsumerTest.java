@@ -16,8 +16,8 @@ import org.junit.Test;
 
 public class DeferredConsumerTest {
 	
-	protected DeferredConsumer<Float> deferredConsumer;
-	protected List<Float> floatList;
+	protected DeferredConsumer<Integer> deferredConsumer;
+	protected List<Integer> intList;
 	protected TestConsumer testConsumer;
 
 	@BeforeClass
@@ -31,27 +31,49 @@ public class DeferredConsumerTest {
 	@Before
 	public void setUp() throws Exception {
 		testConsumer = new TestConsumer();
-		floatList = new ArrayList<>();
-		deferredConsumer = new DeferredConsumer<>(testConsumer, 200, TimeUnit.MILLISECONDS);
+		intList = new ArrayList<>();
+		deferredConsumer = new DeferredConsumer<>(testConsumer, 50, TimeUnit.MILLISECONDS);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 	
-	public class TestConsumer implements Consumer<List<Float>> {
+	public class TestConsumer implements Consumer<List<Integer>> {
 
 		@Override
-		public void consume(List<Float> item) {
-			DeferredConsumerTest.this.floatList.addAll(item);
+		public void consume(List<Integer> item) {
+			DeferredConsumerTest.this.intList.addAll(item);
 		}
 		
 	}
 
 	@Test
-	public void test() {
-		deferredConsumer.consume(0.0f);
-		floatList.contains(new Float(0.0f));
+	public void testSingleConsume() throws InterruptedException {
+		deferredConsumer.consume(0);
+		// integer is not consumed instantly
+		assertFalse(intList.contains(0));
+		
+		Thread.sleep(60);
+		
+		// integer is consumed after 50 ms
+		assertTrue(intList.contains(0));
+	}
+
+	@Test
+	public void testMultipleConsume() throws InterruptedException {
+		deferredConsumer.consume(0);
+		deferredConsumer.consume(1);
+		deferredConsumer.consume(2);
+		deferredConsumer.consume(3);
+		
+		Thread.sleep(60);
+		
+		// integers are consumed after 50 ms
+		assertTrue(intList.contains(0));
+		assertTrue(intList.contains(1));
+		assertTrue(intList.contains(2));
+		assertTrue(intList.contains(3));
 	}
 
 }
