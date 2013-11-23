@@ -1,0 +1,42 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.GridPane
+import javafx.scene.control.Label
+import javafx.scene.control.TextField
+import javafx.scene.layout.ColumnConstraints
+import javafx.scene.control.Button
+import kuleuven.group2.ui.DirectoryField
+
+component Configuration {
+	GridPane {
+		hgap : 5,
+		vgap : 5,
+		columnConstraints : [
+			ColumnConstraints {
+				fillWidth : true,
+				hgrow : "NEVER"
+			},
+			ColumnConstraints {
+				fillWidth : true,
+				hgrow : "ALWAYS"
+			}
+		],
+		children : [
+			Label {
+				static rowIndex : 0, static columnIndex : 0,
+				text : "Class sources: "
+			},
+			include DirectoryField { static rowIndex : 0, static columnIndex : 1 },
+			Label {
+				static rowIndex : 1, static columnIndex : 0,
+				text : "Test sources: "
+			},
+			include DirectoryField { static rowIndex : 1, static columnIndex : 1 },
+			Label {
+				static rowIndex : 2, static columnIndex : 0,
+				text : "Binaries: "
+			},
+			include DirectoryField { static rowIndex : 2, static columnIndex : 1 }
+		]
+	}
+}

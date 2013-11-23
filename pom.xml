@@ -81,6 +81,13 @@
 			<artifactId>asm-util</artifactId>
 			<version>4.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>jfxrt</artifactId>
+			<version>2.2</version>
+			<scope>system</scope>
+			<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

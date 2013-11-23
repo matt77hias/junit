@@ -1,0 +1,36 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.GridPane
+import javafx.scene.control.Label
+import javafx.scene.control.TextField
+import javafx.scene.layout.ColumnConstraints
+import javafx.scene.control.Button
+import kuleuven.group2.ui.DirectoryFieldController
+
+component DirectoryField controlledby DirectoryFieldController {
+	GridPane {
+		hgap : 5,
+		vgap : 5,
+		columnConstraints : [
+			ColumnConstraints {
+				fillWidth : true,
+				hgrow : "ALWAYS"
+			},
+			ColumnConstraints {
+				fillWidth : true,
+				hgrow : "NEVER"
+			}
+		],
+		children : [
+			TextField id directoryText {
+				static rowIndex : 0, static columnIndex : 0,
+				editable : false
+			},
+			Button {
+				static rowIndex : 0, static columnIndex : 1,
+				text : "Browse",
+				onAction : controllermethod onBrowse
+			}
+		]
+	}
+}
