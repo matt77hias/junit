@@ -102,9 +102,9 @@ public class Pipeline {
 		
 		handleTestSourceEvents(events);
 
-		Test[] tests = sortTests();
+		Test[] sortedTests = sortTests();
 
-		runTests(tests);
+		runTests(sortedTests);
 	}
 	
 	private void reloadClasses() {
