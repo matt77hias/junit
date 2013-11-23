@@ -1,4 +1,4 @@
-package kuleuven.group2.ui;
+package kuleuven.group2;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +7,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Pane root = (Pane) FXMLLoader.load(getClass().getResource("Configuration.fxml"));
+			Pane root = (Pane) FXMLLoader.load(getClass().getResource("ui/Main.fxml"));
 			Scene scene = new Scene(root, 400, 400);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -22,4 +23,5 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }

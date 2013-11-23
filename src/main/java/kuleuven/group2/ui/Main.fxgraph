@@ -1,0 +1,11 @@
+package kuleuven.group2.ui
+
+import kuleuven.group2.ui.MainController
+import kuleuven.group2.ui.Configuration
+import javafx.scene.layout.BorderPane
+
+component Main controlledby MainController {
+	BorderPane {
+		center : include Configuration
+	}
+}
