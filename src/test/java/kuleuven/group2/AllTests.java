@@ -17,6 +17,7 @@ import kuleuven.group2.defer.DeferredConsumerTest;
 import kuleuven.group2.defer.DeferredTaskRunnerTest;
 import kuleuven.group2.filewatch.FolderWatcherTest;
 import kuleuven.group2.policy.PolicyTest;
+import kuleuven.group2.sourcehandler.SourceEventHandlerTest;
 import kuleuven.group2.store.DirectoryStoreTest;
 import kuleuven.group2.testrunner.TestRunnerTest;
 
@@ -42,6 +43,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	DeferredTaskRunnerTest.class,
 	FolderWatcherTest.class,
 	PolicyTest.class,
+	SourceEventHandlerTest.class,
 	DirectoryStoreTest.class,
 	TestRunnerTest.class
 	})
