@@ -78,7 +78,7 @@ public class TestSourceEventHandlerTest {
 	
 
 	@Test
-	public void test() throws Exception {
+	public void testHandleEventsOneTestClassOneTest() throws Exception {
 		String className = "ATest";
 		String source =
 				"import org.junit.Test; \n" + 
