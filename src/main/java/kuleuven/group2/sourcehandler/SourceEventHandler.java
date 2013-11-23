@@ -9,6 +9,12 @@ import kuleuven.group2.store.StoreEvent;
 
 import com.google.common.collect.Sets;
 
+/**
+ * An abstract handler for events that happen with source code.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public abstract class SourceEventHandler {
 
 	public abstract void handleEvents(List<StoreEvent> events) throws Exception;

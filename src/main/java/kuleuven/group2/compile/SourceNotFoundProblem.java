@@ -1,5 +1,11 @@
 package kuleuven.group2.compile;
 
+/**
+ * A problem caused by the not existing of a referenced source file.
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public class SourceNotFoundProblem implements CompilationProblem {
 
 	private final String resourceName;

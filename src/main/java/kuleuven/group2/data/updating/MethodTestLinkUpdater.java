@@ -8,15 +8,15 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
 
 /**
- * This class updates the link between methods and tests when tests are run.
+ * Updates the link between methods and tests when tests are run.
  * 
- * @author Vital D'haveloose, Ruben Pieters
+ * @author Group2
+ * @version 15 November 2013
  */
 public class MethodTestLinkUpdater extends Monitor {
 
@@ -34,7 +34,9 @@ public class MethodTestLinkUpdater extends Monitor {
 	}
 
 	public void registerTestHolder(TestRunner testRunner) {
-		this.currentTestHolder = new MethodTestLinkRunListener(testRunner);
+		MethodTestLinkRunListener listener = new MethodTestLinkRunListener();
+		testRunner.addRunListener(listener);
+		this.currentTestHolder = listener;
 	}
 
 	@Override
@@ -51,57 +53,33 @@ public class MethodTestLinkUpdater extends Monitor {
 
 		private Test currentTest = null;
 
-		protected MethodTestLinkRunListener(TestRunner testRunner) {
-			testRunner.addRunListener(this);
-		}
-
-		/**
-		 * Called before any tests have been run.
-		 * 
-		 * @param description
-		 *            describes the tests to be run
-		 */
-		@Override
-		public void testRunStarted(Description description) throws Exception {
-			testDatabase.clearMethodTestLinks();
-
-			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
-		}
-
-		/**
-		 * Called when an atomic test is about to be started.
-		 * 
-		 * @param description
-		 *            the description of the test that is about to be run
-		 *            (generally a class and method name)
-		 */
-		@Override
-		public void testStarted(Description description) throws Exception {
-			String testClassName = description.getClassName();
-			String testMethodName = description.getMethodName();
-			currentTest = new Test(testClassName, testMethodName);
-		}
-
-		@Override
-		public void testRunFinished(Result result) throws Exception {
-			ossRewriterLoader.unregisterMonitor(MethodTestLinkUpdater.this);
-		}
-
-		/**
-		 * Called when an atomic test has finished, whether the test succeeds or
-		 * fails.
-		 * 
-		 * @param description
-		 *            the description of the test that just ran
-		 */
-		@Override
-		public void testFinished(Description description) throws Exception {
-			currentTest = null;
-		}
-
 		@Override
 		public Test getCurrentRunningTest() {
 			return currentTest;
+		}
+
+		@Override
+		public void testRunStarted(Description description) throws Exception {
+			// Clear all links before test run
+			testDatabase.clearMethodTestLinks();
+		}
+
+		@Override
+		public void testStarted(Description description) throws Exception {
+			// Store current test
+			String testClassName = description.getClassName();
+			String testMethodName = description.getMethodName();
+			currentTest = new Test(testClassName, testMethodName);
+			// Monitor method calls
+			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
+		}
+
+		@Override
+		public void testFinished(Description description) throws Exception {
+			// Clear current test
+			currentTest = null;
+			// Stop monitoring method calls
+			ossRewriterLoader.unregisterMonitor(MethodTestLinkUpdater.this);
 		}
 
 	}

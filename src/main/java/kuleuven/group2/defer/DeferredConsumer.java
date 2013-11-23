@@ -11,6 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 import kuleuven.group2.util.Consumer;
 
+/**
+ * TODO [DOC] beschrijf klasse DeferredConsumer<T>
+ *
+ * @param <T>
+ * 
+ * @author Group2
+ * @version 8 November 2013
+ */
 public class DeferredConsumer<T> implements Consumer<T> {
 
 	protected final DeferredTaskRunner runner;

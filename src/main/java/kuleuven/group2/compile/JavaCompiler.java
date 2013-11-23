@@ -5,6 +5,12 @@ import java.util.Collection;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreFilter;
 
+/**
+ * An abstract representation of a Java compiler, with a source store, a binary store and a class loader.
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public abstract class JavaCompiler {
 
 	protected final Store sourceStore;

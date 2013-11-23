@@ -22,6 +22,13 @@ import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
+/**
+ * Brings all parts of the program together to form a pipeline.
+ * TODO [DOC] vervolledig beschrijving can de klasse Pipeline
+ * 
+ * @author Group2
+ * @version 19 November 2013
+ */
 public class Pipeline {
 
 	protected final Store classSourceStore;
@@ -85,6 +92,7 @@ public class Pipeline {
 		testSourceWatcher.registerConsumer(deferredTask);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
+		// TODO Enable rewriter!
 	}
 
 	public void stop() {
@@ -93,6 +101,7 @@ public class Pipeline {
 		testSourceWatcher.unregisterConsumer(deferredTask);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
+		// TODO Disable rewriter!
 		// TODO Stop current test run as well?
 	}
 
@@ -115,10 +124,13 @@ public class Pipeline {
 			// Sort tests
 			Test[] tests = sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
 
-			// Run tests and monitor method calls
-			rewriterLoader.registerMonitor(methodTestLinkUpdater);
-			testRunner.runTestMethods(tests);
-			rewriterLoader.unregisterMonitor(methodTestLinkUpdater);
+			// Run tests
+			try {
+				testRunner.runTestMethods(tests);
+			} catch (Exception e) {
+				// TODO Show in GUI?
+				e.printStackTrace();
+			}
 		}
 	}
 

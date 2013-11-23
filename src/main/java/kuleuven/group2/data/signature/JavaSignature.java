@@ -6,6 +6,14 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * A representation of a signature of a method in Java. This contains
+ * a method name, class name, package name, a list of argument types
+ * and a return type.
+ * 
+ * @author Group2
+ * @version 6 November 2013
+ */
 public class JavaSignature {
 
 	protected final String name;

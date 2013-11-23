@@ -6,6 +6,12 @@ import kuleuven.group2.store.Store;
 
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 
+/**
+ * TODO [DOC] beschrijf klasse EclipseCompilationUnit
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public class EclipseCompilationUnit implements ICompilationUnit {
 
 	private final String className;

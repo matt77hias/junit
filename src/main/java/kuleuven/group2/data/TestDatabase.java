@@ -19,7 +19,8 @@ import com.google.common.collect.Multimap;
  * A class that has keeps track of all {@link Test}s, {@link TestedMethod}s and
  * links between them for access by updaters and users.
  * 
- * @author Vital D'haveloose, Ruben Pieters, Mattias Buelens
+ * @author Group2
+ * @version 18 November 2013
  */
 public class TestDatabase {
 

@@ -14,6 +14,12 @@ import org.objectweb.asm.Opcodes;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
+/**
+ * Calculates hashes for methods using their byte codes.
+ * 
+ * @author Group2
+ * @version 8 November 2013
+ */
 public class MethodHasher {
 
 	protected final ClassReader classReader;
