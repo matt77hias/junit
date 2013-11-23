@@ -90,12 +90,12 @@ public class TestChangeUpdaterTest {
 	
 	@Test
 	public void testUpdateWithStoreClassLoader() throws ClassNotFoundException {
-		String className = "A";
+		String className = "ATest";
 		String source =
 				"import org.junit.Test; \n" + 
-						"public class A {\n" +
+						"public class " + className + " {\n" +
 						"@Test\n" +
-						"public boolean foo() { return true; }\n" +
+						"public void foo() { int i = 0; }\n" +
 						"}";
 
 		MemoryStore classSourceStore = new MemoryStore();
@@ -119,7 +119,7 @@ public class TestChangeUpdaterTest {
 		
 		System.out.println(testDatabase.getAllTests());
 		
-		assertTrue(testDatabase.containsTest("A", "foo"));
+		assertTrue(testDatabase.containsTest(className, "foo"));
 	}
 
 }

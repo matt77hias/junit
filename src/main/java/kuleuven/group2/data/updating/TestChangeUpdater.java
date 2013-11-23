@@ -61,7 +61,6 @@ public class TestChangeUpdater {
 		// Collect test method names
 		Set<String> testNames = new HashSet<String>();
 		for (Description description : runner.getDescription().getChildren()) {
-			System.out.println(description.testCount());
 			// Only consider atomic tests
 			if (description.isTest()) {
 				testNames.add(description.getMethodName());
