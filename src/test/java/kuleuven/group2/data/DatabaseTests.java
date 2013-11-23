@@ -27,5 +27,5 @@ import org.junit.runners.Suite.SuiteClasses;
 		TestTest.class
 })
 public class DatabaseTests {
-
+	
 }

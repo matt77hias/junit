@@ -2,14 +2,21 @@ package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.*;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.compile.CompilationResult;
+import kuleuven.group2.compile.EclipseCompiler;
+import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestDatabaseTest;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
+import kuleuven.group2.store.MemoryStore;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -81,6 +88,38 @@ public class TestChangeUpdaterTest {
 		testChangeUpdater.updateTestClasses(testClassNames);
 		
 		assertTrue(testDatabase.containsTest(getClass().getName(), "testUpdatingTests"));
+	}
+	
+	@Test
+	public void testUpdateWithStoreClassLoader() throws ClassNotFoundException {
+		String className = "ATest";
+		String source =
+				"import org.junit.Test; \n" + 
+						"public class " + className + " {\n" +
+						"@Test\n" +
+						"public void foo() { int i = 0; }\n" +
+						"}";
+
+		MemoryStore classSourceStore = new MemoryStore();
+		MemoryStore binaryStore = new MemoryStore();
+		
+		StoreClassLoader binaryLoader = new StoreClassLoader(binaryStore);
+		testChangeUpdater = new TestChangeUpdater(testDatabase, binaryLoader);
+		
+		EclipseCompiler compiler = new EclipseCompiler(classSourceStore, binaryStore, binaryLoader);
+		
+		classSourceStore.write(NameUtils.toSourceName(className), source.getBytes());
+		
+		CompilationResult result = compiler.compileAll();
+		
+		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
+		
+		Class<?> a = binaryLoader.loadClass(className);
+		
+		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
+		//testChangeUpdater.updateTestClass(a);
+		
+		assertTrue(testDatabase.containsTest(className, "foo"));
 	}
 
 }

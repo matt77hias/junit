@@ -15,7 +15,8 @@ import kuleuven.group2.util.Consumer;
  * while before being processed.
  * </p>
  * 
- * @author Ruben, Mattias
+ * @author Group2
+ * @version 11 November 2013
  */
 public class StoreWatcher implements StoreListener {
 

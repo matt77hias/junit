@@ -62,7 +62,6 @@ public class MethodTestLinkUpdaterTest {
 
 	@Test
 	public void testLinks() throws Exception {
-
 		assertEquals(0, database.getNbLinks());
 		
 		currentTestHolder.setCurrentTest(testMethod2F);
@@ -81,7 +80,7 @@ public class MethodTestLinkUpdaterTest {
 	}
 	
 	@Test
-	public void testWithOssRewriter() {
+	public void testWithOssRewriter() throws Exception {
 		OssRewriterLoader ossRewriterLoader = new OssRewriterLoader();
 		
 		TestRunner testRunner = new TestRunner(getClass().getClassLoader());

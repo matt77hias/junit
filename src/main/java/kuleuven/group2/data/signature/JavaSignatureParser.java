@@ -7,6 +7,12 @@ import java.util.regex.Pattern;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
+/**
+ * Parses strings to {@link JavaSignature}s
+ * 
+ * @author Group2
+ * @version 8 November 2013
+ */
 public class JavaSignatureParser {
 
 	protected final String signature;

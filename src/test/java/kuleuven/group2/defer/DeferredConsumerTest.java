@@ -67,7 +67,7 @@ public class DeferredConsumerTest {
 		deferredConsumer.consume(2);
 		deferredConsumer.consume(3);
 		
-		Thread.sleep(60);
+		Thread.sleep(80);
 		
 		// integers are consumed after 50 ms
 		assertTrue(intList.contains(0));

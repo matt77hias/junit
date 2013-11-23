@@ -10,7 +10,8 @@ import kuleuven.group2.data.signature.JavaSignatureParser;
  * A class that represents a method that is used by at least one test. It also
  * keeps the time of its latest change.
  * 
- * @author Ruben Pieters, Vital D'haveloose
+ * @author Group2
+ * @version 7 November 2013
  */
 public class TestedMethod {
 

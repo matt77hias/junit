@@ -8,6 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A store that has its contents in memory.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public class MemoryStore extends AbstractStore {
 
 	protected final Map<String, byte[]> store = new HashMap<String, byte[]>();

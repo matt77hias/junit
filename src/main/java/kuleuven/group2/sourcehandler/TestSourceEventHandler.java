@@ -11,6 +11,12 @@ import kuleuven.group2.data.updating.TestChangeUpdater;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 
+/**
+ * A handler for events that happen with test source code.
+ * 
+ * @author Group2
+ * @version 18 November 2013
+ */
 public class TestSourceEventHandler extends SourceEventHandler {
 
 	protected final Store testSourceStore;
@@ -41,12 +47,12 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		// Compile changed test sources
 		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
-
+		
 		// Update test methods in compiled test classes
 		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 
 		if (!result.isSuccess()) {
-			// TODO What exception should be thrown?
+			// TODO What exception should be thrown when EclipseCompiler.compile returns false?
 			throw new Exception("Compilation of test sources failed: " + result.getErrors());
 		}
 	}

@@ -11,7 +11,7 @@ import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
-import kuleuven.group2.policy.Policy;
+import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
@@ -22,12 +22,19 @@ import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
+/**
+ * Brings all parts of the program together to form a pipeline.
+ * TODO [DOC] vervolledig beschrijving can de klasse Pipeline
+ * 
+ * @author Group2
+ * @version 19 November 2013
+ */
 public class Pipeline {
 
 	protected final Store classSourceStore;
 	protected final Store testSourceStore;
 	protected final Store binaryStore;
-	protected Policy sortPolicy;
+	protected TestSortingPolicy sortPolicy;
 
 	protected final TestDatabase testDatabase;
 	protected final ReloadingStoreClassLoader testClassLoader;
@@ -45,7 +52,7 @@ public class Pipeline {
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
 
-	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, Policy sortPolicy) {
+	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, TestSortingPolicy sortPolicy) {
 		this.classSourceStore = checkNotNull(classSourceStore);
 		this.testSourceStore = checkNotNull(testSourceStore);
 		this.binaryStore = checkNotNull(binaryStore);
@@ -71,11 +78,11 @@ public class Pipeline {
 		this.deferredTask = new DeferredConsumer<>(task);
 	}
 
-	public Policy getSortPolicy() {
+	public TestSortingPolicy getSortPolicy() {
 		return sortPolicy;
 	}
 
-	public void setSortPolicy(Policy sortPolicy) {
+	public void setSortPolicy(TestSortingPolicy sortPolicy) {
 		this.sortPolicy = checkNotNull(sortPolicy);
 	}
 
@@ -85,6 +92,54 @@ public class Pipeline {
 		testSourceWatcher.registerConsumer(deferredTask);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
+		// TODO Enable rewriter!
+	}
+	
+	private void run(List<StoreEvent> events) {
+		reloadClasses();
+		
+		handleSourceEvents(events);
+		
+		handleTestSourceEvents(events);
+
+		Test[] sortedTests = sortTests();
+
+		runTests(sortedTests);
+	}
+	
+	private void reloadClasses() {
+		testClassLoader.reload();
+	}
+	
+	private void handleSourceEvents(List<StoreEvent> events) {
+		try {
+			classSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	private void handleTestSourceEvents(List<StoreEvent> events) {
+		try {
+			testSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	private Test[] sortTests() {
+		return sortPolicy.getSortedTests(testDatabase);
+	}
+	
+	private void runTests(Test[] tests) {
+		try {
+			testRunner.runTestMethods(tests);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			e.printStackTrace();
+		}
 	}
 
 	public void stop() {
@@ -93,6 +148,7 @@ public class Pipeline {
 		testSourceWatcher.unregisterConsumer(deferredTask);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
+		// TODO Disable rewriter!
 		// TODO Stop current test run as well?
 	}
 
@@ -100,25 +156,7 @@ public class Pipeline {
 
 		@Override
 		public void consume(List<StoreEvent> events) {
-			// Reload classes
-			testClassLoader.reload();
-
-			// Handle events
-			try {
-				classSourceEventHandler.handleEvents(events);
-				testSourceEventHandler.handleEvents(events);
-			} catch (Exception e) {
-				// TODO Show in GUI?
-				System.err.println(e.getMessage());
-			}
-
-			// Sort tests
-			Test[] tests = sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
-
-			// Run tests and monitor method calls
-			rewriterLoader.registerMonitor(methodTestLinkUpdater);
-			testRunner.runTestMethods(tests);
-			rewriterLoader.unregisterMonitor(methodTestLinkUpdater);
+			Pipeline.this.run(events);
 		}
 	}
 

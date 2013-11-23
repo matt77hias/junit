@@ -2,6 +2,12 @@ package kuleuven.group2.compile;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 
+/**
+ * TODO [DOC] beschrijf klasse EclipseCompilationProblem
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public class EclipseCompilationProblem implements CompilationProblem {
 
 	protected final IProblem problem;

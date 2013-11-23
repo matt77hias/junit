@@ -9,6 +9,12 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
 import com.google.common.io.Files;
 
+/**
+ * Utilities for transforming class and other names.
+ * 
+ * @author Group2
+ * @version 5 November 2013
+ */
 public class NameUtils {
 
 	private NameUtils() {

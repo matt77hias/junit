@@ -1,7 +1,9 @@
 package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertNotNull;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +19,8 @@ import org.junit.runner.Runner;
  * A TestChangeUpdater detects additions or removal of test methods in a test
  * class and updates the database accordingly.
  * 
- * @author Mattias Buelens
+ * @author Group2
+ * @version 14 November 2013
  */
 public class TestChangeUpdater {
 
@@ -55,6 +58,8 @@ public class TestChangeUpdater {
 	public void updateTestClass(Class<?> testClass) {
 		// Create a runner
 		Runner runner = Request.aClass(testClass).getRunner();
+		// TODO: when building fails it returns an errorreportingrunner
+		// we should probably do something with this so this can be catched
 		if (runner == null) return;
 		// Collect test method names
 		Set<String> testNames = new HashSet<String>();
