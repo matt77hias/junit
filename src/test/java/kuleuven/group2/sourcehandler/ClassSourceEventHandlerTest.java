@@ -7,9 +7,7 @@ import java.util.List;
 
 import kuleuven.group2.classloader.StoreClassLoader;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
-import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest.TestConsumer;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;

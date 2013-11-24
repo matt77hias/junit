@@ -3,11 +3,8 @@ package kuleuven.group2.data.updating;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
-import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
 import kuleuven.group2.data.updating.CurrentRunningTestHolder;
@@ -20,7 +17,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
 
 public class MethodTestLinkUpdaterTest {
 	

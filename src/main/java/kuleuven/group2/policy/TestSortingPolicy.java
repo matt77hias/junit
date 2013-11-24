@@ -16,8 +16,6 @@ import kuleuven.group2.data.TestDatabase;
 public interface TestSortingPolicy {
 	
 	/*
-	 * Policy is not an abstract class for the same reason Comparator
-	 * is not an abstract class.
 	 * If significant similarities between policies appear in the future,
 	 * the Policy interface can change to an abstract class.
 	 */
