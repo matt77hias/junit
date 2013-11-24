@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
 import kuleuven.group2.util.Consumer;
 
 /**
- * TODO [DOC] beschrijf klasse DeferredConsumer<T>
+ * A deferred consumer will amass given input in a deferred manner
+ * and then it will pass it as a list to its batch consumers.
  *
  * @param <T>
  * 

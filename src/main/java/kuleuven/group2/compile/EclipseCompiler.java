@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
 
 /**
- * TODO [DOC] beschrijf klasse EclipseCompiler
+ * An implementation for the Java Compiler, using the eclipse compiler class.
  * 
  * @author Group2
  * @version 5 November 2013
