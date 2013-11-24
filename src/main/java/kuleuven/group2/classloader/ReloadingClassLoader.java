@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * A class loader that allows the complete reloading of a class from disk.
+ * A class loader which supports an operation to reload the class loader, making it look up all the classes again which ensures it has the latest versions.
  * 
  * @author Group2
  * @version 18 November 2013

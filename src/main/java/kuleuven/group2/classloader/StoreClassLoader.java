@@ -6,7 +6,7 @@ import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.store.Store;
 
 /**
- * TODO [DOC] beschrijf klasse StoreClassLoader
+ * A ClassLoader which uses the resources in its store to find the bytes of classes to load.
  * 
  * @author Group2
  * @version 19 November 2013
