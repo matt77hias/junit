@@ -194,6 +194,18 @@ public class DeferredTaskRunner {
 	}
 
 	/**
+	 * Checks if the currently scheduled task of this deferred runner is
+	 * scheduled.
+	 * 
+	 * @return True if and only if the current runnable of this deferred runner
+	 *         is scheduled.
+	 */
+	public synchronized boolean isScheduled() {
+		ScheduledFuture<?> future = getScheduledFuture();
+		return future != null && !isRunning() && !isFinished();
+	}
+
+	/**
 	 * Checks if the current runnable object of this deferred runner is running.
 	 * 
 	 * @return True if and only if the current runnable of this deferred runner
@@ -273,7 +285,13 @@ public class DeferredTaskRunner {
 	 * Schedules the runnable of this deferred runner.
 	 */
 	protected synchronized void schedule(boolean reschedule) {
-		if (getScheduledFuture() != null) {
+		if (isRunning()) {
+			// Never schedule when still running
+			return;
+		}
+
+		if (isScheduled()) {
+			// Scheduled but not yet running
 			if (reschedule) {
 				// Cancel current schedule
 				cancelScheduledFuture();
