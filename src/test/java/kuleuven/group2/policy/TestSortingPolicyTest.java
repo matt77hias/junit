@@ -7,7 +7,6 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 
