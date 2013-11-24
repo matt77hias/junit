@@ -5,9 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.data.updating.OssRewriterTest.A;
-import kuleuven.group2.data.updating.OssRewriterTest.VisitedMethodsTracker;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
-import be.kuleuven.cs.ossrewriter.MonitorEntrypoint;
 
 public class OssRewriterLoaderTest {
 
