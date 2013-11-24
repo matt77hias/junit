@@ -49,7 +49,7 @@ public class Test {
 
 	public List<TestRun> getTestRuns() {
 		if (!isTestRunsSorted) {
-			// Sort: last failures first
+			// Sort: last test run first
 			Collections.sort(testRuns, new Comparator<TestRun>() {
 				@Override
 				public int compare(TestRun o1, TestRun o2) {
