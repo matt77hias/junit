@@ -23,8 +23,8 @@ import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
 /**
- * Brings all parts of the program together to form a pipeline.
- * TODO [DOC] vervolledig beschrijving can de klasse Pipeline
+ * Brings all parts of the program together to form a pipeline. TODO [DOC]
+ * vervolledig beschrijving can de klasse Pipeline
  * 
  * @author Group2
  * @version 19 November 2013
@@ -78,6 +78,10 @@ public class Pipeline {
 		this.deferredTask = new DeferredConsumer<>(task);
 	}
 
+	public TestDatabase getTestDatabase() {
+		return testDatabase;
+	}
+
 	public TestSortingPolicy getSortPolicy() {
 		return sortPolicy;
 	}
@@ -90,27 +94,52 @@ public class Pipeline {
 		// Start listening
 		classSourceWatcher.registerConsumer(deferredTask);
 		testSourceWatcher.registerConsumer(deferredTask);
+		classSourceStore.addStoreListener(classSourceWatcher);
+		testSourceStore.addStoreListener(testSourceWatcher);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
 		// TODO Enable rewriter!
+		// First setup
+		firstRun();
 	}
-	
+
+	private void firstRun() {
+		reloadClasses();
+
+		setupSources();
+
+		setupTestSources();
+
+		Test[] sortedTests = sortTests();
+
+		runTests(sortedTests);
+	}
+
 	private void run(List<StoreEvent> events) {
 		reloadClasses();
-		
+
 		handleSourceEvents(events);
-		
+
 		handleTestSourceEvents(events);
 
 		Test[] sortedTests = sortTests();
 
 		runTests(sortedTests);
 	}
-	
+
 	private void reloadClasses() {
 		testClassLoader.reload();
 	}
-	
+
+	private void setupSources() {
+		try {
+			classSourceEventHandler.setup();
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+
 	private void handleSourceEvents(List<StoreEvent> events) {
 		try {
 			classSourceEventHandler.handleEvents(events);
@@ -119,7 +148,16 @@ public class Pipeline {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
+	private void setupTestSources() {
+		try {
+			testSourceEventHandler.setup();
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+
 	private void handleTestSourceEvents(List<StoreEvent> events) {
 		try {
 			testSourceEventHandler.handleEvents(events);
@@ -128,11 +166,11 @@ public class Pipeline {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
 	private Test[] sortTests() {
 		return sortPolicy.getSortedTests(testDatabase);
 	}
-	
+
 	private void runTests(Test[] tests) {
 		try {
 			testRunner.runTestMethods(tests);
@@ -146,6 +184,8 @@ public class Pipeline {
 		// Stop listening
 		classSourceWatcher.unregisterConsumer(deferredTask);
 		testSourceWatcher.unregisterConsumer(deferredTask);
+		classSourceStore.removeStoreListener(classSourceWatcher);
+		testSourceStore.removeStoreListener(testSourceWatcher);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
 		// TODO Disable rewriter!

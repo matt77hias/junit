@@ -37,6 +37,15 @@ public class TestSourceEventHandler extends SourceEventHandler {
 	}
 
 	@Override
+	public void setup() throws Exception {
+		// Compile all test sources
+		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
+		CompilationResult result = classCompiler.compileAll();
+
+		handleCompilation(result);
+	}
+
+	@Override
 	public void handleEvents(List<StoreEvent> events) throws Exception {
 		// Collect changes in test sources
 		Changes changes = collectChanges(events, testSourceStore);
@@ -47,7 +56,11 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		// Compile changed test sources
 		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
-		
+
+		handleCompilation(result);
+	}
+
+	protected void handleCompilation(CompilationResult result) throws Exception {
 		// Update test methods in compiled test classes
 		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 

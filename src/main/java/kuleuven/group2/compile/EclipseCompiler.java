@@ -109,6 +109,7 @@ public class EclipseCompiler extends JavaCompiler {
 			}
 
 			// Find in class loader
+			// TODO StoreClassLoader.getResourceAsStream needs proper implementation
 			try (InputStream is = getClassLoader().getResourceAsStream(classResourceName)) {
 				if (is != null) {
 					// Found, produce answer
@@ -142,6 +143,7 @@ public class EclipseCompiler extends JavaCompiler {
 			}
 
 			// Check for loaded class
+			// TODO StoreClassLoader.getResourceAsStream needs proper implementation
 			String classResourceName = NameUtils.toBinaryName(className);
 			try (InputStream is = getClassLoader().getResourceAsStream(classResourceName)) {
 				if (is != null) {

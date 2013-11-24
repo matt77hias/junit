@@ -1,7 +1,6 @@
 package kuleuven.group2.ui;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -14,15 +13,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import kuleuven.group2.Pipeline;
-import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestRun;
 import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.ui.model.PolicyModel;
 import kuleuven.group2.ui.model.TestRunModel;
-
-import org.junit.runner.notification.Failure;
+import kuleuven.group2.ui.model.TestRunsModel;
 
 public class MainController {
 
@@ -73,6 +69,7 @@ public class MainController {
 	}
 
 	private final BooleanProperty running = new SimpleBooleanProperty(false);
+	private final TestRunsModel testRunsModel = new TestRunsModel();
 
 	public boolean isConfigured() {
 		return running.get();
@@ -104,9 +101,7 @@ public class MainController {
 		});
 
 		// TODO Hook this up to a TestDatabaseListener
-		testRunsProperty().add(new TestRunModel(new Test("foo", "bar()"), TestRun.createSuccessful(new Date())));
-		testRunsProperty().add(
-				new TestRunModel(new Test("foo", "baz()"), TestRun.createFailed(new Date(), new Failure(null, null))));
+		testRunsProperty().set(testRunsModel);
 	}
 
 	protected void setup() throws IOException {
@@ -115,6 +110,7 @@ public class MainController {
 		Store binaryStore = new DirectoryStore(binariesDirProperty().get());
 		TestSortingPolicy sortPolicy = policyProperty().get().getPolicy();
 		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
+		pipeline.getTestDatabase().addListener(testRunsModel);
 	}
 
 	@FXML

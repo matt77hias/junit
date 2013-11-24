@@ -32,6 +32,8 @@ public class TestDatabase {
 	protected final Multimap<TestedMethod, Test> methodToTestLinks = HashMultimap.create();
 	protected final Multimap<Test, TestedMethod> testToMethodLinks = HashMultimap.create();
 
+	protected final List<TestDatabaseListener> listeners = new ArrayList<>();
+
 	/*
 	 * Methods
 	 */
@@ -39,6 +41,7 @@ public class TestDatabase {
 	public void addMethod(TestedMethod testedMethod) {
 		JavaSignature signature = testedMethod.getSignature();
 		getOrCreateMethodMap(signature.getFullClassName()).put(signature, testedMethod);
+		fireMethodAdded(testedMethod);
 	}
 
 	public void removeMethod(TestedMethod testedMethod) {
@@ -51,6 +54,7 @@ public class TestDatabase {
 				methods.remove(signature.getFullClassName(), methodMap);
 			}
 		}
+		fireMethodRemoved(testedMethod);
 	}
 
 	public boolean containsMethod(JavaSignature signature) {
@@ -72,7 +76,9 @@ public class TestDatabase {
 	public TestedMethod getOrCreateMethod(JavaSignature signature) {
 		TestedMethod newMethod = new TestedMethod(signature);
 		TestedMethod oldMethod = getOrCreateMethodMap(signature.getFullClassName()).putIfAbsent(signature, newMethod);
-		return oldMethod != null ? oldMethod : newMethod;
+		if (oldMethod != null) return oldMethod;
+		fireMethodAdded(newMethod);
+		return newMethod;
 	}
 
 	public Collection<TestedMethod> getMethodsIn(String className) {
@@ -100,6 +106,7 @@ public class TestDatabase {
 
 	public void addTest(Test test) {
 		getOrCreateTestMap(test.getTestClassName()).put(test.getTestMethodName(), test);
+		fireTestAdded(test);
 	}
 
 	public void removeTest(Test test) {
@@ -111,6 +118,7 @@ public class TestDatabase {
 				tests.remove(test.getTestClassName(), testMap);
 			}
 		}
+		fireTestRemoved(test);
 	}
 
 	public boolean containsTest(String testClassName, String testMethodName) {
@@ -132,7 +140,9 @@ public class TestDatabase {
 	public Test getOrCreateTest(String testClassName, String testMethodName) {
 		Test newTest = new Test(testClassName, testMethodName);
 		Test oldTest = getOrCreateTestMap(testClassName).putIfAbsent(testMethodName, newTest);
-		return oldTest != null ? oldTest : newTest;
+		if (oldTest != null) return oldTest;
+		fireTestAdded(newTest);
+		return newTest;
 	}
 
 	public Collection<Test> getAllTests() {
@@ -171,7 +181,9 @@ public class TestDatabase {
 	}
 
 	protected void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
-		getOrCreateTest(testClassName, testMethodName).addTestRun(testRun);
+		Test test = getOrCreateTest(testClassName, testMethodName);
+		test.addTestRun(testRun);
+		fireTestRunAdded(test, testRun);
 	}
 
 	public List<TestRun> getAllTestRuns() {
@@ -205,7 +217,7 @@ public class TestDatabase {
 	}
 
 	public Collection<TestedMethod> getLinkedMethods(Test test) {
-		//System.out.println(testToMethodLinks);
+		// System.out.println(testToMethodLinks);
 		Collection<TestedMethod> linkedMethods = testToMethodLinks.get(test);
 		if (linkedMethods == null) {
 			return Collections.emptySet();
@@ -225,6 +237,48 @@ public class TestDatabase {
 
 	public int getNbLinks() {
 		return methodToTestLinks.size();
+	}
+
+	/*
+	 * Listeners
+	 */
+
+	public void addListener(TestDatabaseListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(TestDatabaseListener listener) {
+		listeners.remove(listener);
+	}
+
+	protected void fireMethodAdded(TestedMethod testedMethod) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.methodAdded(testedMethod);
+		}
+	}
+
+	protected void fireMethodRemoved(TestedMethod testedMethod) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.methodRemoved(testedMethod);
+		}
+	}
+
+	protected void fireTestAdded(Test test) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testAdded(test);
+		}
+	}
+
+	protected void fireTestRemoved(Test test) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testRemoved(test);
+		}
+	}
+
+	protected void fireTestRunAdded(Test test, TestRun testRun) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testRunAdded(test, testRun);
+		}
 	}
 
 }
