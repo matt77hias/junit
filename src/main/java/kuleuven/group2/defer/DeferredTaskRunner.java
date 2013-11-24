@@ -273,10 +273,16 @@ public class DeferredTaskRunner {
 	 * Schedules the runnable of this deferred runner.
 	 */
 	protected synchronized void schedule(boolean reschedule) {
-		// Ignore if already scheduled and not rescheduling
-		if (getScheduledFuture() != null && !reschedule) return;
+		if (getScheduledFuture() != null) {
+			if (reschedule) {
+				// Cancel current schedule
+				cancelScheduledFuture();
+			} else {
+				// Keep current schedule
+				return;
+			}
+		}
 
-		// Nothing scheduled or rescheduling
 		// Create new scheduled future
 		try {
 			setScheduledFuture(getScheduledExecutorService().schedule(getRunnable(), getDelay(), getTimeUnit()));
