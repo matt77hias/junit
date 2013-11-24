@@ -9,12 +9,14 @@ import kuleuven.group2.ui.MainController;
 
 public class Main extends Application {
 
+	private MainController controller;
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Main.fxml"));
 			Parent root = (Parent) loader.load();
-			MainController controller = (MainController) loader.getController();
+			controller = (MainController) loader.getController();
 			Scene scene = new Scene(root, 400, 400);
 			primaryStage.setTitle("JUnit Test Daemon");
 			primaryStage.setScene(scene);

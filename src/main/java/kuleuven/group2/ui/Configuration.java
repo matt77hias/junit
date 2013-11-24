@@ -9,7 +9,6 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
 import kuleuven.group2.ui.model.PolicyModel;
 
 public class Configuration extends BorderPane {
@@ -17,14 +16,9 @@ public class Configuration extends BorderPane {
 	private ConfigurationController controller;
 
 	public Configuration() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Configuration.fxml"));
-		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-			@Override
-			public Object call(Class<?> param) {
-				return controller = new ConfigurationController();
-			}
-		});
-		Node view = (Node) fxmlLoader.load();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Configuration.fxml"));
+		Node view = (Node) loader.load();
+		controller = (ConfigurationController) loader.getController();
 		setCenter(view);
 	}
 

@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
 import kuleuven.group2.ui.model.TestRunModel;
 
 public class TestRuns extends BorderPane {
@@ -15,14 +14,9 @@ public class TestRuns extends BorderPane {
 	private TestRunsController controller;
 
 	public TestRuns() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TestRuns.fxml"));
-		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-			@Override
-			public Object call(Class<?> param) {
-				return controller = new TestRunsController();
-			}
-		});
-		Node view = (Node) fxmlLoader.load();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("TestRuns.fxml"));
+		Node view = (Node) loader.load();
+		controller = (TestRunsController) loader.getController();
 		setCenter(view);
 	}
 

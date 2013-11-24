@@ -6,21 +6,15 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
 
 public class DirectoryField extends BorderPane {
 
 	private DirectoryFieldController controller;
 
 	public DirectoryField() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DirectoryField.fxml"));
-		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-			@Override
-			public Object call(Class<?> param) {
-				return controller = new DirectoryFieldController();
-			}
-		});
-		Node view = (Node) fxmlLoader.load();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryField.fxml"));
+		Node view = (Node) loader.load();
+		controller = (DirectoryFieldController) loader.getController();
 		setCenter(view);
 	}
 
