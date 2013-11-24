@@ -178,9 +178,6 @@ public class TestRunsController {
 		// Bind to model
 		runsTable.itemsProperty().bindBidirectional(runs);
 
-		// Make re-sortable
-		new ResortableTableView<>(runsTable).setup();
-
 		// Set up columns
 		TableColumn<TestRunModel, Boolean> resultColumn = new TableColumn<>();
 		resultColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
