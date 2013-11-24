@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 
-public class DistinctFailureFirstTest extends PolicyTest {
+public class DistinctFailureFirstTest extends TestSortingPolicyTest {
 
 	@Test
 	public void correct_order_test() {

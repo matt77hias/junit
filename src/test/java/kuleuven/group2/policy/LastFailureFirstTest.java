@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class LastFailureFirstTest extends PolicyTest {
+public class LastFailureFirstTest extends TestSortingPolicyTest {
 
 	@Test
 	public void correct_order_test() {
