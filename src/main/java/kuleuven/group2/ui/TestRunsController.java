@@ -30,10 +30,12 @@ public class TestRunsController {
 	@FXML
 	public void initialize() {
 		runsTable.itemsProperty().bindBidirectional(runs);
+		new ResortableTableView<>(runsTable).setup();
 
 		TableColumn<TestRunModel, Boolean> resultColumn = new TableColumn<>();
 		resultColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
 		resultColumn.setCellFactory(new ResultCellFactory());
+		resultColumn.setPrefWidth(50);
 
 		TableColumn<TestRunModel, String> testClassNameColumn = new TableColumn<>("Test class");
 		testClassNameColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, String>("testClassName"));
@@ -56,10 +58,23 @@ public class TestRunsController {
 		return runs;
 	}
 
+	/**
+	 * Formats a date table column using the given {@link DateFormat}.
+	 */
 	protected static class TimestampCellFactory implements
 			Callback<TableColumn<TestRunModel, Date>, TableCell<TestRunModel, Date>> {
 
-		protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		protected static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+		protected final DateFormat dateFormat;
+
+		public TimestampCellFactory() {
+			this(DEFAULT_DATE_FORMAT);
+		}
+
+		public TimestampCellFactory(DateFormat dateFormat) {
+			this.dateFormat = dateFormat;
+		}
 
 		@Override
 		public TableCell<TestRunModel, Date> call(TableColumn<TestRunModel, Date> column) {
@@ -75,9 +90,11 @@ public class TestRunsController {
 				}
 			};
 		}
-
 	}
 
+	/**
+	 * Puts a success or failure image in a boolean table column cell.
+	 */
 	protected static class ResultCellFactory implements
 			Callback<TableColumn<TestRunModel, Boolean>, TableCell<TestRunModel, Boolean>> {
 
