@@ -192,6 +192,13 @@ public class Pipeline {
 		// TODO Stop current test run as well?
 	}
 
+	public void shutdown() {
+		// Stop
+		stop();
+		// Shut down
+		deferredTask.stopService();
+	}
+
 	protected class PipelineTask implements Consumer<List<StoreEvent>> {
 
 		@Override

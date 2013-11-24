@@ -2,6 +2,7 @@ package kuleuven.group2.ui;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -10,8 +11,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.stage.WindowEvent;
 import kuleuven.group2.Pipeline;
 import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
@@ -20,7 +23,7 @@ import kuleuven.group2.ui.model.PolicyModel;
 import kuleuven.group2.ui.model.TestRunModel;
 import kuleuven.group2.ui.model.TestRunsModel;
 
-public class MainController {
+public class MainController implements EventHandler<WindowEvent> {
 
 	/*
 	 * Models
@@ -128,7 +131,12 @@ public class MainController {
 		try {
 			setup();
 			setRunning(true);
-			pipeline.start();
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					pipeline.start();
+				}
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,7 +147,8 @@ public class MainController {
 	public void stop() {
 		setRunning(false);
 		if (pipeline != null) {
-			pipeline.stop();
+			// Shut down, we won't re-use it
+			pipeline.shutdown();
 		}
 	}
 
@@ -148,6 +157,12 @@ public class MainController {
 		if (pipeline != null) {
 			pipeline.setSortPolicy(policyModel.getPolicy());
 		}
+	}
+
+	@Override
+	public void handle(WindowEvent e) {
+		// Shutdown pipeline
+		stop();
 	}
 
 }
