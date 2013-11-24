@@ -7,7 +7,7 @@ import kuleuven.group2.store.Store;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 
 /**
- * TODO [DOC] beschrijf klasse EclipseCompilationUnit
+ * Represents a single compilation unit for the eclipse compiler.
  * 
  * @author Group2
  * @version 5 November 2013

@@ -3,7 +3,7 @@ package kuleuven.group2.compile;
 import org.eclipse.jdt.core.compiler.IProblem;
 
 /**
- * TODO [DOC] beschrijf klasse EclipseCompilationProblem
+ * A compilation problem which occured when using the Eclipse Compiler.
  * 
  * @author Group2
  * @version 5 November 2013
