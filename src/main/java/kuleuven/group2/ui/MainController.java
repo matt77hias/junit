@@ -101,6 +101,7 @@ public class MainController {
 		buttonStart.disableProperty().bind(configured().not().or(running));
 		buttonStop.disableProperty().bind(configured().not().or(running.not()));
 
+		// Update policy in pipeline
 		policyProperty().addListener(new ChangeListener<PolicyModel>() {
 			@Override
 			public void changed(ObservableValue<? extends PolicyModel> observable, PolicyModel oldValue,
@@ -109,8 +110,8 @@ public class MainController {
 			}
 		});
 
-		// TODO Hook this up to a TestDatabaseListener
-		testRunsProperty().set(testRunsModel);
+		// Bind test runs list
+		testRunsProperty().bind(testRunsModel);
 	}
 
 	protected void setup() throws IOException {
