@@ -26,10 +26,11 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
 
 /**
- * TODO [DOC] beschrijf klasse EclipseCompiler
+ * An implementation for the Java Compiler, using the eclipse compiler class.
  * 
  * @author Group2
  * @version 5 November 2013
@@ -68,8 +69,12 @@ public class EclipseCompiler extends JavaCompiler {
 		final ICompilerRequestor compilerRequestor = new CompilerRequestor(problems, compiled);
 
 		// Compile
-		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(), compilerRequestor,
-				problemFactory);
+		Map<String, String> options = ImmutableMap.<String, String> builder()
+				.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7)
+				.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7)
+				.build();
+		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(options),
+				compilerRequestor, problemFactory);
 		compiler.compile(compilationUnits.toArray(new ICompilationUnit[0]));
 
 		// Return result

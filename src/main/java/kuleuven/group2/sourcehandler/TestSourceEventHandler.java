@@ -47,7 +47,7 @@ public class TestSourceEventHandler extends SourceEventHandler {
 		// Compile changed test sources
 		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
-
+		
 		// Update test methods in compiled test classes
 		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 

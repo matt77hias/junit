@@ -11,7 +11,7 @@ import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
-import kuleuven.group2.policy.Policy;
+import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
@@ -34,7 +34,7 @@ public class Pipeline {
 	protected final Store classSourceStore;
 	protected final Store testSourceStore;
 	protected final Store binaryStore;
-	protected Policy sortPolicy;
+	protected TestSortingPolicy sortPolicy;
 
 	protected final TestDatabase testDatabase;
 	protected final ReloadingStoreClassLoader testClassLoader;
@@ -52,7 +52,7 @@ public class Pipeline {
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
 
-	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, Policy sortPolicy) {
+	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, TestSortingPolicy sortPolicy) {
 		this.classSourceStore = checkNotNull(classSourceStore);
 		this.testSourceStore = checkNotNull(testSourceStore);
 		this.binaryStore = checkNotNull(binaryStore);
@@ -78,11 +78,11 @@ public class Pipeline {
 		this.deferredTask = new DeferredConsumer<>(task);
 	}
 
-	public Policy getSortPolicy() {
+	public TestSortingPolicy getSortPolicy() {
 		return sortPolicy;
 	}
 
-	public void setSortPolicy(Policy sortPolicy) {
+	public void setSortPolicy(TestSortingPolicy sortPolicy) {
 		this.sortPolicy = checkNotNull(sortPolicy);
 	}
 
@@ -120,8 +120,17 @@ public class Pipeline {
 		}
 	}
 	
+	private void handleTestSourceEvents(List<StoreEvent> events) {
+		try {
+			testSourceEventHandler.handleEvents(events);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+	
 	private Test[] sortTests() {
-		return sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
+		return sortPolicy.getSortedTests(testDatabase);
 	}
 	
 	private void runTests(Test[] tests) {
@@ -130,15 +139,6 @@ public class Pipeline {
 		} catch (Exception e) {
 			// TODO Show in GUI?
 			e.printStackTrace();
-		}
-	}
-	
-	private void handleTestSourceEvents(List<StoreEvent> events) {
-		try {
-			testSourceEventHandler.handleEvents(events);
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
 		}
 	}
 

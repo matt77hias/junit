@@ -2,6 +2,7 @@ package kuleuven.group2;
 
 import kuleuven.group2.classloader.ReloadingStoreClassLoaderTest;
 import kuleuven.group2.compile.EclipseCompilerTest;
+import kuleuven.group2.classloader.StoreClassLoaderTest;
 import kuleuven.group2.data.TestDatabaseTest;
 import kuleuven.group2.data.TestTest;
 import kuleuven.group2.data.hash.MethodHasherTest;
@@ -16,6 +17,9 @@ import kuleuven.group2.defer.DeferredConsumerTest;
 import kuleuven.group2.defer.DeferredTaskRunnerTest;
 import kuleuven.group2.filewatch.FolderWatcherTest;
 import kuleuven.group2.policy.PolicyTest;
+import kuleuven.group2.sourcehandler.ClassSourceEventHandlerTest;
+import kuleuven.group2.sourcehandler.SourceEventHandlerTest;
+import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest;
 import kuleuven.group2.store.DirectoryStoreTest;
 import kuleuven.group2.testrunner.TestRunnerTest;
 
@@ -26,6 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	ReloadingStoreClassLoaderTest.class,
+	StoreClassLoaderTest.class,
 	EclipseCompilerTest.class,
 	MethodHasherTest.class,
 	JavaSignatureParserTest.class,
@@ -41,6 +46,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	DeferredTaskRunnerTest.class,
 	FolderWatcherTest.class,
 	PolicyTest.class,
+	ClassSourceEventHandlerTest.class,
+	SourceEventHandlerTest.class,
+	TestSourceEventHandlerTest.class,
 	DirectoryStoreTest.class,
 	TestRunnerTest.class
 	})
