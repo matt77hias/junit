@@ -45,10 +45,9 @@ public class StoreClassLoader extends SecureClassLoader {
 
 	@Override
 	protected URL findResource(String name) {
-		String resourceName = name;
-		if (classStore.contains(resourceName)) {
+		if (classStore.contains(name)) {
 			try {
-				return new URL(null, "res://store/" + resourceName, new StoreURLStreamHandler());
+				return new URL(null, "res://store/" + name, new StoreURLStreamHandler(name));
 			} catch (MalformedURLException e) {
 			}
 		}
@@ -56,17 +55,23 @@ public class StoreClassLoader extends SecureClassLoader {
 	}
 
 	protected class StoreURLStreamHandler extends URLStreamHandler {
+		private final String resourceName;
+
+		public StoreURLStreamHandler(String resourceName) {
+			this.resourceName = resourceName;
+		}
+
 		@Override
 		protected URLConnection openConnection(final URL u) throws IOException {
 			return new URLConnection(u) {
 				@Override
 				public void connect() throws IOException {
+					// No need to connect
 				}
 
 				@Override
 				public InputStream getInputStream() throws IOException {
-					// Remove initial slash
-					String resourceName = u.getFile().substring(1);
+					// Read from store
 					return new ByteArrayInputStream(classStore.read(resourceName));
 				}
 			};

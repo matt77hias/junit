@@ -79,6 +79,10 @@ public class MainController {
 		return configuration.configured();
 	}
 
+	protected BooleanProperty canConfigure() {
+		return configuration.canConfigure();
+	}
+
 	public boolean isRunning() {
 		return running.get();
 	}
@@ -89,6 +93,11 @@ public class MainController {
 
 	@FXML
 	public void initialize() {
+		// Disable reconfigurations while running
+		canConfigure().bind(running.not());
+
+		// Disable start/stop when not configured
+		// Disable start/stop when (not) running
 		buttonStart.disableProperty().bind(configured().not().or(running));
 		buttonStop.disableProperty().bind(configured().not().or(running.not()));
 

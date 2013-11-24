@@ -3,6 +3,7 @@ package kuleuven.group2.ui;
 import java.io.IOException;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
@@ -81,6 +82,10 @@ public class Configuration extends BorderPane {
 
 	public BooleanBinding configured() {
 		return controller.configured();
+	}
+
+	public BooleanProperty canConfigure() {
+		return controller.canConfigure();
 	}
 
 }

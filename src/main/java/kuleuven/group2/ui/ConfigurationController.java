@@ -1,8 +1,10 @@
 package kuleuven.group2.ui;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -31,7 +33,9 @@ public class ConfigurationController {
 	private final ObjectProperty<PolicyModel> selectedPolicy = new SimpleObjectProperty<PolicyModel>();
 	private final ListProperty<PolicyModel> policies = new SimpleListProperty<>(
 			FXCollections.observableArrayList(PolicyModel.ALL));
+
 	private BooleanBinding configured;
+	private BooleanProperty canConfigure = new SimpleBooleanProperty();
 
 	@FXML
 	public void initialize() {
@@ -39,6 +43,11 @@ public class ConfigurationController {
 		configured = classSourceField.directoryProperty().isNotNull()
 				.and(testSourceField.directoryProperty().isNotNull()).and(binaryField.directoryProperty().isNotNull())
 				.and(policyField.valueProperty().isNotNull());
+
+		// Disable reconfigurations when not allowed
+		classSourceField.disableProperty().bind(canConfigure().not());
+		testSourceField.disableProperty().bind(canConfigure().not());
+		binaryField.disableProperty().bind(canConfigure().not());
 
 		// Bind policy field to policies list
 		policyField.itemsProperty().bind(policies);
@@ -75,6 +84,10 @@ public class ConfigurationController {
 
 	public BooleanBinding configured() {
 		return configured;
+	}
+
+	public BooleanProperty canConfigure() {
+		return canConfigure;
 	}
 
 	protected static class PolicyListCellFactory implements Callback<ListView<PolicyModel>, ListCell<PolicyModel>> {
