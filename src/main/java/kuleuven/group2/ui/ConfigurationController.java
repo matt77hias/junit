@@ -1,5 +1,6 @@
 package kuleuven.group2.ui;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -30,19 +31,25 @@ public class ConfigurationController {
 	private final ObjectProperty<PolicyModel> selectedPolicy = new SimpleObjectProperty<PolicyModel>();
 	private final ListProperty<PolicyModel> policies = new SimpleListProperty<>(
 			FXCollections.observableArrayList(PolicyModel.ALL));
+	private BooleanBinding configured;
 
 	@FXML
 	public void initialize() {
+		// Configured when all fields set
+		configured = classSourceField.directoryProperty().isNotNull()
+				.and(testSourceField.directoryProperty().isNotNull()).and(binaryField.directoryProperty().isNotNull())
+				.and(policyField.valueProperty().isNotNull());
+
+		// Bind policy field to policies list
 		policyField.itemsProperty().bind(policies);
 		policyField.valueProperty().bindBidirectional(selectedPolicy);
-		policyField.setButtonCell(new PolicyListCell());
-		policyField.setCellFactory(new Callback<ListView<PolicyModel>, ListCell<PolicyModel>>() {
-			@Override
-			public ListCell<PolicyModel> call(ListView<PolicyModel> arg0) {
-				return new PolicyListCell();
-			}
-		});
 
+		// Set up policy display
+		PolicyListCellFactory cellFactory = new PolicyListCellFactory();
+		policyField.setButtonCell(cellFactory.call(null));
+		policyField.setCellFactory(cellFactory);
+
+		// Default policy
 		policyField.getSelectionModel().selectFirst();
 	}
 
@@ -62,11 +69,26 @@ public class ConfigurationController {
 		return selectedPolicy;
 	}
 
+	public boolean isConfigured() {
+		return configured().get();
+	}
+
+	public BooleanBinding configured() {
+		return configured;
+	}
+
+	protected static class PolicyListCellFactory implements Callback<ListView<PolicyModel>, ListCell<PolicyModel>> {
+		@Override
+		public ListCell<PolicyModel> call(ListView<PolicyModel> view) {
+			return new PolicyListCell();
+		}
+	}
+
 	protected static class PolicyListCell extends ListCell<PolicyModel> {
 		@Override
 		protected void updateItem(PolicyModel model, boolean empty) {
 			super.updateItem(model, empty);
-			if (model != null) {
+			if (!empty) {
 				setText(model.getName());
 			} else {
 				setText(null);

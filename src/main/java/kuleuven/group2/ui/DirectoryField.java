@@ -5,10 +5,10 @@ import java.io.IOException;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
-public class DirectoryField extends Pane {
+public class DirectoryField extends BorderPane {
 
 	private DirectoryFieldController controller;
 
@@ -21,7 +21,7 @@ public class DirectoryField extends Pane {
 			}
 		});
 		Node view = (Node) fxmlLoader.load();
-		getChildren().add(view);
+		setCenter(view);
 	}
 
 	public String getDialogTitle() {

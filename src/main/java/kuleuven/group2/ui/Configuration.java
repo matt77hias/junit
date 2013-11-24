@@ -2,15 +2,16 @@ package kuleuven.group2.ui;
 
 import java.io.IOException;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 import kuleuven.group2.ui.model.PolicyModel;
 
-public class Configuration extends Pane {
+public class Configuration extends BorderPane {
 
 	private ConfigurationController controller;
 
@@ -23,7 +24,7 @@ public class Configuration extends Pane {
 			}
 		});
 		Node view = (Node) fxmlLoader.load();
-		getChildren().add(view);
+		setCenter(view);
 	}
 
 	public String getClassSourceDir() {
@@ -72,6 +73,14 @@ public class Configuration extends Pane {
 
 	public ObjectProperty<PolicyModel> selectedPolicyProperty() {
 		return controller.selectedPolicyProperty();
+	}
+
+	public boolean isConfigured() {
+		return configured().get();
+	}
+
+	public BooleanBinding configured() {
+		return controller.configured();
 	}
 
 }

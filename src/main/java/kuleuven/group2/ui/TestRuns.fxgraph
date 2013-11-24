@@ -1,0 +1,15 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.GridPane
+import javafx.scene.control.TableView
+import kuleuven.group2.ui.TestRunsController
+import kuleuven.group2.ui.model.TestRunModel
+import javafx.scene.layout.BorderPane
+
+component TestRuns controlledby TestRunsController {
+	BorderPane {
+		center : TableView < TestRunModel > id runsTable {
+			editable : false
+		}
+	}
+}

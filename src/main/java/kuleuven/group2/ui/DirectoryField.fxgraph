@@ -1,34 +1,22 @@
 package kuleuven.group2.ui
 
-import javafx.scene.layout.GridPane
-import javafx.scene.control.Label
+import javafx.scene.layout.HBox
 import javafx.scene.control.TextField
-import javafx.scene.layout.ColumnConstraints
 import javafx.scene.control.Button
+import javafx.geometry.Insets
 import kuleuven.group2.ui.DirectoryFieldController
-import javafx.beans.property.StringProperty
 
-dynamic component DirectoryField controlledby DirectoryFieldController {
-	GridPane {
-		hgap : 5,
-		vgap : 5,
-		columnConstraints : [
-			ColumnConstraints {
-				fillWidth : true,
-				hgrow : "ALWAYS"
-			},
-			ColumnConstraints {
-				fillWidth : true,
-				hgrow : "NEVER"
-			}
-		],
+component DirectoryField controlledby DirectoryFieldController {
+	HBox {
 		children : [
 			TextField id directoryText {
-				static rowIndex : 0, static columnIndex : 0,
+				static hgrow : "ALWAYS",
 				editable : false
 			},
 			Button {
-				static rowIndex : 0, static columnIndex : 1,
+				static hgrow : "NEVER", static margin : Insets {
+					left : 5
+				},
 				text : "Browse",
 				onAction : controllermethod onBrowse
 			}

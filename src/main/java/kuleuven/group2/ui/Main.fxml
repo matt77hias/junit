@@ -4,12 +4,47 @@
 -->
 
 <?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import kuleuven.group2.ui.Configuration?>
+<?import kuleuven.group2.ui.TestRuns?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.MainController">
 
 	<center>
-		<Configuration fx:id="configuration"/> 
+		<TabPane tabClosingPolicy="UNAVAILABLE"> 
+			<tabs>
+				<Tab text="Configuration"> 
+					<content>
+						<Configuration fx:id="configuration"> 
+							<padding>
+								<Insets top="5" bottom="5" left="5" right="5"/> 
+							</padding>
+						</Configuration>
+					</content>
+				</Tab>
+				<Tab text="Test runs"> 
+					<content>
+						<TestRuns fx:id="testRuns"> 
+							<padding>
+								<Insets top="5" bottom="5" left="5" right="5"/> 
+							</padding>
+						</TestRuns>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
 	</center>
+	<bottom>
+		<HBox alignment="CENTER"> 
+			<children>
+				<Button fx:id="buttonStart" text="Start" onAction="#start"/> 
+				<Button fx:id="buttonStop" text="Stop" onAction="#stop"/> 
+			</children>
+		</HBox>
+	</bottom>
 </BorderPane>
