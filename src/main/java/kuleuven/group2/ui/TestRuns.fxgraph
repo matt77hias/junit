@@ -1,15 +1,68 @@
 package kuleuven.group2.ui
 
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.VBox
+import javafx.scene.layout.ColumnConstraints
 import javafx.scene.control.TableView
+import javafx.scene.control.Label
+import javafx.scene.control.TextArea
+import javafx.geometry.Insets
 import kuleuven.group2.ui.TestRunsController
 import kuleuven.group2.ui.model.TestRunModel
-import javafx.scene.layout.BorderPane
 
 component TestRuns controlledby TestRunsController {
-	BorderPane {
-		center : TableView < TestRunModel > id runsTable {
-			editable : false
-		}
+	VBox {
+		children : [
+			TableView < TestRunModel > id runsTable {
+				static vgrow : "ALWAYS",
+				editable : false
+			},
+			GridPane id selectedRunDetail {
+				hgap : 5,
+				vgap : 5,
+				padding : Insets {
+					top : 5,
+					bottom : 5,
+					left : 5,
+					right : 5
+				},
+				columnConstraints : [
+					ColumnConstraints {
+						minWidth : 100,
+						hgrow : "NEVER"
+					},
+					ColumnConstraints {
+						hgrow : "ALWAYS"
+					}
+				],
+				children : [
+					Label id selectedRunTitle {
+						static rowIndex : 0, static columnIndex : 0, static columnSpan : 2
+					},
+					Label {
+						static rowIndex : 1, static columnIndex : 0, static valignment : "TOP",
+						text : "Time: "
+					},
+					Label id selectedRunTimeStamp {
+						static rowIndex : 1, static columnIndex : 1
+					},
+					Label id selectedRunExceptionLabel {
+						static rowIndex : 2, static columnIndex : 0, static valignment : "TOP",
+						text : "Exception: "
+					},
+					Label id selectedRunException {
+						static rowIndex : 2, static columnIndex : 1
+					},
+					Label id selectedRunTraceLabel {
+						static rowIndex : 3, static columnIndex : 0, static valignment : "TOP",
+						text : "Stack trace: "
+					},
+					TextArea id selectedRunTrace {
+						static rowIndex : 3, static columnIndex : 1,
+						editable : false
+					}
+				]
+			}
+		]
 	}
 }
