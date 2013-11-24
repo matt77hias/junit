@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
@@ -77,6 +78,7 @@ public class TestSourceEventHandlerTest {
 	@Test
 	public void testHandleEventsOneTestClassOneTest() throws Exception {
 		String className = "ATest";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"import org.junit.Test; \n" + 
 						"public class " + className + " {\n" +
@@ -86,7 +88,7 @@ public class TestSourceEventHandlerTest {
 
 		classSourceStore.startListening();
 		
-		classSourceStore.write(className, source.getBytes());
+		classSourceStore.write(sourceName, source.getBytes());
 		
 		classSourceStore.stopListening();
 		
