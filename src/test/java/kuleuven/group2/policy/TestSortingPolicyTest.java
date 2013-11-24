@@ -125,9 +125,7 @@ public abstract class TestSortingPolicyTest {
 		method.invoke(testDatabase, test4);
 	}
 	
-	@Test
 	public abstract void correct_order_test();
 	
-	@Test
 	public abstract void immutable_input_test();
 }

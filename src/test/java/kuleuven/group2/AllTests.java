@@ -16,7 +16,9 @@ import kuleuven.group2.data.updating.TestResultUpdaterTest;
 import kuleuven.group2.defer.DeferredConsumerTest;
 import kuleuven.group2.defer.DeferredTaskRunnerTest;
 import kuleuven.group2.filewatch.FolderWatcherTest;
-import kuleuven.group2.policy.TestSortingPolicyTest;
+import kuleuven.group2.policy.DistinctFailureFirstTest;
+import kuleuven.group2.policy.FrequentFailureTest;
+import kuleuven.group2.policy.LastFailureFirstTest;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandlerTest;
 import kuleuven.group2.sourcehandler.SourceEventHandlerTest;
 import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest;
@@ -45,7 +47,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	DeferredConsumerTest.class,
 	DeferredTaskRunnerTest.class,
 	FolderWatcherTest.class,
-	TestSortingPolicyTest.class,
+	DistinctFailureFirstTest.class,
+	FrequentFailureTest.class,
+	LastFailureFirstTest.class,
 	ClassSourceEventHandlerTest.class,
 	SourceEventHandlerTest.class,
 	TestSourceEventHandlerTest.class,
