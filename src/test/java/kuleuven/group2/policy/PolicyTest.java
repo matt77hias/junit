@@ -1,16 +1,11 @@
 package kuleuven.group2.policy;
 
-import static org.junit.Assert.*;
-
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -22,7 +17,7 @@ import org.junit.runner.notification.Failure;
  * @author 	Group 2
  * @version	21 November 2013
  */
-public class PolicyTest {
+public abstract class PolicyTest {
 	protected TestDatabase testDatabase;
 	protected kuleuven.group2.data.Test test1;
 	protected kuleuven.group2.data.Test test2;
@@ -130,183 +125,9 @@ public class PolicyTest {
 		method.invoke(testDatabase, test4);
 	}
 	
-	@After
-	public void tearDown() {
-	}
-
 	@Test
-	public void distinctFailureFirstTest() {
-		TestSortingPolicy policy = new DistinctFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
-		
-		if (result[0] == test1) {
-			if (result[1] == test2) {
-				assertTrue(result[2] == test3);
-				assertTrue(result[3] == test4);
-			} else if (result[1] == test3) {
-				assertTrue(result[2] == test2);
-				assertTrue(result[3] == test4);
-			} else {
-				fail();
-			}
-		} else if (result[0] == test2) {
-			assertTrue(result[1] == test1);
-			assertTrue(result[2] == test3);
-			assertTrue(result[3] == test4);
-		} else if (result[0] == test3) {
-			assertTrue(result[1] == test1);
-			assertTrue(result[2] == test2);
-			assertTrue(result[3] == test4);
-		} else {
-			fail();
-		}
-		
-		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
-		
-		if (result[0] == test2) {
-			assertTrue(result[1] == test3);
-			assertTrue(result[2] == test4);
-		} else if (result[0] == test3) {
-			assertTrue(result[1] == test2);
-			assertTrue(result[2] == test4);
-		} else {
-			fail();
-		}
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		result = policy.getSortedTests(testDatabase, list);
-		
-		if (result[0] == test2) {
-			assertTrue(result[1] == test3);
-			assertTrue(result[2] == test4);
-		} else if (result[0] == test3) {
-			assertTrue(result[1] == test2);
-			assertTrue(result[2] == test4);
-		} else {
-			fail();
-		}
-	}
+	public abstract void correct_order_test();
 	
 	@Test
-	public void frequentFailureFirstTest() {
-		TestSortingPolicy policy = new FrequentFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test1);
-		assertTrue(result[2] == test2);
-		assertTrue(result[3] == test4);
-		
-		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test2);
-		assertTrue(result[2] == test4);
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		result = policy.getSortedTests(testDatabase, list);
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test2);
-		assertTrue(result[2] == test4);
-	}
-	
-	@Test
-	public void lastFailureFirstTest() {
-		TestSortingPolicy policy = new LastFailureFirst();
-		kuleuven.group2.data.Test[] result = policy.getSortedTests(testDatabase);
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test2);
-		assertTrue(result[2] == test1);
-		assertTrue(result[3] == test4);
-		
-		result = policy.getSortedTests(testDatabase, new kuleuven.group2.data.Test[] {test2, test3, test4});
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test2);
-		assertTrue(result[2] == test4);
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		result = policy.getSortedTests(testDatabase, list);
-		
-		assertTrue(result[0] == test3);
-		assertTrue(result[1] == test2);
-		assertTrue(result[2] == test4);
-	}
-	
-	@Test
-	public void distinctFailureFirstTest_immutable_input() {
-		TestSortingPolicy policy = new DistinctFailureFirst();
-		
-		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTests(testDatabase, input);
-		assertTrue(input[0] == test2);
-		assertTrue(input[1] == test3);
-		assertTrue(input[2] == test4);
-		assertEquals(input.length, 3);
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		policy.getSortedTests(testDatabase, list);
-		assertTrue(list.get(0) == test2);
-		assertTrue(list.get(1) == test3);
-		assertTrue(list.get(2) == test4);
-		assertEquals(list.size(), 3);
-	}
-	
-	@Test
-	public void frequentFailureFirstTest_immutable_input() {
-		TestSortingPolicy policy = new FrequentFailureFirst();
-		
-		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTests(testDatabase, input);
-		assertTrue(input[0] == test2);
-		assertTrue(input[1] == test3);
-		assertTrue(input[2] == test4);
-		assertEquals(input.length, 3);
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		policy.getSortedTests(testDatabase, list);
-		assertTrue(list.get(0) == test2);
-		assertTrue(list.get(1) == test3);
-		assertTrue(list.get(2) == test4);
-		assertEquals(list.size(), 3);
-	}
-	
-	@Test
-	public void lastFailureFirstTest_immutable_input() {
-		TestSortingPolicy policy = new LastFailureFirst();
-		
-		kuleuven.group2.data.Test[] input = new kuleuven.group2.data.Test[] {test2, test3, test4};
-		policy.getSortedTests(testDatabase, input);
-		assertTrue(input[0] == test2);
-		assertTrue(input[1] == test3);
-		assertTrue(input[2] == test4);
-		assertEquals(input.length, 3);
-		
-		List<kuleuven.group2.data.Test> list = new ArrayList<kuleuven.group2.data.Test>();
-		list.add(test2);
-		list.add(test3);
-		list.add(test4);
-		policy.getSortedTests(testDatabase, list);
-		assertTrue(list.get(0) == test2);
-		assertTrue(list.get(1) == test3);
-		assertTrue(list.get(2) == test4);
-		assertEquals(list.size(), 3);
-	}
+	public abstract void immutable_input_test();
 }
