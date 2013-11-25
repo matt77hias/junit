@@ -23,8 +23,34 @@ import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
 /**
- * Brings all parts of the program together to form a pipeline. TODO [DOC]
- * vervolledig beschrijving can de klasse Pipeline
+ * Controls the execution of the complete pipeline.
+ * 
+ * <p>
+ * This is the main entry point for the program. It sets up the whole running
+ * environment and controls the flow of information between the different
+ * components.
+ * </p>
+ * 
+ * <ul>
+ * <li>Sets up {@link StoreWatcher}s on the class and test source stores.</li>
+ * <li>Sets up a {@link TestDatabase} for the (intermediate) results.</li>
+ * <li>Consumes the produced {@link StoreEvent}s using a deferred task execution
+ * strategy.</li>
+ * <li>In the first run:
+ * <ol>
+ * <li>Compile all class and test sources.</li>
+ * <li>Initialize the database with the found classes and tests.</li>
+ * <li>Sort and run all tests.</li>
+ * </ol>
+ * </li>
+ * <li>In every other run:
+ * <ol>
+ * <li>Compile changed sources.</li>
+ * <li>Update the database to reflect these changes.</li>
+ * <li>Sort and run all tests.</li>
+ * </ol>
+ * </li>
+ * </ul>
  * 
  * @author Group2
  * @version 19 November 2013
