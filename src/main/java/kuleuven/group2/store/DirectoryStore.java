@@ -94,9 +94,12 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 	public void write(String resourceName, byte[] contents) {
 		try {
 			// Write byte array to file
+			Path path = getPath(resourceName);
+			Files.createDirectories(path.getParent());
 			Files.write(getPath(resourceName), contents);
 		} catch (IOException e) {
 			// File not writable
+			e.printStackTrace();
 		}
 	}
 
@@ -107,6 +110,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 			Files.delete(getPath(resourceName));
 		} catch (IOException e) {
 			// File not writable
+			e.printStackTrace();
 		}
 	}
 
