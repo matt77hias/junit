@@ -61,7 +61,7 @@ public class Pipeline {
 		this.testDatabase = new TestDatabase();
 		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
 		this.testRunner = new TestRunner(testClassLoader);
-		this.rewriterLoader = new OssRewriterLoader();
+		this.rewriterLoader = OssRewriterLoader.getInstance();
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
 		methodTestLinkUpdater.registerTestHolder(testRunner);
 		this.testResultUpdater = new TestResultUpdater(testDatabase);
@@ -98,7 +98,6 @@ public class Pipeline {
 		testSourceStore.addStoreListener(testSourceWatcher);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
-		// TODO Enable rewriter!
 		// First setup
 		firstRun();
 	}
@@ -188,7 +187,6 @@ public class Pipeline {
 		testSourceStore.removeStoreListener(testSourceWatcher);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
-		// TODO Disable rewriter!
 		// TODO Stop current test run as well?
 	}
 
