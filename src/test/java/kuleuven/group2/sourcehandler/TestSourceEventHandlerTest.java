@@ -100,6 +100,7 @@ public class TestSourceEventHandlerTest {
 	@Test
 	public void testHandleEventsNoTestMethods() throws Exception {
 		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"public class " + className + " {\n" +
 						"public void foo() { int i = 0; }\n" +
@@ -107,7 +108,7 @@ public class TestSourceEventHandlerTest {
 
 		classSourceStore.startListening();
 		
-		classSourceStore.write(className, source.getBytes());
+		classSourceStore.write(sourceName, source.getBytes());
 		
 		classSourceStore.stopListening();
 		
