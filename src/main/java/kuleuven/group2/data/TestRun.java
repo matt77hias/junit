@@ -5,7 +5,8 @@ import java.util.Date;
 import org.junit.runner.notification.Failure;
 
 /**
- * Represents the running of a certain test, at a particular time and with a particular result.
+ * Represents the running of a certain test, at a particular time and with a
+ * particular result.
  * 
  * @author Group2
  * @version 7 November 2013
@@ -44,16 +45,21 @@ public class TestRun {
 		return !isSuccessfulRun();
 	}
 
-	public StackTraceElement getTraceTop() 
-			throws IllegalStateException {
+	public Throwable getException() {
+		if (isSuccessfulRun()) {
+			throw new IllegalStateException("Cannot get exception of successful run.");
+		}
+		return getFailure().getException();
+	}
+
+	public StackTraceElement getTraceTop() throws IllegalStateException {
 		return getTrace()[0];
 	}
 
-	public StackTraceElement[] getTrace() 
-			throws IllegalStateException {
+	public StackTraceElement[] getTrace() throws IllegalStateException {
 		if (isSuccessfulRun()) {
 			throw new IllegalStateException("Cannot get stack trace of successful run.");
 		}
-		return getFailure().getException().getStackTrace();
+		return getException().getStackTrace();
 	}
 }

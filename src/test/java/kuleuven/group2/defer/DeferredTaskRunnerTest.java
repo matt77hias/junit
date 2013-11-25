@@ -13,8 +13,8 @@ import org.junit.Test;
 public class DeferredTaskRunnerTest {
 	
 	protected DeferredTaskRunner deferredTaskRunner200msDelay;
-	protected boolean taskDone = false;
-	protected int taskDoneCounter = 0;
+	protected volatile boolean taskDone = false;
+	protected volatile int taskDoneCounter = 0;
 	protected Runnable task100ms = new Runnable() {
 		@Override
 		public void run() {

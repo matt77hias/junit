@@ -64,8 +64,8 @@ public class DeferredTaskRunner {
 	 * @param runnable
 	 *            The runnable for this new deferred runner.
 	 * @throws IllegalArgumentException
-	 *             The given runnable factory must be a valid runnable factory.
-	 *             | !isValidRunnableFactory(runnableFactory)
+	 *             The given runnable must be a valid runnable.
+	 *             | !isValidRunnable(runnable)
 	 */
 	public DeferredTaskRunner(Runnable runnable) throws IllegalArgumentException {
 		this(runnable, DEFAULT_DELAY, DEFAULT_TIME_UNIT);
@@ -185,12 +185,24 @@ public class DeferredTaskRunner {
 		} else if (isFinished()) {
 			// Nothing scheduled
 			// Schedule a new task
-			scheduleRunnable();
+			schedule(false);
 		} else {
 			// Scheduled but not yet running
 			// Reschedule task
-			delay();
+			schedule(true);
 		}
+	}
+
+	/**
+	 * Checks if the currently scheduled task of this deferred runner is
+	 * scheduled.
+	 * 
+	 * @return True if and only if the current runnable of this deferred runner
+	 *         is scheduled.
+	 */
+	public synchronized boolean isScheduled() {
+		ScheduledFuture<?> future = getScheduledFuture();
+		return future != null && !isRunning() && !isFinished();
 	}
 
 	/**
@@ -199,7 +211,7 @@ public class DeferredTaskRunner {
 	 * @return True if and only if the current runnable of this deferred runner
 	 *         is running.
 	 */
-	public boolean isRunning() {
+	public synchronized boolean isRunning() {
 		return getRunnable() != null && getRunnable().isRunning() && !isFinished();
 	}
 
@@ -210,24 +222,9 @@ public class DeferredTaskRunner {
 	 * @return True if and only if the currently scheduled task of this deferred
 	 *         runner is finished.
 	 */
-	public boolean isFinished() {
+	public synchronized boolean isFinished() {
 		ScheduledFuture<?> future = getScheduledFuture();
 		return future == null || future.isDone();
-	}
-
-	/**
-	 * Delays the scheduled execution if the current runnable of this deferred
-	 * runner is not yet running.
-	 * 
-	 * @return True if and only if the previous future is properly cancelled, in
-	 *         which case it could be replace by the new future.
-	 */
-	protected boolean delay() {
-		if (cancelScheduledFuture()) {
-			scheduleRunnable();
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -257,14 +254,14 @@ public class DeferredTaskRunner {
 	/**
 	 * Returns the scheduled future of this deferred runner.
 	 */
-	protected ScheduledFuture<?> getScheduledFuture() {
+	private ScheduledFuture<?> getScheduledFuture() {
 		return this.scheduledFuture;
 	}
 
 	/**
 	 * Sets the scheduled future of this deferred runner to the given request.
 	 */
-	protected void setScheduledFuture(ScheduledFuture<?> request) {
+	private void setScheduledFuture(ScheduledFuture<?> request) {
 		this.scheduledFuture = request;
 	}
 
@@ -279,21 +276,37 @@ public class DeferredTaskRunner {
 	 * @return True if and only if the scheduled future is null or is
 	 *         successfully canceled.
 	 */
-	protected boolean cancelScheduledFuture() {
+	protected synchronized boolean cancelScheduledFuture() {
 		ScheduledFuture<?> future = getScheduledFuture();
 		return future == null || future.cancel(false);
 	}
 
 	/**
 	 * Schedules the runnable of this deferred runner.
-	 * 
-	 * @pre May not be called when no runnable is created.
 	 */
-	protected void scheduleRunnable() {
+	protected synchronized void schedule(boolean reschedule) {
+		if (isRunning()) {
+			// Never schedule when still running
+			return;
+		}
+
+		if (isScheduled()) {
+			// Scheduled but not yet running
+			if (reschedule) {
+				// Cancel current schedule
+				cancelScheduledFuture();
+			} else {
+				// Keep current schedule
+				return;
+			}
+		}
+
+		// Create new scheduled future
 		try {
 			setScheduledFuture(getScheduledExecutorService().schedule(getRunnable(), getDelay(), getTimeUnit()));
 		} catch (RejectedExecutionException e) {
 			System.out.println(e.getMessage());
+			setScheduledFuture(null);
 		}
 	}
 
@@ -323,12 +336,16 @@ public class DeferredTaskRunner {
 		@Override
 		public void run() {
 			try {
-				boolean shouldStart = preRun();
+				boolean shouldStart = setRequest(false);
 				if (shouldStart) {
+					this.running = true;
 					this.delegate.run();
 				}
 			} finally {
-				postRun();
+				this.running = false;
+				if (hasRequest()) {
+					schedule(true);
+				}
 			}
 		}
 
@@ -336,36 +353,5 @@ public class DeferredTaskRunner {
 			return this.running;
 		}
 
-		/**
-		 * Prepare the run.
-		 * 
-		 * <ol>
-		 * <li>Mark the task as running.</li>
-		 * <li>Reset the request flag to indicate that this task will handle it.
-		 * </li>
-		 * </ol>
-		 * Only start the task if the request flag was set previously.
-		 * 
-		 * @return True if and only if the task should still be run.
-		 */
-		protected boolean preRun() {
-			this.running = true;
-			return setRequest(false);
-		}
-
-		/**
-		 * Finish the run.
-		 * 
-		 * <ol>
-		 * <li>If there are new requests, schedule a new task.</li>
-		 * <li>Mark the task as not running.</li>
-		 * </ol>
-		 */
-		protected void postRun() {
-			if (hasRequest()) {
-				scheduleRunnable();
-			}
-			this.running = false;
-		}
 	}
 }

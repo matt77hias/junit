@@ -4,7 +4,20 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * A class loader that allows the complete reloading of a class from disk.
+ * A {@link ClassLoader} which can be reset to allow for class reloading.
+ * 
+ * <p>
+ * This class delegates to a wrapped {@link ClassLoader} instance. Such an
+ * instance is lazily constructed whenever one of the {@link ClassLoader}
+ * methods is called.
+ * </p>
+ * 
+ * <p>
+ * {@link #reload()} removes the wrapped instance such that the next time a
+ * {@link ClassLoader} method is called, a new instance must be created. This
+ * new instance won't have the loaded classes from the previous instance,
+ * forcing it to load them again.
+ * </p>
  * 
  * @author Group2
  * @version 18 November 2013

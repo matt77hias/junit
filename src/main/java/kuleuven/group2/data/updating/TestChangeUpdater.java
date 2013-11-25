@@ -1,9 +1,7 @@
 package kuleuven.group2.data.updating;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertNotNull;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +9,7 @@ import java.util.Set;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
+import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
@@ -58,8 +57,21 @@ public class TestChangeUpdater {
 	public void updateTestClass(Class<?> testClass) {
 		// Create a runner
 		Runner runner = Request.aClass(testClass).getRunner();
-		// TODO: when building fails it returns an errorreportingrunner
-		// we should probably do something with this so this can be catched
+		if (runner instanceof ErrorReportingRunner) {
+			/*
+			 * TODO This is a very dirty instanceof check, and we know it.
+			 * 
+			 * We need this because JUnit does not let us know about validation
+			 * errors without actually running the test. Even the description of
+			 * an ErrorReportingRunner does not give this away.
+			 * 
+			 * The alternative would be to add a field to the Description class
+			 * indicating that it describes an invalid test. Such a change would
+			 * break a lot of things, and it doesn't seem worthwhile to modify
+			 * JUnit for this one small thing.
+			 */
+			return;
+		}
 		if (runner == null) return;
 		// Collect test method names
 		Set<String> testNames = new HashSet<String>();

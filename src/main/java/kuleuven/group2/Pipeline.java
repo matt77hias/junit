@@ -11,7 +11,7 @@ import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
-import kuleuven.group2.policy.Policy;
+import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
@@ -23,8 +23,34 @@ import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.util.Consumer;
 
 /**
- * Brings all parts of the program together to form a pipeline.
- * TODO [DOC] vervolledig beschrijving can de klasse Pipeline
+ * Controls the execution of the complete pipeline.
+ * 
+ * <p>
+ * This is the main entry point for the program. It sets up the whole running
+ * environment and controls the flow of information between the different
+ * components.
+ * </p>
+ * 
+ * <ul>
+ * <li>Sets up {@link StoreWatcher}s on the class and test source stores.</li>
+ * <li>Sets up a {@link TestDatabase} for the (intermediate) results.</li>
+ * <li>Consumes the produced {@link StoreEvent}s using a deferred task execution
+ * strategy.</li>
+ * <li>In the first run:
+ * <ol>
+ * <li>Compile all class and test sources.</li>
+ * <li>Initialize the database with the found classes and tests.</li>
+ * <li>Sort and run all tests.</li>
+ * </ol>
+ * </li>
+ * <li>In every other run:
+ * <ol>
+ * <li>Compile changed sources.</li>
+ * <li>Update the database to reflect these changes.</li>
+ * <li>Sort and run all tests.</li>
+ * </ol>
+ * </li>
+ * </ul>
  * 
  * @author Group2
  * @version 19 November 2013
@@ -34,7 +60,7 @@ public class Pipeline {
 	protected final Store classSourceStore;
 	protected final Store testSourceStore;
 	protected final Store binaryStore;
-	protected Policy sortPolicy;
+	protected TestSortingPolicy sortPolicy;
 
 	protected final TestDatabase testDatabase;
 	protected final ReloadingStoreClassLoader testClassLoader;
@@ -52,7 +78,7 @@ public class Pipeline {
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
 
-	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, Policy sortPolicy) {
+	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, TestSortingPolicy sortPolicy) {
 		this.classSourceStore = checkNotNull(classSourceStore);
 		this.testSourceStore = checkNotNull(testSourceStore);
 		this.binaryStore = checkNotNull(binaryStore);
@@ -61,7 +87,7 @@ public class Pipeline {
 		this.testDatabase = new TestDatabase();
 		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
 		this.testRunner = new TestRunner(testClassLoader);
-		this.rewriterLoader = new OssRewriterLoader();
+		this.rewriterLoader = OssRewriterLoader.getInstance();
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
 		methodTestLinkUpdater.registerTestHolder(testRunner);
 		this.testResultUpdater = new TestResultUpdater(testDatabase);
@@ -78,11 +104,15 @@ public class Pipeline {
 		this.deferredTask = new DeferredConsumer<>(task);
 	}
 
-	public Policy getSortPolicy() {
+	public TestDatabase getTestDatabase() {
+		return testDatabase;
+	}
+
+	public TestSortingPolicy getSortPolicy() {
 		return sortPolicy;
 	}
 
-	public void setSortPolicy(Policy sortPolicy) {
+	public void setSortPolicy(TestSortingPolicy sortPolicy) {
 		this.sortPolicy = checkNotNull(sortPolicy);
 	}
 
@@ -90,27 +120,51 @@ public class Pipeline {
 		// Start listening
 		classSourceWatcher.registerConsumer(deferredTask);
 		testSourceWatcher.registerConsumer(deferredTask);
+		classSourceStore.addStoreListener(classSourceWatcher);
+		testSourceStore.addStoreListener(testSourceWatcher);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
-		// TODO Enable rewriter!
+		// First setup
+		firstRun();
 	}
-	
+
+	private void firstRun() {
+		reloadClasses();
+
+		setupSources();
+
+		setupTestSources();
+
+		Test[] sortedTests = sortTests();
+
+		runTests(sortedTests);
+	}
+
 	private void run(List<StoreEvent> events) {
 		reloadClasses();
-		
+
 		handleSourceEvents(events);
-		
+
 		handleTestSourceEvents(events);
 
 		Test[] sortedTests = sortTests();
 
 		runTests(sortedTests);
 	}
-	
+
 	private void reloadClasses() {
 		testClassLoader.reload();
 	}
-	
+
+	private void setupSources() {
+		try {
+			classSourceEventHandler.setup();
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			System.err.println(e.getMessage());
+		}
+	}
+
 	private void handleSourceEvents(List<StoreEvent> events) {
 		try {
 			classSourceEventHandler.handleEvents(events);
@@ -119,20 +173,16 @@ public class Pipeline {
 			System.err.println(e.getMessage());
 		}
 	}
-	
-	private Test[] sortTests() {
-		return sortPolicy.getSortedTestsAccordingToPolicy(testDatabase);
-	}
-	
-	private void runTests(Test[] tests) {
+
+	private void setupTestSources() {
 		try {
-			testRunner.runTestMethods(tests);
+			testSourceEventHandler.setup();
 		} catch (Exception e) {
 			// TODO Show in GUI?
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
-	
+
 	private void handleTestSourceEvents(List<StoreEvent> events) {
 		try {
 			testSourceEventHandler.handleEvents(events);
@@ -142,14 +192,35 @@ public class Pipeline {
 		}
 	}
 
+	private Test[] sortTests() {
+		return sortPolicy.getSortedTests(testDatabase);
+	}
+
+	private void runTests(Test[] tests) {
+		try {
+			testRunner.runTestMethods(tests);
+		} catch (Exception e) {
+			// TODO Show in GUI?
+			e.printStackTrace();
+		}
+	}
+
 	public void stop() {
 		// Stop listening
 		classSourceWatcher.unregisterConsumer(deferredTask);
 		testSourceWatcher.unregisterConsumer(deferredTask);
+		classSourceStore.removeStoreListener(classSourceWatcher);
+		testSourceStore.removeStoreListener(testSourceWatcher);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
-		// TODO Disable rewriter!
 		// TODO Stop current test run as well?
+	}
+
+	public void shutdown() {
+		// Stop
+		stop();
+		// Shut down
+		deferredTask.stopService();
 	}
 
 	protected class PipelineTask implements Consumer<List<StoreEvent>> {

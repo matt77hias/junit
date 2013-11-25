@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
-import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest.TestConsumer;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
@@ -79,6 +78,7 @@ public class ClassSourceEventHandlerTest {
 	@Test
 	public void testInitialAdd() throws Exception {
 		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"public class " + className + " {\n" +
 						"public boolean foo() { return true; }\n" +
@@ -86,7 +86,7 @@ public class ClassSourceEventHandlerTest {
 
 		classSourceStore.startListening();
 		
-		classSourceStore.write(className, source.getBytes());
+		classSourceStore.write(sourceName, source.getBytes());
 		
 		classSourceStore.stopListening();
 		
@@ -98,6 +98,7 @@ public class ClassSourceEventHandlerTest {
 	@Test
 	public void testChange() throws Exception {
 		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"public class " + className + " {\n" +
 						"public boolean foo() { return true; }\n" +
@@ -107,11 +108,11 @@ public class ClassSourceEventHandlerTest {
 						"public boolean bar() { return true; }\n" +
 						"}";
 		
-		classSourceStore.write(className, source.getBytes());
+		classSourceStore.write(sourceName, source.getBytes());
 
 		classSourceStore.startListening();
 		
-		classSourceStore.write(className, sourceChange.getBytes());
+		classSourceStore.write(sourceName, sourceChange.getBytes());
 		
 		classSourceStore.stopListening();
 		
@@ -124,6 +125,7 @@ public class ClassSourceEventHandlerTest {
 	@Test
 	public void testChangeWhileListening() throws Exception {
 		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"public class " + className + " {\n" +
 						"public boolean foo() { return true; }\n" +
@@ -135,8 +137,8 @@ public class ClassSourceEventHandlerTest {
 
 		classSourceStore.startListening();
 
-		classSourceStore.write(className, source.getBytes());
-		classSourceStore.write(className, sourceChange.getBytes());
+		classSourceStore.write(sourceName, source.getBytes());
+		classSourceStore.write(sourceName, sourceChange.getBytes());
 		
 		classSourceStore.stopListening();
 		
@@ -149,6 +151,7 @@ public class ClassSourceEventHandlerTest {
 	@Test
 	public void testRemove() throws Exception {
 		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
 		String source =
 				"public class " + className + " {\n" +
 						"public boolean foo() { return true; }\n" +
@@ -156,8 +159,8 @@ public class ClassSourceEventHandlerTest {
 
 		classSourceStore.startListening();
 
-		classSourceStore.write(className, source.getBytes());
-		classSourceStore.remove(className);
+		classSourceStore.write(sourceName, source.getBytes());
+		classSourceStore.remove(sourceName);
 		
 		classSourceStore.stopListening();
 		

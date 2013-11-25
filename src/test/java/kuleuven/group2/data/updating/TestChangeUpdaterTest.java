@@ -2,8 +2,6 @@ package kuleuven.group2.data.updating;
 
 import static org.junit.Assert.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,8 +11,6 @@ import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.TestDatabaseTest;
-import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
 import kuleuven.group2.store.MemoryStore;
 
@@ -114,7 +110,7 @@ public class TestChangeUpdaterTest {
 		
 		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
 		
-		Class<?> a = binaryLoader.loadClass(className);
+		//Class<?> a = binaryLoader.loadClass(className);
 		
 		testChangeUpdater.updateTestClasses(result.getCompiledClassNames());
 		//testChangeUpdater.updateTestClass(a);

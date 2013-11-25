@@ -87,7 +87,7 @@ public class TestRunnerTest {
 		    }
 		});
 
-		Result[] result = testRunner.runTestMethods(testMethod2Arg);
+		testRunner.runTestMethods(testMethod2Arg);
 		
 		assertTrue(listenerVisited);
 	}

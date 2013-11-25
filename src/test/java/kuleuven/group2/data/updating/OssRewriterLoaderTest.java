@@ -1,43 +1,23 @@
 package kuleuven.group2.data.updating;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.data.updating.OssRewriterTest.A;
-import kuleuven.group2.data.updating.OssRewriterTest.VisitedMethodsTracker;
-
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
-import be.kuleuven.cs.ossrewriter.MonitorEntrypoint;
 
 public class OssRewriterLoaderTest {
 
 	protected A a;
-	protected static OssRewriterLoader ossRewriterLoader = new OssRewriterLoader();
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		ossRewriterLoader.launchOssRewriter();
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+	protected static OssRewriterLoader ossRewriterLoader = OssRewriterLoader.getInstance();
 
 	@Before
 	public void setUp() throws Exception {
 		a = new A();
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	public class A {
@@ -74,7 +54,7 @@ public class OssRewriterLoaderTest {
 		}
 
 	}
-	
+
 	@Test
 	public void methodIsVisitedTest() {
 		final VisitedMethodsTracker visitedMethodsTracker = new VisitedMethodsTracker();
@@ -88,10 +68,11 @@ public class OssRewriterLoaderTest {
 		ossRewriterLoader.registerMonitor(monitor);
 
 		a.visit();
-		
+
 		ossRewriterLoader.unregisterMonitor(monitor);
-		
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterLoaderTest$A.visit()V"));
+
+		assertTrue(visitedMethodsTracker
+				.methodIsVisited("kuleuven/group2/data/updating/OssRewriterLoaderTest$A.visit()V"));
 	}
 
 }

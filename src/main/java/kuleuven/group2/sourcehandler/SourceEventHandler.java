@@ -17,6 +17,8 @@ import com.google.common.collect.Sets;
  */
 public abstract class SourceEventHandler {
 
+	public abstract void setup() throws Exception;
+
 	public abstract void handleEvents(List<StoreEvent> events) throws Exception;
 
 	protected Changes collectChanges(List<StoreEvent> events) {

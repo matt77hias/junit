@@ -18,7 +18,7 @@ import kuleuven.group2.util.ArrayUtils;
  * @version	17 November 2013
  * 
  */
-public class DistinctFailureFirst implements Policy {
+public class DistinctFailureFirst implements TestSortingPolicy {
 	
 	/**
 	 * The default depth of the level of history that's
@@ -101,9 +101,9 @@ public class DistinctFailureFirst implements Policy {
 	 * 			distinct failure first policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase) {
+	public Test[] getSortedTests(TestDatabase testDatabase) {
 		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTestsAccordingToPolicy(testDatabase, result);
+		return getSortedTests(testDatabase, result);
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class DistinctFailureFirst implements Policy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests) {
+	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
 		Set<StackTraceElement> currentTraceElements = new HashSet<StackTraceElement>();
 		List<Test> priority = new ArrayList<Test>();
 		List<Test> postponed = new ArrayList<Test>();
@@ -163,7 +163,7 @@ public class DistinctFailureFirst implements Policy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTestsAccordingToPolicy(testDatabase, tests.toArray(new Test[0]));
+	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
 	}
 }

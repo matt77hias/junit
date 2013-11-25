@@ -12,7 +12,8 @@ import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 
 /**
- * Handles events in the (non test) source code, such as deletions, adds and changes.
+ * Handles events in the (non test) source code, such as deletions, adds and
+ * changes.
  * 
  * @author Group2
  * @version 18 November 2013
@@ -37,6 +38,15 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 	}
 
 	@Override
+	public void setup() throws Exception {
+		// Compile all class sources
+		JavaCompiler classCompiler = new EclipseCompiler(classSourceStore, binaryStore, testClassLoader);
+		CompilationResult result = classCompiler.compileAll();
+
+		handleCompilation(result);
+	}
+
+	@Override
 	public void handleEvents(List<StoreEvent> events) throws Exception {
 		// Collect changes in class sources
 		Changes changes = collectChanges(events, classSourceStore);
@@ -48,6 +58,10 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 		JavaCompiler classCompiler = new EclipseCompiler(classSourceStore, binaryStore, testClassLoader);
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
 
+		handleCompilation(result);
+	}
+
+	protected void handleCompilation(CompilationResult result) throws Exception {
 		// Detect changes in compiled classes
 		methodChangeUpdater.detectChanges(result.getCompiledClasses());
 

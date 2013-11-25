@@ -7,7 +7,6 @@ import java.util.ListIterator;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
-import com.google.common.io.Files;
 
 /**
  * Utilities for transforming class and other names.
@@ -21,15 +20,23 @@ public class NameUtils {
 	}
 
 	public static String toSourceName(String className) {
-		return className.replace('.', '/') + ".java";
+		return dotsToSlashes(className) + ".java";
 	}
 
 	public static String toBinaryName(String className) {
-		return className.replace('.', '/') + ".class";
+		return dotsToSlashes(className) + ".class";
 	}
 
 	public static String toClassName(String resourceName) {
-		return Files.getNameWithoutExtension(resourceName).replace('/', '.');
+		return slashesToDots(resourceName.substring(0, resourceName.lastIndexOf(".")));
+	}
+
+	public static String slashesToDots(String resourceName) {
+		return resourceName.replace('/', '.').replace('\\', '.');
+	}
+
+	public static String dotsToSlashes(String resourceName) {
+		return resourceName.replace('.', '/');
 	}
 
 	public static Collection<String> toClassNames(Collection<String> resourceNames) {

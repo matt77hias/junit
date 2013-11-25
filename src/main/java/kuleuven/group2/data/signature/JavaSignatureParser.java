@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import kuleuven.group2.compile.NameUtils;
+
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
@@ -61,7 +63,7 @@ public class JavaSignatureParser {
 			throw new IllegalArgumentException("Incorrectly formatted signature");
 		}
 
-		String packageName = Strings.nullToEmpty(match.group(1)).replace('/', '.');
+		String packageName = NameUtils.slashesToDots(Strings.nullToEmpty(match.group(1)));
 		String className = match.group(2);
 		String methodName = match.group(3);
 		List<String> arguments = Splitter.on(';').omitEmptyStrings().splitToList(match.group(4));

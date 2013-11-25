@@ -1,0 +1,56 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.BorderPane
+import javafx.geometry.Insets
+import javafx.scene.control.TabPane
+import javafx.scene.control.Tab
+import javafx.scene.layout.HBox
+import javafx.scene.control.Button
+import kuleuven.group2.ui.MainController
+import kuleuven.group2.ui.Configuration
+import kuleuven.group2.ui.TestRuns
+
+component Main controlledby MainController {
+	BorderPane {
+		center : TabPane {
+			tabClosingPolicy : "UNAVAILABLE",
+			tabs : [
+				Tab {
+					text : "Configuration",
+					content : Configuration id configuration {
+						padding : Insets {
+							top : 5,
+							bottom : 5,
+							left : 5,
+							right : 5
+						}
+					}
+				},
+				Tab {
+					text : "Test runs",
+					content : TestRuns id testRuns {
+						padding : Insets {
+							top : 5,
+							bottom : 5,
+							left : 5,
+							right : 5
+						}
+					}
+				}
+			]
+		},
+		bottom : HBox {
+			alignment : "CENTER",
+			children : [
+				Button id buttonStart {
+					text : "Start",
+					onAction : controllermethod start
+				},
+				Button id buttonStop {
+					text : "Stop",
+					onAction : controllermethod stop
+				}
+			]
+		}
+	}
+}

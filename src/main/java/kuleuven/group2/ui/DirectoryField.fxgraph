@@ -1,0 +1,25 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.HBox
+import javafx.scene.control.TextField
+import javafx.scene.control.Button
+import javafx.geometry.Insets
+import kuleuven.group2.ui.DirectoryFieldController
+
+component DirectoryField controlledby DirectoryFieldController {
+	HBox {
+		children : [
+			TextField id directoryText {
+				static hgrow : "ALWAYS",
+				editable : false
+			},
+			Button {
+				static hgrow : "NEVER", static margin : Insets {
+					left : 5
+				},
+				text : "Browse",
+				onAction : controllermethod onBrowse
+			}
+		]
+	}
+}

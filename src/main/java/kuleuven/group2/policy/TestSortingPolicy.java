@@ -13,11 +13,9 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  *
  */
-public interface Policy {
+public interface TestSortingPolicy {
 	
 	/*
-	 * Policy is not an abstract class for the same reason Comparator
-	 * is not an abstract class.
 	 * If significant similarities between policies appear in the future,
 	 * the Policy interface can change to an abstract class.
 	 */
@@ -29,7 +27,7 @@ public interface Policy {
 	 * 			The test database which contains the given tests.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase);
+	public Test[] getSortedTests(TestDatabase testDatabase);
 	
 	/**
 	 * Sorts the given tests according to this policy.
@@ -41,7 +39,7 @@ public interface Policy {
 	 * @post	The given array may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Test[] tests);
+	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests);
 		
 	/**
 	 * Sorts the given tests according to this policy.
@@ -53,5 +51,5 @@ public interface Policy {
 	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTestsAccordingToPolicy(TestDatabase testDatabase, Collection<Test> tests);
+	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
 }
