@@ -131,12 +131,12 @@ public class MainController implements EventHandler<WindowEvent> {
 		try {
 			setup();
 			setRunning(true);
-			Platform.runLater(new Runnable() {
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					pipeline.start();
 				}
-			});
+			}).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
