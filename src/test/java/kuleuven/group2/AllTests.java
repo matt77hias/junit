@@ -1,8 +1,8 @@
 package kuleuven.group2;
 
 import kuleuven.group2.classloader.ReloadingStoreClassLoaderTest;
-import kuleuven.group2.compile.EclipseCompilerTest;
 import kuleuven.group2.classloader.StoreClassLoaderTest;
+import kuleuven.group2.compile.EclipseCompilerTest;
 import kuleuven.group2.data.TestDatabaseTest;
 import kuleuven.group2.data.TestTest;
 import kuleuven.group2.data.hash.MethodHasherTest;
@@ -33,27 +33,38 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 	ReloadingStoreClassLoaderTest.class,
 	StoreClassLoaderTest.class,
+	
 	EclipseCompilerTest.class,
+	
 	MethodHasherTest.class,
+	
 	JavaSignatureParserTest.class,
+	
 	MethodChangeUpdaterTest.class,
 	MethodTestLinkUpdaterTest.class,
 	OssRewriterLoaderTest.class,
 	OssRewriterTest.class,
 	TestChangeUpdaterTest.class,
 	TestResultUpdaterTest.class,
+	
 	TestDatabaseTest.class,
 	TestTest.class,
+	
 	DeferredConsumerTest.class,
 	DeferredTaskRunnerTest.class,
+	
 	FolderWatcherTest.class,
+	
 	DistinctFailureFirstTest.class,
 	FrequentFailureTest.class,
 	LastFailureFirstTest.class,
+	
 	ClassSourceEventHandlerTest.class,
 	SourceEventHandlerTest.class,
 	TestSourceEventHandlerTest.class,
+	
 	DirectoryStoreTest.class,
+	
 	TestRunnerTest.class
 	})
 public class AllTests {

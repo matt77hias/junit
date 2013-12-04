@@ -24,6 +24,11 @@ public class TestResultUpdater extends RunListener {
 	public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
 	}
+	
+	@Override
+	public void testRunStarted(Description description) throws Exception {
+		testDatabase.testRunStarted(description);
+	}
 
 	@Override
 	public void testStarted(Description description) throws Exception {

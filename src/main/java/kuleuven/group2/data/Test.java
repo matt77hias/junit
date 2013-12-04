@@ -23,11 +23,12 @@ public class Test {
 	protected String testMethodName;
 
 	protected boolean isTestRunsSorted = true;
-	protected List<TestRun> testRuns = new LinkedList<TestRun>();
+	protected List<List<TestRun>> testBatches = new LinkedList<List<TestRun>>();
 
 	public Test(String testClassName, String testMethodName) {
 		this.testClassName = checkNotNull(testClassName);
 		this.testMethodName = checkNotNull(testMethodName);
+		testBatchStarted();
 	}
 
 	public String getTestClassName() {
@@ -42,15 +43,30 @@ public class Test {
 		return getTestClassName().equals(testClassName) && getTestMethodName().equals(testMethodName);
 	}
 
+	/**
+	 * Returns the current test batch, which is the last in the list.
+	 */
+	protected List<TestRun> getCurrentTestBatch() {
+		return testBatches.get(testBatches.size() - 1);
+	}
+	
+	public void testBatchStarted() {
+		testBatches.add(new LinkedList<TestRun>());
+	}
+
+	public List<List<TestRun>> getTestBatches() {
+		return Collections.unmodifiableList(testBatches);
+	}
+
 	public void addTestRun(TestRun testRun) {
-		testRuns.add(testRun);
+		getCurrentTestBatch().add(testRun);
 		isTestRunsSorted = false;
 	}
 
 	public List<TestRun> getTestRuns() {
 		if (!isTestRunsSorted) {
 			// Sort: last test run first
-			Collections.sort(testRuns, new Comparator<TestRun>() {
+			Collections.sort(getCurrentTestBatch(), new Comparator<TestRun>() {
 				@Override
 				public int compare(TestRun o1, TestRun o2) {
 					return -o1.getTimeStamp().compareTo(o2.getTimeStamp());
@@ -58,9 +74,9 @@ public class Test {
 			});
 			isTestRunsSorted = true;
 		}
-		return Collections.unmodifiableList(testRuns);
+		return Collections.unmodifiableList(getCurrentTestBatch());
 	}
-
+	
 	public float getFailurePercentage(int depth) {
 		int failed = 0;
 		int succeeded = 0;

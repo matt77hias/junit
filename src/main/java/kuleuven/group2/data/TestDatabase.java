@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.junit.runner.Description;
+
 import kuleuven.group2.data.signature.JavaSignature;
 
 import com.google.common.collect.HashMultimap;
@@ -175,6 +177,12 @@ public class TestDatabase {
 	/*
 	 * Test runs
 	 */
+	
+	public void testRunStarted(Description description) {
+		for(Test test : getAllTests()) {
+			test.testBatchStarted();
+		}
+	}
 
 	public void addTestRun(TestRun testRun, Test test) {
 		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
