@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 
-import kuleuven.group2.compile.CompilationProblem;
-import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.store.MemoryStore;
