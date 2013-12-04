@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 
+import kuleuven.group2.compile.CompilationProblem;
+import kuleuven.group2.compile.CompilationResult;
 import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.store.MemoryStore;
@@ -83,6 +85,11 @@ public class StoreClassLoaderTest {
 				assertNotNull(method.getAnnotation(Test.class));
 			}
 		}
+	}
+	
+	@Test(expected=ClassNotFoundException.class)
+	public void testLoadClassNotInStore() throws ClassNotFoundException {
+		classLoader.loadClass("NonExistingClass");
 	}
 
 }

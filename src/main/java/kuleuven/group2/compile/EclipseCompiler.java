@@ -36,6 +36,11 @@ import com.google.common.io.ByteStreams;
  * @version 5 November 2013
  */
 public class EclipseCompiler extends JavaCompiler {
+	
+	private final static Map<String, String> STANDARD_OPTIONS = ImmutableMap.<String, String> builder()
+			.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7)
+			.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7)
+			.build();
 
 	public EclipseCompiler(Store sourceStore, Store binaryStore, ClassLoader classLoader) {
 		super(sourceStore, binaryStore, classLoader);
@@ -46,19 +51,10 @@ public class EclipseCompiler extends JavaCompiler {
 		final Map<String, byte[]> compiled = new HashMap<String, byte[]>();
 		final List<CompilationProblem> problems = new ArrayList<CompilationProblem>();
 
-		// Collect compilation units
-		final List<ICompilationUnit> compilationUnits = new ArrayList<ICompilationUnit>(sourceNames.size());
-		for (String sourceName : sourceNames) {
-			if (getSourceStore().contains(sourceName)) {
-				compilationUnits.add(new EclipseCompilationUnit(getSourceStore(), sourceName));
-			} else {
-				// Source not found, error
-				problems.add(new SourceNotFoundProblem(sourceName));
-			}
-		}
+		final List<ICompilationUnit> compilationUnits = collectCompilationUnits(sourceNames, problems);
 
 		// Exit if problems
-		if (!problems.isEmpty()) {
+		if (! problems.isEmpty()) {
 			return new CompilationResult(problems);
 		}
 
@@ -69,16 +65,26 @@ public class EclipseCompiler extends JavaCompiler {
 		final ICompilerRequestor compilerRequestor = new CompilerRequestor(problems, compiled);
 
 		// Compile
-		Map<String, String> options = ImmutableMap.<String, String> builder()
-				.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7)
-				.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7)
-				.build();
-		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(options),
+		final Compiler compiler = new Compiler(nameEnvironment, policy, new CompilerOptions(STANDARD_OPTIONS),
 				compilerRequestor, problemFactory);
 		compiler.compile(compilationUnits.toArray(new ICompilationUnit[0]));
 
-		// Return result
 		return new CompilationResult(problems, compiled);
+	}
+	
+	protected List<ICompilationUnit> collectCompilationUnits(final Collection<String> sourceNames, final List<CompilationProblem> problems) {
+		final List<ICompilationUnit> compilationUnits = new ArrayList<ICompilationUnit>(sourceNames.size());
+		
+		for (String sourceName : sourceNames) {
+			if (getSourceStore().contains(sourceName)) {
+				compilationUnits.add(new EclipseCompilationUnit(getSourceStore(), sourceName));
+			} else {
+				// Source not found, error
+				problems.add(new SourceNotFoundProblem(sourceName));
+			}
+		}
+		
+		return compilationUnits;
 	}
 
 	/**
