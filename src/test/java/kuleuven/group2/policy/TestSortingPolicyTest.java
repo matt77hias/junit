@@ -1,6 +1,5 @@
 package kuleuven.group2.policy;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 
 import kuleuven.group2.data.TestDatabase;
@@ -114,14 +113,11 @@ public abstract class TestSortingPolicyTest {
 		test4.addTestRun(TestRun.createSuccessful(new Date(19)));
 		test4.addTestRun(TestRun.createSuccessful(new Date(20)));
 		test4.addTestRun(TestRun.createSuccessful(new Date(21)));
-		
-		// Use reflection for updating the test database.
-		Method method = TestDatabase.class.getDeclaredMethod("addTest", kuleuven.group2.data.Test.class);
-		method.setAccessible(true);
-		method.invoke(testDatabase, test1);
-		method.invoke(testDatabase, test2);
-		method.invoke(testDatabase, test3);
-		method.invoke(testDatabase, test4);
+
+		testDatabase.addTest(test1);
+		testDatabase.addTest(test2);
+		testDatabase.addTest(test3);
+		testDatabase.addTest(test4);
 	}
 	
 	public abstract void correct_order_test();
