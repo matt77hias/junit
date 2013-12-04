@@ -13,20 +13,26 @@ import org.junit.runner.notification.Failure;
  */
 public class TestRun {
 
+	private final Test test;
 	private final Date timestamp;
 	private final Failure failure;
 
-	protected TestRun(Date timestamp, Failure failure) {
+	protected TestRun(Test test, Date timestamp, Failure failure) {
+		this.test = test;
 		this.timestamp = timestamp;
 		this.failure = failure;
 	}
 
-	public static TestRun createSuccessful(Date timestamp) {
-		return new TestRun(timestamp, null);
+	public static TestRun createSuccessful(Test test, Date timestamp) {
+		return new TestRun(test, timestamp, null);
 	}
 
-	public static TestRun createFailed(Date timestamp, Failure failure) {
-		return new TestRun(timestamp, failure);
+	public static TestRun createFailed(Test test, Date timestamp, Failure failure) {
+		return new TestRun(test, timestamp, failure);
+	}
+	
+	public Test getTest() {
+		return test;
 	}
 
 	public Date getTimeStamp() {

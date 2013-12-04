@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.junit.runner.Description;
-
 import kuleuven.group2.data.signature.JavaSignature;
 
 import com.google.common.collect.HashMultimap;
@@ -29,6 +27,7 @@ public class TestDatabase {
 	protected final ConcurrentMap<String, ConcurrentMap<JavaSignature, TestedMethod>> methods = new ConcurrentHashMap<>();
 
 	protected final ConcurrentMap<String, ConcurrentMap<String, Test>> tests = new ConcurrentHashMap<>();
+	protected final List<TestBatch> testBatches = new ArrayList<TestBatch>();
 
 	protected final Object linksLock = new Object();
 	protected final Multimap<TestedMethod, Test> methodToTestLinks = HashMultimap.create();
@@ -177,20 +176,11 @@ public class TestDatabase {
 	/*
 	 * Test runs
 	 */
-	
-	public void testRunStarted(Description description) {
-		for(Test test : getAllTests()) {
-			test.testBatchStarted();
-		}
-	}
 
-	public void addTestRun(TestRun testRun, Test test) {
-		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
-	}
-
-	protected void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
-		Test test = getOrCreateTest(testClassName, testMethodName);
+	public void addTestRun(TestRun testRun, TestBatch testBatch) {
+		Test test = testRun.getTest();
 		test.addTestRun(testRun);
+		testBatch.addTestRun(testRun);
 		fireTestRunAdded(test, testRun);
 	}
 
@@ -200,6 +190,21 @@ public class TestDatabase {
 			testRuns.addAll(test.getTestRuns());
 		}
 		return testRuns;
+	}
+	
+	/*
+	 * Test batches
+	 */
+	
+	public TestBatch createTestBatch() {
+		TestBatch testBatch = new TestBatch();
+		testBatches.add(testBatch);
+		// TODO fireTestBatchAdded(testBatch);
+		return testBatch;
+	}
+	
+	public List<TestBatch> getTestBatches() {
+		return Collections.unmodifiableList(testBatches);
 	}
 
 	/*
@@ -283,6 +288,8 @@ public class TestDatabase {
 		}
 	}
 
+	// TODO 
+	// protected void fireTestRunAdded(TestRun testRun, TestBatch testBatch) {
 	protected void fireTestRunAdded(Test test, TestRun testRun) {
 		for (TestDatabaseListener listener : listeners) {
 			listener.testRunAdded(test, testRun);

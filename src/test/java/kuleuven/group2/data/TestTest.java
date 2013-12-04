@@ -27,17 +27,17 @@ public class TestTest {
 
 	@Test
 	public void lastFailureTimeTest() {
-		test.addTestRun(TestRun.createFailed(new Date(1), failure));
-		test.addTestRun(TestRun.createFailed(new Date(2), failure));
-		test.addTestRun(TestRun.createFailed(new Date(3), failure));
-		test.addTestRun(TestRun.createSuccessful(new Date(4)));
+		test.addTestRun(TestRun.createFailed(test, new Date(1), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(3), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(4)));
 
 		assertEquals(new Date(3), test.getLastFailureTime());
 	}
 
 	@Test
 	public void lastFailureTimeTestNoFailures() {
-		test.addTestRun(TestRun.createSuccessful(new Date(3)));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(3)));
 
 		assertEquals(new Date(0), test.getLastFailureTime());
 	}
@@ -49,38 +49,38 @@ public class TestTest {
 
 	@Test
 	public void failurePercentageTest() {
-		test.addTestRun(TestRun.createSuccessful(new Date(1)));
-		test.addTestRun(TestRun.createFailed(new Date(2), failure));
-		test.addTestRun(TestRun.createFailed(new Date(3), failure));
-		test.addTestRun(TestRun.createFailed(new Date(4), failure));
-		test.addTestRun(TestRun.createSuccessful(new Date(5)));
-		test.addTestRun(TestRun.createSuccessful(new Date(6)));
-		test.addTestRun(TestRun.createFailed(new Date(7), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(1)));
+		test.addTestRun(TestRun.createFailed(test, new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(6)));
+		test.addTestRun(TestRun.createFailed(test, new Date(7), failure));
 
 		assertEquals(0.5f, test.getFailurePercentage(4), 0.001f);
 	}
 
 	@Test
 	public void failurePercentageTestTooHighDepth() {
-		test.addTestRun(TestRun.createSuccessful(new Date(1)));
-		test.addTestRun(TestRun.createFailed(new Date(2), failure));
-		test.addTestRun(TestRun.createFailed(new Date(3), failure));
-		test.addTestRun(TestRun.createFailed(new Date(4), failure));
-		test.addTestRun(TestRun.createSuccessful(new Date(5)));
-		test.addTestRun(TestRun.createSuccessful(new Date(6)));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(1)));
+		test.addTestRun(TestRun.createFailed(test, new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(6)));
 
 		assertEquals(0.5f, test.getFailurePercentage(20), 0.001f);
 	}
 
 	@Test
 	public void failurePercentageTestTooLowDepth() {
-		test.addTestRun(TestRun.createSuccessful(new Date(1)));
-		test.addTestRun(TestRun.createFailed(new Date(2), failure));
-		test.addTestRun(TestRun.createFailed(new Date(3), failure));
-		test.addTestRun(TestRun.createFailed(new Date(4), failure));
-		test.addTestRun(TestRun.createSuccessful(new Date(5)));
-		test.addTestRun(TestRun.createSuccessful(new Date(6)));
-		test.addTestRun(TestRun.createFailed(new Date(7), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(1)));
+		test.addTestRun(TestRun.createFailed(test, new Date(2), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(3), failure));
+		test.addTestRun(TestRun.createFailed(test, new Date(4), failure));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(5)));
+		test.addTestRun(TestRun.createSuccessful(test, new Date(6)));
+		test.addTestRun(TestRun.createFailed(test, new Date(7), failure));
 
 		assertEquals(0f, test.getFailurePercentage(-1), 0.001f);
 	}

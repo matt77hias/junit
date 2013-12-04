@@ -69,7 +69,7 @@ public class MethodTestLinkUpdater extends Monitor {
 			// Store current test
 			String testClassName = description.getClassName();
 			String testMethodName = description.getMethodName();
-			currentTest = new Test(testClassName, testMethodName);
+			currentTest = testDatabase.getOrCreateTest(testClassName, testMethodName);
 			// Monitor method calls
 			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
 		}
