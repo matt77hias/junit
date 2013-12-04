@@ -11,7 +11,6 @@ import kuleuven.group2.classloader.StoreClassLoader;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.MemoryStore;
 import kuleuven.group2.store.Store;
-import kuleuven.group2.store.StoreFilter;
 
 import org.junit.Before;
 import org.junit.Test;

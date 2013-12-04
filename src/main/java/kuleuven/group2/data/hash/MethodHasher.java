@@ -27,6 +27,8 @@ public class MethodHasher {
 	/**
 	 * Create a method hasher which reads the given bytecode.
 	 * 
+	 * @pre classBytes must be valid Java byte code
+	 * 
 	 * @param classBytes
 	 *            The class bytecode to read.
 	 */
@@ -78,11 +80,19 @@ public class MethodHasher {
 
 		@Override
 		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-			// Get full method name
-			String methodName = name + desc;
-			// Visit single method
+			String fullMethodName = getFullMethodName(name, desc);
+			
+			return visitSingleMethod(access, name, desc, signature, exceptions, fullMethodName);
+		}
+		
+		private String getFullMethodName(String name, String desc) {
+			return name + desc;
+		}
+
+		private MethodVisitor visitSingleMethod(int access, String name, String desc, String signature,
+				String[] exceptions, String fullMethodName) {
 			ClassWriter visitor = new ClassWriter(0);
-			writers.put(methodName, visitor);
+			writers.put(fullMethodName, visitor);
 			return visitor.visitMethod(access, name, desc, signature, exceptions);
 		}
 

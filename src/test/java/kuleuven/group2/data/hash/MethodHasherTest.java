@@ -18,14 +18,30 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MethodHasherTest {
+	
+	protected static CompilationResult compiledClassAResult;
 
-	protected Store sourceStore;
-	protected Store binaryStore;
-	protected EclipseCompiler compiler;
-	protected ClassLoader classLoader;
+	protected static Store sourceStore;
+	protected static Store binaryStore;
+	protected static EclipseCompiler compiler;
+	protected static ClassLoader classLoader;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		sourceStore = new MemoryStore();
+		binaryStore = new MemoryStore();
+		classLoader = new StoreClassLoader(binaryStore);
+		compiler = new EclipseCompiler(sourceStore, binaryStore, classLoader);
+		
+		String className = "A";
+		String source =
+				"public class A {\n" +
+						"public boolean foo() { return true; }\n" +
+						"}";
+		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
+
+		compiledClassAResult = compiler.compileAll();
+		
 	}
 
 	@AfterClass
@@ -34,10 +50,6 @@ public class MethodHasherTest {
 	
 	@Before
 	public void setup() {
-		sourceStore = new MemoryStore();
-		binaryStore = new MemoryStore();
-		classLoader = new StoreClassLoader(binaryStore);
-		compiler = new EclipseCompiler(sourceStore, binaryStore, classLoader);
 	}
 
 
@@ -46,21 +58,18 @@ public class MethodHasherTest {
 	}
 
 	@Test
-	public void test() {
-		String className = "A";
-		String source =
-				"public class A {\n" +
-						"public boolean foo() { return true; }\n" +
-						"}";
-		sourceStore.write(NameUtils.toSourceName(className), source.getBytes());
-
-		CompilationResult result = compiler.compileAll();
-		
-		MethodHasher methodHasher = new MethodHasher(result.getCompiledClass("A"));
+	public void testGetHashes() {
+		MethodHasher methodHasher = new MethodHasher(compiledClassAResult.getCompiledClass("A"));
 		
 		Map<String, MethodHash> mapWithMethodHashes = methodHasher.getHashes();
 		
 		assertTrue(mapWithMethodHashes.containsKey("foo()Z"));
 	}
+	
+	/* Not tested due to precondition in constructor
+	@Test
+	public void testConstructorInvalidCompiled() {
+		MethodHasher methodHasher = new MethodHasher("invalid".getBytes());
+	}*/
 
 }
