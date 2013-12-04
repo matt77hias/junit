@@ -1,6 +1,5 @@
 package kuleuven.group2.policy;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,31 +12,15 @@ import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
 public class CompositePolicy implements TestSortingPolicy {
-
+	
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase) {
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
-		List<Test[]> policiesResults = new ArrayList<Test[]>();
-		for (PolicyRecord record : this.policies) {
-			policiesResults.add(record.getTestSortingPolicy().getSortedTests(testDatabase, tests));
-		}
-		
-		List<Test> result = new ArrayList<Test>();
-		for (PolicyRecord record : this.policies) {
-			for (int i = 0; i < record.getWeight(); i++) {
-				// first -> other return types
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
 		// TODO Auto-generated method stub
 		return null;
 	}

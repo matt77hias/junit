@@ -1,8 +1,10 @@
 package kuleuven.group2.policy;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -93,25 +95,8 @@ public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test>
 	 * 			frequent failure first policy.
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase) {
-		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTests(testDatabase, result);
-	}
-	
-	/**
-	 * Sorts the given tests according to this frequent failure first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
-		Test[] results = tests.clone();
-		Arrays.sort(results, 0, results.length, this);
-		return results;
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
+		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	
 	/**
@@ -123,8 +108,10 @@ public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test>
 	 * 
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		List<Test> result = new ArrayList<Test>(tests);
+		Collections.sort(result, this);
+		return result;
 	}
 
 	/**

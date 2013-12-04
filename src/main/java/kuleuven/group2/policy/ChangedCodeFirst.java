@@ -1,7 +1,9 @@
 package kuleuven.group2.policy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -32,41 +34,8 @@ public class ChangedCodeFirst implements TestSortingPolicy {
 	 * 			last failure policy.
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase) {
-		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTests(testDatabase, result);
-	}
-	
-	/**
-	 * Sorts the given tests according to this changed code first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
-		int nb = tests.length;
-		Tuple[] tuples = new Tuple[nb];
-		for (int i=0; i<nb; i++) {
-			long optimal = Long.MIN_VALUE;
-			Test current = tests[i];
-			for(TestedMethod t : testDatabase.getLinkedMethods(current)) {
-				long temp = t.getLastChange().getTime();
-				if (temp > optimal) {
-					optimal = temp;
-				}
-			}
-			tuples[i] = new Tuple(current, optimal);
-		}
-		Arrays.sort(tuples);
-		Test[] result = new Test[nb];
-		for (int i=0; i<nb; i++) {
-			result[i] = tuples[i].test;
-		}
-		return result;
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
+		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	
 	/**
@@ -132,7 +101,27 @@ public class ChangedCodeFirst implements TestSortingPolicy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		int nb = tests.size();
+		Tuple[] tuples = new Tuple[nb];
+		int i=0;
+		for (Test test : tests) {
+			long optimal = Long.MIN_VALUE;
+			Test current = test;
+			for(TestedMethod t : testDatabase.getLinkedMethods(current)) {
+				long temp = t.getLastChange().getTime();
+				if (temp > optimal) {
+					optimal = temp;
+				}
+			}
+			tuples[i] = new Tuple(current, optimal);
+			i++;
+		}
+		Arrays.sort(tuples);
+		List<Test> result = new ArrayList<Test>();
+		for (i=0; i<nb; i++) {
+			result.add(tuples[i].test);
+		}
+		return result;
 	}
 }

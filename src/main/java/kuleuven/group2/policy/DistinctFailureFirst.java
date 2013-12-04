@@ -101,9 +101,8 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 	 * 			distinct failure first policy.
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase) {
-		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTests(testDatabase, result);
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
+		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	
 	/**
@@ -116,12 +115,12 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
 		Set<StackTraceElement> currentTraceElements = new HashSet<StackTraceElement>();
 		List<Test> priority = new ArrayList<Test>();
 		List<Test> postponed = new ArrayList<Test>();
 		
-		int nb = tests.length;
+		int nb = tests.size();
 		for (int i=0; i<nb; i++) {
 			Test current = tests[i];
 			
@@ -151,19 +150,5 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 		}
 		
 		return ArrayUtils.concat(priority.toArray(new Test[0]), postponed.toArray(new Test[0]));
-	}
-	
-	/**
-	 * Sorts the given tests according to this changed code first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
 	}
 }
