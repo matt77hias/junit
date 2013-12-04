@@ -11,6 +11,8 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 import kuleuven.group2.util.ArrayUtils;
 
+import com.google.common.collect.Iterables;
+
 /**
  * A class representing the distinct failure first policy.
  * 
@@ -117,40 +119,55 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 	 */
 	@Override
 	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
-		Set<StackTraceElement> currentTraceElements = new HashSet<StackTraceElement>();
+		Set<StackTraceElement> distinctCauses = new HashSet<StackTraceElement>();
 		List<Test> priority = new ArrayList<Test>();
 		List<Test> postponed = new ArrayList<Test>();
-		
-		int nb = tests.length;
-		for (int i=0; i<nb; i++) {
-			Test current = tests[i];
-			
-			int d = 0;
-			for (TestRun testRun : current.getTestRuns()) {
-				
-				if (d == getDepth()) {
-					break;
-				}
-				
+
+		for (Test test : tests) {
+			boolean isPrioritized = false;
+			// Select at most depth test runs
+			Iterable<TestRun> limitedTestRuns = Iterables.limit(test.getTestRuns(), getDepth());
+			for (TestRun testRun : limitedTestRuns) {
 				if (testRun.isFailedRun()) {
-					StackTraceElement e = testRun.getTrace()[0];
-					if (!currentTraceElements.contains(e)) {
-						currentTraceElements.add(e);
-						if (!priority.contains(current)) {
-							priority.add(current);
+					// Find cause of failure in tested code
+					StackTraceElement element = findTestedFailureCause(testDatabase, testRun.getTrace());
+					if (element != null && !distinctCauses.contains(element)) {
+						// New distinct failure cause
+						// Prioritize this test
+						distinctCauses.add(element);
+						if (!isPrioritized) {
+							priority.add(test);
+							isPrioritized = true;
 						}
 					}
 				}
-				
-				d++;
 			}
-			
-			if (!priority.contains(current) && !postponed.contains(current)) {
-				postponed.add(current);
+			// Postpone if not prioritized
+			if (!isPrioritized) {
+				postponed.add(test);
 			}
 		}
-		
+
 		return ArrayUtils.concat(priority.toArray(new Test[0]), postponed.toArray(new Test[0]));
+	}
+
+	/**
+	 * Find the cause of a failure in the tested code. That is, find the first
+	 * stack trace element occurring inside a tested class.
+	 * 
+	 * @param testDatabase
+	 *            The test database.
+	 * @param trace
+	 *            The stack trace.
+	 * @return The first element inside a tested class.
+	 */
+	protected StackTraceElement findTestedFailureCause(TestDatabase testDatabase, StackTraceElement[] trace) {
+		for (StackTraceElement element : trace) {
+			if (!testDatabase.getMethodsIn(element.getClassName()).isEmpty()) {
+				return element;
+			}
+		}
+		return null;
 	}
 	
 	/**
