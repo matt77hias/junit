@@ -1,6 +1,6 @@
 package kuleuven.group2.filewatch;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -94,6 +94,7 @@ public class FolderWatcherTest {
 
 		// Test
 		assertCreated(testFile);
+		assertNotDeleted(testFile);
 	}
 
 	@Test
@@ -117,8 +118,7 @@ public class FolderWatcherTest {
 
 		// Test
 		assertModified(testFile);
-		// TODO [TEST] perhaps we want to test things that shouldn't have happened as
-		// well?
+		assertNotDeleted(testFile);
 	}
 
 	@Test
@@ -165,6 +165,7 @@ public class FolderWatcherTest {
 
 		// Test
 		assertCreated(testSubFile);
+		assertNotDeleted(testSubFile);
 	}
 
 	@Test
@@ -189,6 +190,7 @@ public class FolderWatcherTest {
 
 		// Test
 		assertModified(testSubFile);
+		assertNotDeleted(testSubFile);
 	}
 
 	@Test
@@ -225,6 +227,10 @@ public class FolderWatcherTest {
 
 	private void assertCreated(Path path) {
 		assertTrue(registeredChanges.get("create").contains(path));
+	}
+
+	private void assertNotDeleted(Path path) {
+		assertFalse(registeredChanges.get("delete").contains(path));
 	}
 
 }

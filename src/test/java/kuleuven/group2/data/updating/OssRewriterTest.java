@@ -101,12 +101,5 @@ public class OssRewriterTest {
 		
 		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterTest$A.visit()V"));
 	}
-	
-	@Test
-	public void retransformClassesAfterReloadTest() throws ClassNotFoundException {
-		getClass().getClassLoader().loadClass(OssRewriterTest.A.class.getName());
-		
-		methodIsVisitedTest();
-	}
 
 }
