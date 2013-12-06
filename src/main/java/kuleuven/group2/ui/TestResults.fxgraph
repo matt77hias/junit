@@ -57,7 +57,7 @@ component TestResults controlledby TestResultsController {
 						static rowIndex : 1, static columnIndex : 0, static valignment : "TOP",
 						text : "Time: "
 					},
-					Label id selectedRunTimeStamp {
+					Label id selectedRunTimestamp {
 						static rowIndex : 1, static columnIndex : 1
 					},
 					Label id selectedRunExceptionLabel {

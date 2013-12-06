@@ -37,7 +37,7 @@
 			<children>
 				<Label fx:id="selectedRunTitle" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/> 
 				<Label text="Time: " GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
-				<Label fx:id="selectedRunTimeStamp" GridPane.rowIndex="1" GridPane.columnIndex="1"/> 
+				<Label fx:id="selectedRunTimestamp" GridPane.rowIndex="1" GridPane.columnIndex="1"/> 
 				<Label fx:id="selectedRunExceptionLabel" text="Exception: " GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
 				<Label fx:id="selectedRunException" GridPane.rowIndex="2" GridPane.columnIndex="1"/> 
 				<Label fx:id="selectedRunTraceLabel" text="Stack trace: " GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 

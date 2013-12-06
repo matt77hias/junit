@@ -1,6 +1,7 @@
 package kuleuven.group2.ui;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,12 +15,13 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,6 +31,9 @@ import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import kuleuven.group2.ui.model.TestBatchModel;
 import kuleuven.group2.ui.model.TestRunModel;
+import kuleuven.group2.ui.util.BooleanImageCellFactory;
+import kuleuven.group2.ui.util.FormattedDateCellFactory;
+import kuleuven.group2.ui.util.FormattedNumberCellFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -41,12 +46,16 @@ public class TestResultsController {
 	protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	/*
-	 * Images for test result
+	 * Images for test results
 	 */
-	protected static final Image IMAGE_SUCCESS = new Image(TestResultsController.class.getResource("icons/test-ok.png")
-			.toExternalForm());
-	protected static final Image IMAGE_FAILURE = new Image(TestResultsController.class
-			.getResource("icons/test-err.png").toExternalForm());
+	protected static final Image IMAGE_BATCH_SUCCESS = new Image(TestResultsController.class.getResource(
+			"icons/batch-ok.png").toExternalForm());
+	protected static final Image IMAGE_BATCH_FAILURE = new Image(TestResultsController.class.getResource(
+			"icons/batch-err.png").toExternalForm());
+	protected static final Image IMAGE_TEST_SUCCESS = new Image(TestResultsController.class.getResource(
+			"icons/test-ok.png").toExternalForm());
+	protected static final Image IMAGE_TEST_FAILURE = new Image(TestResultsController.class.getResource(
+			"icons/test-err.png").toExternalForm());
 
 	/*
 	 * Components
@@ -65,7 +74,7 @@ public class TestResultsController {
 	private Label selectedRunTitle;
 
 	@FXML
-	private Label selectedRunTimeStamp;
+	private Label selectedRunTimestamp;
 
 	@FXML
 	private Label selectedRunExceptionLabel;
@@ -126,7 +135,7 @@ public class TestResultsController {
 	}
 
 	public ObjectBinding<Image> selectedRun_resultImage() {
-		return new When(selectedRun_isSuccessful()).then(IMAGE_SUCCESS).otherwise(IMAGE_FAILURE);
+		return new When(selectedRun_isSuccessful()).then(IMAGE_TEST_SUCCESS).otherwise(IMAGE_TEST_FAILURE);
 	}
 
 	public ObjectBinding<ImageView> selectedRun_resultImageView() {
@@ -151,7 +160,7 @@ public class TestResultsController {
 	}
 
 	public ObjectBinding<Date> selectedRun_timeStamp() {
-		return Bindings.select(selectedRunProperty(), "timeStamp");
+		return Bindings.select(selectedRunProperty(), "timestamp");
 	}
 
 	public StringBinding selectedRunTest_formattedTimeStamp() {
@@ -210,12 +219,34 @@ public class TestResultsController {
 		selectedBatchProperty().bind(batchesTable.getSelectionModel().selectedItemProperty());
 
 		// Set up columns
+		TableColumn<TestBatchModel, Boolean> successColumn = new TableColumn<>();
+		successColumn.setCellValueFactory(new SuccessfulBatchCellFactory());
+		successColumn.setCellFactory(new BooleanImageCellFactory<TestBatchModel>(IMAGE_BATCH_SUCCESS,
+				IMAGE_BATCH_FAILURE));
+		successColumn.setPrefWidth(50);
+
 		TableColumn<TestBatchModel, Date> timestampColumn = new TableColumn<>("Time");
 		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Date>("timestamp"));
-		timestampColumn.setCellFactory(new TimestampCellFactory<TestBatchModel>());
+		timestampColumn.setCellFactory(new FormattedDateCellFactory<TestBatchModel>(DATE_FORMAT));
 		timestampColumn.setPrefWidth(120);
 
-		batchesTable.getColumns().setAll(ImmutableList.of(timestampColumn));
+		TableColumn<TestBatchModel, Number> runsCountColumn = new TableColumn<>("Runs");
+		runsCountColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Number>("runsCount"));
+		runsCountColumn.setPrefWidth(50);
+
+		TableColumn<TestBatchModel, Number> failedRunsCountColumn = new TableColumn<>("Failed");
+		failedRunsCountColumn.setCellValueFactory(new FailedRunsBatchCellFactory());
+		failedRunsCountColumn.setPrefWidth(50);
+
+		TableColumn<TestBatchModel, Number> failurePercentageColumn = new TableColumn<>("Fail %");
+		failurePercentageColumn.setCellValueFactory(new FailurePercentageBatchCellFactory());
+		failurePercentageColumn.setCellFactory(new FormattedNumberCellFactory<TestBatchModel>(NumberFormat
+				.getPercentInstance()));
+		failurePercentageColumn.setPrefWidth(50);
+
+		batchesTable.getColumns().setAll(
+				ImmutableList.of(successColumn, timestampColumn, runsCountColumn, failedRunsCountColumn,
+						failurePercentageColumn));
 	}
 
 	protected void setupRuns() {
@@ -225,10 +256,10 @@ public class TestResultsController {
 		selectedRunProperty().bind(runsTable.getSelectionModel().selectedItemProperty());
 
 		// Set up columns
-		TableColumn<TestRunModel, Boolean> resultColumn = new TableColumn<>();
-		resultColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
-		resultColumn.setCellFactory(new ResultCellFactory<TestRunModel>());
-		resultColumn.setPrefWidth(50);
+		TableColumn<TestRunModel, Boolean> successColumn = new TableColumn<>();
+		successColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
+		successColumn.setCellFactory(new BooleanImageCellFactory<TestRunModel>(IMAGE_TEST_SUCCESS, IMAGE_TEST_FAILURE));
+		successColumn.setPrefWidth(50);
 
 		TableColumn<TestRunModel, String> testClassNameColumn = new TableColumn<>("Test class");
 		testClassNameColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, String>("testClassName"));
@@ -240,11 +271,11 @@ public class TestResultsController {
 
 		TableColumn<TestRunModel, Date> timestampColumn = new TableColumn<>("Time");
 		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Date>("timestamp"));
-		timestampColumn.setCellFactory(new TimestampCellFactory<TestRunModel>());
+		timestampColumn.setCellFactory(new FormattedDateCellFactory<TestRunModel>(DATE_FORMAT));
 		timestampColumn.setPrefWidth(120);
 
 		runsTable.getColumns().setAll(
-				ImmutableList.of(resultColumn, testClassNameColumn, testMethodNameColumn, timestampColumn));
+				ImmutableList.of(successColumn, testClassNameColumn, testMethodNameColumn, timestampColumn));
 	}
 
 	protected void setupDetail() {
@@ -252,7 +283,7 @@ public class TestResultsController {
 		selectedRunTitle.textProperty().bind(
 				selectedRun_testClassName().concat(".").concat(selectedRun_testMethodName()));
 		selectedRunTitle.graphicProperty().bind(selectedRun_resultImageView());
-		selectedRunTimeStamp.textProperty().bind(selectedRunTest_formattedTimeStamp());
+		selectedRunTimestamp.textProperty().bind(selectedRunTest_formattedTimeStamp());
 		selectedRunException.textProperty().bind(Bindings.convert(selectedRun_exception()));
 		selectedRunTrace.textProperty().bind(Bindings.concat(selectedRun_formattedTrace()));
 
@@ -272,44 +303,39 @@ public class TestResultsController {
 	}
 
 	/**
-	 * Formats a date table column using the given {@link DateFormat}.
+	 * Cell factory for retrieving
+	 * {@code TestBatchModel#successfulBatchProperty()}.
 	 */
-	protected static class TimestampCellFactory<T> implements Callback<TableColumn<T, Date>, TableCell<T, Date>> {
+	protected static class SuccessfulBatchCellFactory implements
+			Callback<TableColumn.CellDataFeatures<TestBatchModel, Boolean>, ObservableValue<Boolean>> {
 		@Override
-		public TableCell<T, Date> call(TableColumn<T, Date> column) {
-			return new TableCell<T, Date>() {
-				@Override
-				protected void updateItem(Date date, boolean empty) {
-					super.updateItem(date, empty);
-					if (!empty) {
-						setText(DATE_FORMAT.format(date));
-					} else {
-						setText(null);
-					}
-				}
-			};
+		public ObservableValue<Boolean> call(CellDataFeatures<TestBatchModel, Boolean> features) {
+			return features.getValue().isSuccessfulProperty();
 		}
 	}
 
 	/**
-	 * Puts a success or failure image in a boolean table column cell.
+	 * Cell factory for retrieving
+	 * {@code TestBatchModel#failedRunsCountProperty()}.
 	 */
-	protected static class ResultCellFactory<T> implements Callback<TableColumn<T, Boolean>, TableCell<T, Boolean>> {
+	protected static class FailedRunsBatchCellFactory implements
+			Callback<TableColumn.CellDataFeatures<TestBatchModel, Number>, ObservableValue<Number>> {
 		@Override
-		public TableCell<T, Boolean> call(TableColumn<T, Boolean> column) {
-			return new TableCell<T, Boolean>() {
-				@Override
-				protected void updateItem(Boolean result, boolean empty) {
-					super.updateItem(result, empty);
-					if (result != null) {
-						setGraphic(new ImageView(result ? IMAGE_SUCCESS : IMAGE_FAILURE));
-					} else {
-						setGraphic(null);
-					}
-				}
-			};
+		public ObservableValue<Number> call(CellDataFeatures<TestBatchModel, Number> features) {
+			return features.getValue().failedRunsCountProperty();
 		}
+	}
 
+	/**
+	 * Cell factory for retrieving
+	 * {@code TestBatchModel#failureFractionProperty()}.
+	 */
+	protected static class FailurePercentageBatchCellFactory implements
+			Callback<TableColumn.CellDataFeatures<TestBatchModel, Number>, ObservableValue<Number>> {
+		@Override
+		public ObservableValue<Number> call(CellDataFeatures<TestBatchModel, Number> features) {
+			return features.getValue().failureFractionProperty();
+		}
 	}
 
 }
