@@ -13,9 +13,8 @@ import kuleuven.group2.ui.TestRunsController
 import kuleuven.group2.ui.model.TestBatchModel
 import kuleuven.group2.ui.model.TestRunModel
 
-component TestRuns controlledby TestResultsController {
+component TestResults controlledby TestResultsController {
 	SplitPane {
-		static vgrow : "ALWAYS",
 		orientation : "HORIZONTAL",
 		//dividerPositions : "0.25",
 		items : [
@@ -28,6 +27,7 @@ component TestRuns controlledby TestResultsController {
 			VBox {
 				children : [
 					TableView < TestRunModel > id runsTable {
+						static vgrow : "ALWAYS",
 						editable : false,
 						placeholder : Label {
 							text : "Select a batch to show its test runs"
