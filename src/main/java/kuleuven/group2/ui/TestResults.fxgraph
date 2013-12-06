@@ -14,70 +14,69 @@ import kuleuven.group2.ui.model.TestBatchModel
 import kuleuven.group2.ui.model.TestRunModel
 
 component TestResults controlledby TestResultsController {
-	SplitPane {
-		orientation : "HORIZONTAL",
-		//dividerPositions : "0.25",
-		items : [
-			TableView < TestBatchModel > id batchesTable {
-				editable : false,
-				placeholder : Label {
-					text : "No batches"
-				}
-			},
-			VBox {
-				children : [
+	VBox {
+		children : [
+			SplitPane {
+				static vgrow : "ALWAYS",
+				orientation : "HORIZONTAL",
+				items : [
+					TableView < TestBatchModel > id batchesTable {
+						editable : false,
+						placeholder : Label {
+							text : "No batches"
+						}
+					},
 					TableView < TestRunModel > id runsTable {
-						static vgrow : "ALWAYS",
 						editable : false,
 						placeholder : Label {
 							text : "Select a batch to show its test runs"
 						}
+					}
+				]
+			},
+			GridPane id selectedRunDetail {
+				hgap : 5,
+				vgap : 5,
+				padding : Insets {
+					top : 5,
+					bottom : 5,
+					left : 5,
+					right : 5
+				},
+				columnConstraints : [
+					ColumnConstraints {
+						minWidth : 100,
+						hgrow : "NEVER"
 					},
-					GridPane id selectedRunDetail {
-						hgap : 5,
-						vgap : 5,
-						padding : Insets {
-							top : 5,
-							bottom : 5,
-							left : 5,
-							right : 5
-						},
-						columnConstraints : [
-							ColumnConstraints {
-								minWidth : 100,
-								hgrow : "NEVER"
-							},
-							ColumnConstraints {
-								hgrow : "ALWAYS"
-							}
-						],
-						children : [
-							Label id selectedRunTitle {
-								static rowIndex : 0, static columnIndex : 0, static columnSpan : 2
-							},
-							Label {
-								static rowIndex : 1, static columnIndex : 0, static valignment : "TOP",
-								text : "Time: "
-							},
-							Label id selectedRunTimeStamp {
-								static rowIndex : 1, static columnIndex : 1
-							},
-							Label id selectedRunExceptionLabel {
-								static rowIndex : 2, static columnIndex : 0, static valignment : "TOP",
-								text : "Exception: "
-							},
-							Label id selectedRunException {
-								static rowIndex : 2, static columnIndex : 1
-							},
-							Label id selectedRunTraceLabel {
-								static rowIndex : 3, static columnIndex : 0, static valignment : "TOP",
-								text : "Stack trace: "
-							},
-							TextArea id selectedRunTrace {
-								static rowIndex : 3, static columnIndex : 1,
-								editable : false
-							}
-						]
+					ColumnConstraints {
+						hgrow : "ALWAYS"
+					}
+				],
+				children : [
+					Label id selectedRunTitle {
+						static rowIndex : 0, static columnIndex : 0, static columnSpan : 2
+					},
+					Label {
+						static rowIndex : 1, static columnIndex : 0, static valignment : "TOP",
+						text : "Time: "
+					},
+					Label id selectedRunTimeStamp {
+						static rowIndex : 1, static columnIndex : 1
+					},
+					Label id selectedRunExceptionLabel {
+						static rowIndex : 2, static columnIndex : 0, static valignment : "TOP",
+						text : "Exception: "
+					},
+					Label id selectedRunException {
+						static rowIndex : 2, static columnIndex : 1
+					},
+					Label id selectedRunTraceLabel {
+						static rowIndex : 3, static columnIndex : 0, static valignment : "TOP",
+						text : "Stack trace: "
+					},
+					TextArea id selectedRunTrace {
+						static rowIndex : 3, static columnIndex : 1,
+						editable : false
 					}
 				]
 			}

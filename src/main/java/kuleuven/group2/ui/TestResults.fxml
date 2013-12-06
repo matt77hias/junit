@@ -13,40 +13,40 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.TestResultsController" orientation="HORIZONTAL">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.TestResultsController">
 
-	<items>
-		<TableView fx:id="batchesTable" editable="false"> 
-			<placeholder>
-				<Label text="No batches"/> 
-			</placeholder>
-		</TableView>
-		<VBox> 
-			<children>
-				<TableView fx:id="runsTable" editable="false" VBox.vgrow="ALWAYS"> 
+	<children>
+		<SplitPane orientation="HORIZONTAL" VBox.vgrow="ALWAYS"> 
+			<items>
+				<TableView fx:id="batchesTable" editable="false"> 
+					<placeholder>
+						<Label text="No batches"/> 
+					</placeholder>
+				</TableView>
+				<TableView fx:id="runsTable" editable="false"> 
 					<placeholder>
 						<Label text="Select a batch to show its test runs"/> 
 					</placeholder>
 				</TableView>
-				<GridPane fx:id="selectedRunDetail" hgap="5" vgap="5"> 
-					<padding>
-						<Insets top="5" bottom="5" left="5" right="5"/> 
-					</padding>
-					<columnConstraints>
-						<ColumnConstraints minWidth="100" hgrow="NEVER"/> 
-						<ColumnConstraints hgrow="ALWAYS"/> 
-					</columnConstraints>
-					<children>
-						<Label fx:id="selectedRunTitle" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/> 
-						<Label text="Time: " GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
-						<Label fx:id="selectedRunTimeStamp" GridPane.rowIndex="1" GridPane.columnIndex="1"/> 
-						<Label fx:id="selectedRunExceptionLabel" text="Exception: " GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
-						<Label fx:id="selectedRunException" GridPane.rowIndex="2" GridPane.columnIndex="1"/> 
-						<Label fx:id="selectedRunTraceLabel" text="Stack trace: " GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
-						<TextArea fx:id="selectedRunTrace" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/> 
-					</children>
-				</GridPane>
+			</items>
+		</SplitPane>
+		<GridPane fx:id="selectedRunDetail" hgap="5" vgap="5"> 
+			<padding>
+				<Insets top="5" bottom="5" left="5" right="5"/> 
+			</padding>
+			<columnConstraints>
+				<ColumnConstraints minWidth="100" hgrow="NEVER"/> 
+				<ColumnConstraints hgrow="ALWAYS"/> 
+			</columnConstraints>
+			<children>
+				<Label fx:id="selectedRunTitle" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/> 
+				<Label text="Time: " GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
+				<Label fx:id="selectedRunTimeStamp" GridPane.rowIndex="1" GridPane.columnIndex="1"/> 
+				<Label fx:id="selectedRunExceptionLabel" text="Exception: " GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
+				<Label fx:id="selectedRunException" GridPane.rowIndex="2" GridPane.columnIndex="1"/> 
+				<Label fx:id="selectedRunTraceLabel" text="Stack trace: " GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.valignment="TOP"/> 
+				<TextArea fx:id="selectedRunTrace" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1"/> 
 			</children>
-		</VBox>
-	</items>
-</SplitPane>
+		</GridPane>
+	</children>
+</VBox>
