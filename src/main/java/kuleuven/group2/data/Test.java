@@ -49,7 +49,7 @@ public class Test {
 			Collections.sort(testRuns, new Comparator<TestRun>() {
 				@Override
 				public int compare(TestRun o1, TestRun o2) {
-					return -o1.getTimeStamp().compareTo(o2.getTimeStamp());
+					return -o1.getTimestamp().compareTo(o2.getTimestamp());
 				}
 			});
 			isTestRunsSorted = true;
@@ -78,7 +78,7 @@ public class Test {
 		if (testRuns.isEmpty()) return new Date(0);
 
 		for (TestRun testRun : testRuns) {
-			if (testRun.isFailedRun()) return testRun.getTimeStamp();
+			if (testRun.isFailedRun()) return testRun.getTimestamp();
 		}
 
 		return new Date(0);

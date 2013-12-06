@@ -1,23 +1,29 @@
 package kuleuven.group2.data;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Date;
 import java.util.List;
 
 public class TestBatch {
-	
-	private List<TestRun> testRuns = new LinkedList<TestRun>();
 
-	public TestBatch() {
-		// do nothing
+	private final Date timestamp;
+	private final List<TestRun> testRuns = new ArrayList<TestRun>();
+
+	public TestBatch(Date timestamp) {
+		this.timestamp = timestamp;
 	}
-	
-	public void addTestRun(TestRun testRun) {
-		testRuns.add(testRun);
+
+	public Date getTimestamp() {
+		return timestamp;
 	}
-	
+
 	public List<TestRun> getTestRuns() {
 		return Collections.unmodifiableList(testRuns);
+	}
+
+	public void addTestRun(TestRun testRun) {
+		testRuns.add(testRun);
 	}
 
 }

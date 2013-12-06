@@ -3,6 +3,7 @@ package kuleuven.group2.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -181,7 +182,7 @@ public class TestDatabase {
 		Test test = testRun.getTest();
 		test.addTestRun(testRun);
 		testBatch.addTestRun(testRun);
-		fireTestRunAdded(test, testRun);
+		fireTestRunAdded(testRun, testBatch);
 	}
 
 	public List<TestRun> getAllTestRuns() {
@@ -191,18 +192,18 @@ public class TestDatabase {
 		}
 		return testRuns;
 	}
-	
+
 	/*
 	 * Test batches
 	 */
-	
-	public TestBatch createTestBatch() {
-		TestBatch testBatch = new TestBatch();
+
+	public TestBatch createTestBatch(Date startDate) {
+		TestBatch testBatch = new TestBatch(startDate);
 		testBatches.add(testBatch);
-		// TODO fireTestBatchAdded(testBatch);
+		fireTestBatchAdded(testBatch);
 		return testBatch;
 	}
-	
+
 	public List<TestBatch> getTestBatches() {
 		return Collections.unmodifiableList(testBatches);
 	}
@@ -288,11 +289,15 @@ public class TestDatabase {
 		}
 	}
 
-	// TODO 
-	// protected void fireTestRunAdded(TestRun testRun, TestBatch testBatch) {
-	protected void fireTestRunAdded(Test test, TestRun testRun) {
+	protected void fireTestRunAdded(TestRun testRun, TestBatch testBatch) {
 		for (TestDatabaseListener listener : listeners) {
-			listener.testRunAdded(test, testRun);
+			listener.testRunAdded(testRun, testBatch);
+		}
+	}
+
+	protected void fireTestBatchAdded(TestBatch testBatch) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testBatchAdded(testBatch);
 		}
 	}
 

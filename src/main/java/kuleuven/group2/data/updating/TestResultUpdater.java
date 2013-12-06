@@ -29,7 +29,7 @@ public class TestResultUpdater extends RunListener {
 
 	@Override
 	public void testRunStarted(Description description) throws Exception {
-		currentTestBatch = testDatabase.createTestBatch();
+		currentTestBatch = testDatabase.createTestBatch(new Date());
 	}
 
 	@Override

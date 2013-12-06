@@ -35,7 +35,7 @@ public class TestRun {
 		return test;
 	}
 
-	public Date getTimeStamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 

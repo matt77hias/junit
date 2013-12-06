@@ -10,6 +10,8 @@ public interface TestDatabaseListener {
 
 	public void testRemoved(Test test);
 
-	public void testRunAdded(Test test, TestRun testRun);
+	public void testRunAdded(TestRun testRun, TestBatch testBatch);
+
+	public void testBatchAdded(TestBatch testBatch);
 
 }

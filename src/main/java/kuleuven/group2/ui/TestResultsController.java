@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ListBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.When;
@@ -14,6 +15,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -25,12 +27,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
+import kuleuven.group2.ui.model.TestBatchModel;
 import kuleuven.group2.ui.model.TestRunModel;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
-public class TestRunsController {
+public class TestResultsController {
 
 	/*
 	 * Date format for time stamp
@@ -40,14 +43,17 @@ public class TestRunsController {
 	/*
 	 * Images for test result
 	 */
-	protected static final Image IMAGE_SUCCESS = new Image(TestRunsController.class.getResource("icons/test-ok.png")
+	protected static final Image IMAGE_SUCCESS = new Image(TestResultsController.class.getResource("icons/test-ok.png")
 			.toExternalForm());
-	protected static final Image IMAGE_FAILURE = new Image(TestRunsController.class.getResource("icons/test-err.png")
-			.toExternalForm());
+	protected static final Image IMAGE_FAILURE = new Image(TestResultsController.class
+			.getResource("icons/test-err.png").toExternalForm());
 
 	/*
 	 * Components
 	 */
+
+	@FXML
+	private TableView<TestBatchModel> batchesTable;
 
 	@FXML
 	private TableView<TestRunModel> runsTable;
@@ -77,12 +83,34 @@ public class TestRunsController {
 	 * Properties
 	 */
 
-	private final ListProperty<TestRunModel> runs = new SimpleListProperty<>(
-			FXCollections.<TestRunModel> observableArrayList());
+	private final ListProperty<TestBatchModel> batches = new SimpleListProperty<>(
+			FXCollections.<TestBatchModel> observableArrayList());
+	private final ObjectProperty<TestBatchModel> selectedBatch = new SimpleObjectProperty<>();
 	private final ObjectProperty<TestRunModel> selectedRun = new SimpleObjectProperty<>();
 
-	public ListProperty<TestRunModel> runsProperty() {
-		return runs;
+	public ListProperty<TestBatchModel> batchesProperty() {
+		return batches;
+	}
+
+	public ObjectProperty<TestBatchModel> selectedBatchProperty() {
+		return selectedBatch;
+	}
+
+	public ListBinding<TestRunModel> runsProperty() {
+		return new ListBinding<TestRunModel>() {
+			{
+				super.bind(selectedBatchProperty());
+			}
+
+			@Override
+			protected ObservableList<TestRunModel> computeValue() {
+				TestBatchModel selectedBatch = selectedBatchProperty().get();
+				if (selectedBatch == null) {
+					return FXCollections.emptyObservableList();
+				}
+				return selectedBatchProperty().get().testRunsProperty();
+			}
+		};
 	}
 
 	public ObjectProperty<TestRunModel> selectedRunProperty() {
@@ -170,18 +198,36 @@ public class TestRunsController {
 
 	@FXML
 	public void initialize() {
-		setupTable();
+		setupBatches();
+		setupRuns();
 		setupDetail();
 	}
 
-	protected void setupTable() {
+	protected void setupBatches() {
 		// Bind to model
-		runsTable.itemsProperty().bindBidirectional(runs);
+		batchesTable.itemsProperty().bindBidirectional(batches);
+		// Bind selected test batch
+		selectedBatchProperty().bind(batchesTable.getSelectionModel().selectedItemProperty());
+
+		// Set up columns
+		TableColumn<TestBatchModel, Date> timestampColumn = new TableColumn<>("Time");
+		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Date>("timestamp"));
+		timestampColumn.setCellFactory(new TimestampCellFactory<TestBatchModel>());
+		timestampColumn.setPrefWidth(120);
+
+		batchesTable.getColumns().setAll(ImmutableList.of(timestampColumn));
+	}
+
+	protected void setupRuns() {
+		// Bind to model
+		runsTable.itemsProperty().bind(runsProperty());
+		// Bind selected test run
+		selectedRunProperty().bind(runsTable.getSelectionModel().selectedItemProperty());
 
 		// Set up columns
 		TableColumn<TestRunModel, Boolean> resultColumn = new TableColumn<>();
 		resultColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
-		resultColumn.setCellFactory(new ResultCellFactory());
+		resultColumn.setCellFactory(new ResultCellFactory<TestRunModel>());
 		resultColumn.setPrefWidth(50);
 
 		TableColumn<TestRunModel, String> testClassNameColumn = new TableColumn<>("Test class");
@@ -193,8 +239,8 @@ public class TestRunsController {
 		testMethodNameColumn.setPrefWidth(100);
 
 		TableColumn<TestRunModel, Date> timestampColumn = new TableColumn<>("Time");
-		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Date>("timeStamp"));
-		timestampColumn.setCellFactory(new TimestampCellFactory());
+		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Date>("timestamp"));
+		timestampColumn.setCellFactory(new TimestampCellFactory<TestRunModel>());
 		timestampColumn.setPrefWidth(120);
 
 		runsTable.getColumns().setAll(
@@ -202,9 +248,6 @@ public class TestRunsController {
 	}
 
 	protected void setupDetail() {
-		// Bind selected test run
-		selectedRunProperty().bind(runsTable.getSelectionModel().selectedItemProperty());
-
 		// Bind to properties
 		selectedRunTitle.textProperty().bind(
 				selectedRun_testClassName().concat(".").concat(selectedRun_testMethodName()));
@@ -231,12 +274,10 @@ public class TestRunsController {
 	/**
 	 * Formats a date table column using the given {@link DateFormat}.
 	 */
-	protected static class TimestampCellFactory implements
-			Callback<TableColumn<TestRunModel, Date>, TableCell<TestRunModel, Date>> {
-
+	protected static class TimestampCellFactory<T> implements Callback<TableColumn<T, Date>, TableCell<T, Date>> {
 		@Override
-		public TableCell<TestRunModel, Date> call(TableColumn<TestRunModel, Date> column) {
-			return new TableCell<TestRunModel, Date>() {
+		public TableCell<T, Date> call(TableColumn<T, Date> column) {
+			return new TableCell<T, Date>() {
 				@Override
 				protected void updateItem(Date date, boolean empty) {
 					super.updateItem(date, empty);
@@ -253,12 +294,10 @@ public class TestRunsController {
 	/**
 	 * Puts a success or failure image in a boolean table column cell.
 	 */
-	protected static class ResultCellFactory implements
-			Callback<TableColumn<TestRunModel, Boolean>, TableCell<TestRunModel, Boolean>> {
-
+	protected static class ResultCellFactory<T> implements Callback<TableColumn<T, Boolean>, TableCell<T, Boolean>> {
 		@Override
-		public TableCell<TestRunModel, Boolean> call(TableColumn<TestRunModel, Boolean> column) {
-			return new TableCell<TestRunModel, Boolean>() {
+		public TableCell<T, Boolean> call(TableColumn<T, Boolean> column) {
+			return new TableCell<T, Boolean>() {
 				@Override
 				protected void updateItem(Boolean result, boolean empty) {
 					super.updateItem(result, empty);

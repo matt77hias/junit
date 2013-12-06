@@ -13,39 +13,37 @@ import kuleuven.group2.data.TestRun;
 
 public class TestRunModel {
 
-	private final Test test;
 	private final TestRun run;
 
 	private final StringProperty testClassName = new SimpleStringProperty();
 	private final StringProperty testMethodName = new SimpleStringProperty();
 	private final BooleanProperty successfulRun = new SimpleBooleanProperty();
 	private final BooleanProperty failedRun = new SimpleBooleanProperty();
-	private final ObjectProperty<Date> timeStamp = new SimpleObjectProperty<Date>();
+	private final ObjectProperty<Date> timestamp = new SimpleObjectProperty<Date>();
 	private final ObjectProperty<Throwable> exception = new SimpleObjectProperty<Throwable>();
 	private final ObjectProperty<StackTraceElement[]> trace = new SimpleObjectProperty<StackTraceElement[]>();
 
-	public TestRunModel(Test test, TestRun testRun) {
-		this.test = test;
+	public TestRunModel(TestRun testRun) {
 		this.run = testRun;
 
 		// Fill in properties
-		testClassName.set(test.getTestClassName());
-		testMethodName.set(test.getTestMethodName());
+		testClassName.set(testRun.getTest().getTestClassName());
+		testMethodName.set(testRun.getTest().getTestMethodName());
 		successfulRun.set(testRun.isSuccessfulRun());
 		failedRun.set(testRun.isFailedRun());
-		timeStamp.set(testRun.getTimeStamp());
+		timestamp.set(testRun.getTimestamp());
 		if (failedRun.get()) {
 			exception.set(testRun.getException());
 			trace.set(testRun.getTrace());
 		}
 	}
 
-	public Test getTest() {
-		return test;
-	}
-
 	public TestRun getRun() {
 		return run;
+	}
+
+	public Test getTest() {
+		return getRun().getTest();
 	}
 
 	public StringProperty testClassNameProperty() {
@@ -64,8 +62,8 @@ public class TestRunModel {
 		return failedRun;
 	}
 
-	public ObjectProperty<Date> timeStampProperty() {
-		return timeStamp;
+	public ObjectProperty<Date> timestampProperty() {
+		return timestamp;
 	}
 
 	public ObjectProperty<Throwable> exceptionProperty() {
