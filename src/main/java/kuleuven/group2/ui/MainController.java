@@ -2,7 +2,6 @@ package kuleuven.group2.ui;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -72,7 +71,7 @@ public class MainController implements EventHandler<WindowEvent> {
 	}
 
 	private final BooleanProperty running = new SimpleBooleanProperty(false);
-	private final TestBatchesModel testRunsModel = new TestBatchesModel();
+	private final TestBatchesModel testBatchesModel = new TestBatchesModel();
 
 	public boolean isConfigured() {
 		return running.get();
@@ -113,8 +112,8 @@ public class MainController implements EventHandler<WindowEvent> {
 			}
 		});
 
-		// Bind test runs list
-		testBatchesProperty().bind(testRunsModel);
+		// Bind test batches model
+		testBatchesProperty().bind(testBatchesModel);
 	}
 
 	protected void setup() throws IOException {
@@ -123,7 +122,7 @@ public class MainController implements EventHandler<WindowEvent> {
 		Store binaryStore = new DirectoryStore(binariesDirProperty().get());
 		TestSortingPolicy sortPolicy = policyProperty().get().getPolicy();
 		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
-		pipeline.getTestDatabase().addListener(testRunsModel);
+		pipeline.getTestDatabase().addListener(testBatchesModel);
 	}
 
 	@FXML
