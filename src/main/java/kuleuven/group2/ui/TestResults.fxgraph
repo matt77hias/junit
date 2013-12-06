@@ -16,9 +16,11 @@ import kuleuven.group2.ui.model.TestRunModel
 
 component TestResults controlledby TestResultsController {
 	VBox {
+		spacing : 5,
 		children : [
 			HBox {
 				static vgrow : "ALWAYS",
+				spacing : 5,
 				children : [
 					TableView < TestBatchModel > id batchesTable {
 						editable : false,
@@ -38,12 +40,6 @@ component TestResults controlledby TestResultsController {
 			GridPane id selectedRunDetail {
 				hgap : 5,
 				vgap : 5,
-				padding : Insets {
-					top : 5,
-					bottom : 5,
-					left : 5,
-					right : 5
-				},
 				columnConstraints : [
 					ColumnConstraints {
 						minWidth : 100,

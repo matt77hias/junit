@@ -4,7 +4,6 @@
 -->
 
 <?import java.lang.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -13,10 +12,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.TestResultsController">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.TestResultsController" spacing="5">
 
 	<children>
-		<HBox VBox.vgrow="ALWAYS"> 
+		<HBox spacing="5" VBox.vgrow="ALWAYS"> 
 			<children>
 				<TableView fx:id="batchesTable" editable="false"> 
 					<placeholder>
@@ -31,9 +30,6 @@
 			</children>
 		</HBox>
 		<GridPane fx:id="selectedRunDetail" hgap="5" vgap="5"> 
-			<padding>
-				<Insets top="5" bottom="5" left="5" right="5"/> 
-			</padding>
 			<columnConstraints>
 				<ColumnConstraints minWidth="100" hgrow="NEVER"/> 
 				<ColumnConstraints hgrow="ALWAYS"/> 
