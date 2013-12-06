@@ -6,30 +6,30 @@
 <?import java.lang.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.TestResultsController">
 
 	<children>
-		<SplitPane orientation="HORIZONTAL" VBox.vgrow="ALWAYS"> 
-			<items>
+		<HBox VBox.vgrow="ALWAYS"> 
+			<children>
 				<TableView fx:id="batchesTable" editable="false"> 
 					<placeholder>
 						<Label text="No batches"/> 
 					</placeholder>
 				</TableView>
-				<TableView fx:id="runsTable" editable="false"> 
+				<TableView fx:id="runsTable" editable="false" HBox.hgrow="ALWAYS"> 
 					<placeholder>
 						<Label text="Select a batch to show its test runs"/> 
 					</placeholder>
 				</TableView>
-			</items>
-		</SplitPane>
+			</children>
+		</HBox>
 		<GridPane fx:id="selectedRunDetail" hgap="5" vgap="5"> 
 			<padding>
 				<Insets top="5" bottom="5" left="5" right="5"/> 

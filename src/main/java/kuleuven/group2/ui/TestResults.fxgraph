@@ -2,6 +2,7 @@ package kuleuven.group2.ui
 
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
+import javafx.scene.layout.HBox
 import javafx.scene.layout.ColumnConstraints
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TableView
@@ -16,10 +17,9 @@ import kuleuven.group2.ui.model.TestRunModel
 component TestResults controlledby TestResultsController {
 	VBox {
 		children : [
-			SplitPane {
+			HBox {
 				static vgrow : "ALWAYS",
-				orientation : "HORIZONTAL",
-				items : [
+				children : [
 					TableView < TestBatchModel > id batchesTable {
 						editable : false,
 						placeholder : Label {
@@ -27,6 +27,7 @@ component TestResults controlledby TestResultsController {
 						}
 					},
 					TableView < TestRunModel > id runsTable {
+						static hgrow : "ALWAYS",
 						editable : false,
 						placeholder : Label {
 							text : "Select a batch to show its test runs"
