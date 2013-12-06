@@ -12,6 +12,8 @@ public interface TestDatabaseListener {
 
 	public void testRunAdded(TestRun testRun, TestBatch testBatch);
 
-	public void testBatchAdded(TestBatch testBatch);
+	public void testBatchStarted(TestBatch testBatch);
+
+	public void testBatchFinished(TestBatch testBatch);
 
 }

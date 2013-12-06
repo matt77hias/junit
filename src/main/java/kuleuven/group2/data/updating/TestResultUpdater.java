@@ -8,6 +8,7 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -44,6 +45,11 @@ public class TestResultUpdater extends RunListener {
 			TestRun testRun = TestRun.createSuccessful(test, new Date());
 			testDatabase.addTestRun(testRun, currentTestBatch);
 		}
+	}
+
+	@Override
+	public void testRunFinished(Result result) throws Exception {
+		testDatabase.finishTestBatch(currentTestBatch, new Date());
 	}
 
 	private Test getTest(Description description) {

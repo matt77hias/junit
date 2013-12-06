@@ -58,8 +58,13 @@ public class TestBatchesModel extends ListPropertyBase<TestBatchModel> implement
 	}
 
 	@Override
-	public void testBatchAdded(TestBatch testBatch) {
+	public void testBatchStarted(TestBatch testBatch) {
 		addModel(new TestBatchModel(testBatch));
+	}
+
+	@Override
+	public void testBatchFinished(TestBatch testBatch) {
+		getModel(testBatch).setRunning(false);
 	}
 
 	@Override

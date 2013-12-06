@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,31 +49,31 @@ public class TestRunModel {
 		return getRun().getTest();
 	}
 
-	public StringProperty testClassNameProperty() {
+	public ReadOnlyStringProperty testClassNameProperty() {
 		return testClassName;
 	}
 
-	public StringProperty testMethodNameProperty() {
+	public ReadOnlyStringProperty testMethodNameProperty() {
 		return testMethodName;
 	}
 
-	public BooleanProperty successfulRunProperty() {
+	public ReadOnlyBooleanProperty successfulRunProperty() {
 		return successfulRun;
 	}
 
-	public BooleanProperty failedRunProperty() {
+	public ReadOnlyBooleanProperty failedRunProperty() {
 		return failedRun;
 	}
 
-	public ObjectProperty<Date> timestampProperty() {
+	public ReadOnlyObjectProperty<Date> timestampProperty() {
 		return timestamp;
 	}
 
-	public ObjectProperty<Throwable> exceptionProperty() {
+	public ReadOnlyObjectProperty<Throwable> exceptionProperty() {
 		return exception;
 	}
 
-	public ObjectProperty<StackTraceElement[]> traceProperty() {
+	public ReadOnlyObjectProperty<StackTraceElement[]> traceProperty() {
 		return trace;
 	}
 

@@ -8,8 +8,15 @@ import java.util.Date;
  */
 public class FormattedDateCellFactory<T> extends FormattedCellFactory<T, Date> {
 
-	public FormattedDateCellFactory(DateFormat format) {
-		super(format);
+	private final DateFormat dateFormat;
+
+	public FormattedDateCellFactory(DateFormat dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	@Override
+	protected String format(Date value) {
+		return dateFormat.format(value);
 	}
 
 }

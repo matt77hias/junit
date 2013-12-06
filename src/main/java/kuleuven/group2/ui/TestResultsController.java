@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Callable;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -30,9 +31,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import kuleuven.group2.ui.model.TestBatchModel;
+import kuleuven.group2.ui.model.TestBatchModel.TestBatchState;
 import kuleuven.group2.ui.model.TestRunModel;
 import kuleuven.group2.ui.util.BooleanImageCellFactory;
+import kuleuven.group2.ui.util.EnumImageCellFactory;
 import kuleuven.group2.ui.util.FormattedDateCellFactory;
+import kuleuven.group2.ui.util.FormattedDurationCellFactory;
 import kuleuven.group2.ui.util.FormattedNumberCellFactory;
 
 import com.google.common.base.Joiner;
@@ -48,6 +52,8 @@ public class TestResultsController {
 	/*
 	 * Images for test results
 	 */
+	protected static final Image IMAGE_BATCH_RUNNING = new Image(TestResultsController.class.getResource(
+			"icons/batch-run.png").toExternalForm());
 	protected static final Image IMAGE_BATCH_SUCCESS = new Image(TestResultsController.class.getResource(
 			"icons/batch-ok.png").toExternalForm());
 	protected static final Image IMAGE_BATCH_FAILURE = new Image(TestResultsController.class.getResource(
@@ -139,16 +145,12 @@ public class TestResultsController {
 	}
 
 	public ObjectBinding<ImageView> selectedRun_resultImageView() {
-		return new ObjectBinding<ImageView>() {
-			{
-				super.bind(selectedRunProperty());
-			}
-
+		return Bindings.createObjectBinding(new Callable<ImageView>() {
 			@Override
-			protected ImageView computeValue() {
+			public ImageView call() throws Exception {
 				return new ImageView(selectedRun_resultImage().get());
 			}
-		};
+		}, selectedRunProperty());
 	}
 
 	public StringBinding selectedRun_testClassName() {
@@ -164,20 +166,16 @@ public class TestResultsController {
 	}
 
 	public StringBinding selectedRunTest_formattedTimeStamp() {
-		return new StringBinding() {
-			{
-				super.bind(selectedRunProperty());
-			}
-
+		return Bindings.createStringBinding(new Callable<String>() {
 			@Override
-			protected String computeValue() {
+			public String call() throws Exception {
 				if (selectedRun_timeStamp().get() != null) {
 					return DATE_FORMAT.format(selectedRun_timeStamp().get());
 				} else {
 					return null;
 				}
 			}
-		};
+		}, selectedRunProperty());
 	}
 
 	public ObjectBinding<Throwable> selectedRun_exception() {
@@ -189,20 +187,16 @@ public class TestResultsController {
 	}
 
 	public StringBinding selectedRun_formattedTrace() {
-		return new StringBinding() {
-			{
-				super.bind(selectedRunProperty());
-			}
-
+		return Bindings.createStringBinding(new Callable<String>() {
 			@Override
-			protected String computeValue() {
+			public String call() throws Exception {
 				if (selectedRun_trace().get() != null) {
 					return Joiner.on('\n').join(selectedRun_trace().get());
 				} else {
 					return null;
 				}
 			}
-		};
+		}, selectedRunProperty());
 	}
 
 	@FXML
@@ -219,33 +213,40 @@ public class TestResultsController {
 		selectedBatchProperty().bind(batchesTable.getSelectionModel().selectedItemProperty());
 
 		// Set up columns
-		TableColumn<TestBatchModel, Boolean> successColumn = new TableColumn<>();
-		successColumn.setCellValueFactory(new SuccessfulBatchCellFactory());
-		successColumn.setCellFactory(new BooleanImageCellFactory<TestBatchModel>(IMAGE_BATCH_SUCCESS,
+		TableColumn<TestBatchModel, TestBatchState> stateColumn = new TableColumn<>();
+		stateColumn.setCellValueFactory(new StateBatchCellValueFactory());
+		stateColumn.setCellFactory(new StateBatchCellFactory(IMAGE_BATCH_RUNNING, IMAGE_BATCH_SUCCESS,
 				IMAGE_BATCH_FAILURE));
-		successColumn.setPrefWidth(50);
+		stateColumn.setPrefWidth(30);
 
-		TableColumn<TestBatchModel, Date> timestampColumn = new TableColumn<>("Time");
-		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Date>("timestamp"));
-		timestampColumn.setCellFactory(new FormattedDateCellFactory<TestBatchModel>(DATE_FORMAT));
-		timestampColumn.setPrefWidth(120);
+		TableColumn<TestBatchModel, Date> startDateColumn = new TableColumn<>("Started");
+		startDateColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Date>("startDate"));
+		startDateColumn.setCellFactory(new FormattedDateCellFactory<TestBatchModel>(DATE_FORMAT));
+		startDateColumn.setPrefWidth(120);
+
+		TableColumn<TestBatchModel, Number> durationColumn = new TableColumn<>("Duration");
+		durationColumn.setCellValueFactory(new DurationBatchCellValueFactory());
+		durationColumn.setCellFactory(new FormattedDurationCellFactory<TestBatchModel>());
+		durationColumn.setPrefWidth(80);
+		durationColumn.setVisible(false);
 
 		TableColumn<TestBatchModel, Number> runsCountColumn = new TableColumn<>("Runs");
 		runsCountColumn.setCellValueFactory(new PropertyValueFactory<TestBatchModel, Number>("runsCount"));
 		runsCountColumn.setPrefWidth(50);
 
 		TableColumn<TestBatchModel, Number> failedRunsCountColumn = new TableColumn<>("Failed");
-		failedRunsCountColumn.setCellValueFactory(new FailedRunsBatchCellFactory());
+		failedRunsCountColumn.setCellValueFactory(new FailedRunsBatchCellValueFactory());
 		failedRunsCountColumn.setPrefWidth(50);
+		failedRunsCountColumn.setVisible(false);
 
 		TableColumn<TestBatchModel, Number> failurePercentageColumn = new TableColumn<>("Fail %");
-		failurePercentageColumn.setCellValueFactory(new FailurePercentageBatchCellFactory());
+		failurePercentageColumn.setCellValueFactory(new FailurePercentageBatchCellValueFactory());
 		failurePercentageColumn.setCellFactory(new FormattedNumberCellFactory<TestBatchModel>(NumberFormat
 				.getPercentInstance()));
 		failurePercentageColumn.setPrefWidth(50);
 
 		batchesTable.getColumns().setAll(
-				ImmutableList.of(successColumn, timestampColumn, runsCountColumn, failedRunsCountColumn,
+				ImmutableList.of(stateColumn, startDateColumn, durationColumn, runsCountColumn, failedRunsCountColumn,
 						failurePercentageColumn));
 	}
 
@@ -259,15 +260,15 @@ public class TestResultsController {
 		TableColumn<TestRunModel, Boolean> successColumn = new TableColumn<>();
 		successColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Boolean>("successfulRun"));
 		successColumn.setCellFactory(new BooleanImageCellFactory<TestRunModel>(IMAGE_TEST_SUCCESS, IMAGE_TEST_FAILURE));
-		successColumn.setPrefWidth(50);
+		successColumn.setPrefWidth(30);
 
 		TableColumn<TestRunModel, String> testClassNameColumn = new TableColumn<>("Test class");
 		testClassNameColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, String>("testClassName"));
-		testClassNameColumn.setPrefWidth(100);
+		testClassNameColumn.setPrefWidth(120);
 
 		TableColumn<TestRunModel, String> testMethodNameColumn = new TableColumn<>("Test method");
 		testMethodNameColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, String>("testMethodName"));
-		testMethodNameColumn.setPrefWidth(100);
+		testMethodNameColumn.setPrefWidth(120);
 
 		TableColumn<TestRunModel, Date> timestampColumn = new TableColumn<>("Time");
 		timestampColumn.setCellValueFactory(new PropertyValueFactory<TestRunModel, Date>("timestamp"));
@@ -304,21 +305,64 @@ public class TestResultsController {
 
 	/**
 	 * Cell factory for retrieving
-	 * {@code TestBatchModel#successfulBatchProperty()}.
+	 * {@code TestBatchModel#failedRunsCountProperty()}.
 	 */
-	protected static class SuccessfulBatchCellFactory implements
-			Callback<TableColumn.CellDataFeatures<TestBatchModel, Boolean>, ObservableValue<Boolean>> {
+	protected static class StateBatchCellFactory extends EnumImageCellFactory<TestBatchModel, TestBatchState> {
+
+		private final Image runningImage;
+		private final Image successImage;
+		private final Image failureImage;
+
+		public StateBatchCellFactory(Image runningImage, Image successImage, Image failureImage) {
+			this.runningImage = runningImage;
+			this.successImage = successImage;
+			this.failureImage = failureImage;
+		}
+
 		@Override
-		public ObservableValue<Boolean> call(CellDataFeatures<TestBatchModel, Boolean> features) {
-			return features.getValue().isSuccessfulProperty();
+		protected Image getImage(TestBatchState value) {
+			switch (value) {
+			case RUNNING:
+				return runningImage;
+			case SUCCESS:
+				return successImage;
+			case FAILURE:
+				return failureImage;
+			default:
+				return null;
+			}
+		}
+
+	}
+
+	/**
+	 * Cell value factory for retrieving {@code TestBatchModel#stateProperty()}.
+	 */
+	protected static class StateBatchCellValueFactory implements
+			Callback<TableColumn.CellDataFeatures<TestBatchModel, TestBatchState>, ObservableValue<TestBatchState>> {
+		@Override
+		public ObservableValue<TestBatchState> call(CellDataFeatures<TestBatchModel, TestBatchState> features) {
+			return features.getValue().stateProperty();
 		}
 	}
 
 	/**
-	 * Cell factory for retrieving
+	 * Cell value factory for retrieving
+	 * {@code TestBatchModel#durationProperty()}.
+	 */
+	protected static class DurationBatchCellValueFactory implements
+			Callback<TableColumn.CellDataFeatures<TestBatchModel, Number>, ObservableValue<Number>> {
+		@Override
+		public ObservableValue<Number> call(CellDataFeatures<TestBatchModel, Number> features) {
+			return features.getValue().durationProperty();
+		}
+	}
+
+	/**
+	 * Cell value factory for retrieving
 	 * {@code TestBatchModel#failedRunsCountProperty()}.
 	 */
-	protected static class FailedRunsBatchCellFactory implements
+	protected static class FailedRunsBatchCellValueFactory implements
 			Callback<TableColumn.CellDataFeatures<TestBatchModel, Number>, ObservableValue<Number>> {
 		@Override
 		public ObservableValue<Number> call(CellDataFeatures<TestBatchModel, Number> features) {
@@ -327,10 +371,10 @@ public class TestResultsController {
 	}
 
 	/**
-	 * Cell factory for retrieving
+	 * Cell value factory for retrieving
 	 * {@code TestBatchModel#failureFractionProperty()}.
 	 */
-	protected static class FailurePercentageBatchCellFactory implements
+	protected static class FailurePercentageBatchCellValueFactory implements
 			Callback<TableColumn.CellDataFeatures<TestBatchModel, Number>, ObservableValue<Number>> {
 		@Override
 		public ObservableValue<Number> call(CellDataFeatures<TestBatchModel, Number> features) {

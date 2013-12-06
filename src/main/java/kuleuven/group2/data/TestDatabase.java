@@ -200,8 +200,13 @@ public class TestDatabase {
 	public TestBatch createTestBatch(Date startDate) {
 		TestBatch testBatch = new TestBatch(startDate);
 		testBatches.add(testBatch);
-		fireTestBatchAdded(testBatch);
+		fireTestBatchStarted(testBatch);
 		return testBatch;
+	}
+
+	public void finishTestBatch(TestBatch testBatch, Date endDate) {
+		testBatch.setEndDate(endDate);
+		fireTestBatchFinished(testBatch);
 	}
 
 	public List<TestBatch> getTestBatches() {
@@ -295,9 +300,15 @@ public class TestDatabase {
 		}
 	}
 
-	protected void fireTestBatchAdded(TestBatch testBatch) {
+	protected void fireTestBatchStarted(TestBatch testBatch) {
 		for (TestDatabaseListener listener : listeners) {
-			listener.testBatchAdded(testBatch);
+			listener.testBatchStarted(testBatch);
+		}
+	}
+
+	protected void fireTestBatchFinished(TestBatch testBatch) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testBatchFinished(testBatch);
 		}
 	}
 

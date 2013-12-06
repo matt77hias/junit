@@ -7,8 +7,15 @@ import java.text.NumberFormat;
  */
 public class FormattedNumberCellFactory<T> extends FormattedCellFactory<T, Number> {
 
-	public FormattedNumberCellFactory(NumberFormat format) {
-		super(format);
+	private final NumberFormat numberFormat;
+
+	public FormattedNumberCellFactory(NumberFormat numberFormat) {
+		this.numberFormat = numberFormat;
+	}
+
+	@Override
+	protected String format(Number value) {
+		return numberFormat.format(value);
 	}
 
 }

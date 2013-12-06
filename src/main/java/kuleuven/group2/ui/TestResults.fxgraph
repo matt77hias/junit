@@ -24,6 +24,7 @@ component TestResults controlledby TestResultsController {
 				children : [
 					TableView < TestBatchModel > id batchesTable {
 						editable : false,
+						tableMenuButtonVisible : true,
 						placeholder : Label {
 							text : "No batches"
 						}

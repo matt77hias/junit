@@ -7,15 +7,33 @@ import java.util.List;
 
 public class TestBatch {
 
-	private final Date timestamp;
+	private final Date startDate;
+	private Date endDate;
+
 	private final List<TestRun> testRuns = new ArrayList<TestRun>();
 
-	public TestBatch(Date timestamp) {
-		this.timestamp = timestamp;
+	public TestBatch(Date startDate) {
+		this.startDate = startDate;
 	}
 
-	public Date getTimestamp() {
-		return timestamp;
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public boolean isRunning() {
+		return getEndDate() == null;
+	}
+
+	public Long getDuration() {
+		return isRunning() ? null : (getEndDate().getTime() - getStartDate().getTime());
 	}
 
 	public List<TestRun> getTestRuns() {

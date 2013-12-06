@@ -17,7 +17,7 @@
 	<children>
 		<HBox spacing="5" VBox.vgrow="ALWAYS"> 
 			<children>
-				<TableView fx:id="batchesTable" editable="false"> 
+				<TableView fx:id="batchesTable" editable="false" tableMenuButtonVisible="true"> 
 					<placeholder>
 						<Label text="No batches"/> 
 					</placeholder>
