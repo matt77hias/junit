@@ -1,7 +1,8 @@
 package kuleuven.group2.testrunner;
 
 import static org.junit.Assert.*;
-import kuleuven.group2.testrunner.TestRunner;
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -55,8 +56,8 @@ public class TestRunnerTest {
 	
 	@Test
 	public void testSucceededSimple() throws Exception {
-		Result[] result = testRunner.runTestMethods(testMethod2Arg);
-		Result testMethod2ArgResult = result[0];
+		List<Result> result = testRunner.runTestMethods(testMethod2Arg);
+		Result testMethod2ArgResult = result.get(0);
 		
 		assertTrue(testMethod2ArgResult.wasSuccessful());
 		assertEquals(1, testMethod2ArgResult.getRunCount());
