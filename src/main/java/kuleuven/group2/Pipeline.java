@@ -193,7 +193,7 @@ public class Pipeline {
 	}
 
 	private Test[] sortTests() {
-		return sortPolicy.getSortedTests(testDatabase);
+		return sortPolicy.getSortedTests(testDatabase).toArray(new Test[0]);
 	}
 
 	private void runTests(Test[] tests) {
