@@ -5,6 +5,7 @@ import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
+import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.runner.Description;
@@ -69,7 +70,7 @@ public class MethodTestLinkUpdater extends Monitor {
 			// Store current test
 			String testClassName = description.getClassName();
 			String testMethodName = description.getMethodName();
-			currentTest = new Test(testClassName, testMethodName);
+			currentTest = testDatabase.getOrCreateTest(testClassName, testMethodName);
 			// Monitor method calls
 			ossRewriterLoader.registerMonitor(MethodTestLinkUpdater.this);
 		}

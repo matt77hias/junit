@@ -2,6 +2,7 @@ package kuleuven.group2.policy;
 
 import java.util.Date;
 
+import kuleuven.group2.data.TestBatch;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 
@@ -93,33 +94,41 @@ public abstract class TestSortingPolicyTest {
 		testDatabase.addTest(test2);
 		testDatabase.addTest(test3);
 		testDatabase.addTest(test4);
+		
+		// Add batches
+		TestBatch batch1 = testDatabase.createTestBatch(new Date(1));
+		TestBatch batch2 = testDatabase.createTestBatch(new Date(2));
+		TestBatch batch3 = testDatabase.createTestBatch(new Date(3));
+		TestBatch batch4 = testDatabase.createTestBatch(new Date(4));
+		TestBatch batch5 = testDatabase.createTestBatch(new Date(5));
+		TestBatch batch6 = testDatabase.createTestBatch(new Date(6));
 
 		// Add test runs
-		testDatabase.addTestRun(TestRun.createFailed(new Date(1), failure1), test1);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(1), failure1), test1);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(2), failure2), test1);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(3)), test1);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(4), failure3), test1);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(5)), test1);
+		testDatabase.addTestRun(TestRun.createFailed(test1, new Date(1), failure1), batch1);
+		testDatabase.addTestRun(TestRun.createFailed(test1, new Date(1), failure1), batch2);
+		testDatabase.addTestRun(TestRun.createFailed(test1, new Date(2), failure2), batch3);
+		testDatabase.addTestRun(TestRun.createSuccessful(test1, new Date(3)), batch4);
+		testDatabase.addTestRun(TestRun.createFailed(test1, new Date(4), failure3), batch5);
+		testDatabase.addTestRun(TestRun.createSuccessful(test1, new Date(5)), batch6);
 
-		testDatabase.addTestRun(TestRun.createFailed(new Date(6), failure5), test2);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(7)), test2);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(8)), test2);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(9), failure6), test2);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(10)), test2);
+		testDatabase.addTestRun(TestRun.createFailed(test2, new Date(6), failure5), batch1);
+		testDatabase.addTestRun(TestRun.createSuccessful(test2, new Date(7)), batch2);
+		testDatabase.addTestRun(TestRun.createSuccessful(test2, new Date(8)), batch3);
+		testDatabase.addTestRun(TestRun.createFailed(test2, new Date(9), failure6), batch4);
+		testDatabase.addTestRun(TestRun.createSuccessful(test2, new Date(10)), batch5);
 
-		testDatabase.addTestRun(TestRun.createFailed(new Date(11), failure6), test3);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(12), failure5), test3);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(13)), test3);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(14), failure6), test3);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(15)), test3);
-		testDatabase.addTestRun(TestRun.createFailed(new Date(16), failure5), test3);
+		testDatabase.addTestRun(TestRun.createFailed(test3, new Date(11), failure6), batch1);
+		testDatabase.addTestRun(TestRun.createFailed(test3, new Date(12), failure5), batch2);
+		testDatabase.addTestRun(TestRun.createSuccessful(test3, new Date(13)), batch3);
+		testDatabase.addTestRun(TestRun.createFailed(test3, new Date(14), failure6), batch4);
+		testDatabase.addTestRun(TestRun.createSuccessful(test3, new Date(15)), batch5);
+		testDatabase.addTestRun(TestRun.createFailed(test3, new Date(16), failure5), batch6);
 
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(17)), test4);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(18)), test4);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(19)), test4);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(20)), test4);
-		testDatabase.addTestRun(TestRun.createSuccessful(new Date(21)), test4);
+		testDatabase.addTestRun(TestRun.createSuccessful(test4, new Date(17)), batch1);
+		testDatabase.addTestRun(TestRun.createSuccessful(test4, new Date(18)), batch2);
+		testDatabase.addTestRun(TestRun.createSuccessful(test4, new Date(19)), batch3);
+		testDatabase.addTestRun(TestRun.createSuccessful(test4, new Date(20)), batch4);
+		testDatabase.addTestRun(TestRun.createSuccessful(test4, new Date(21)), batch5);
 	}
 	
 	public abstract void correct_order_test();
