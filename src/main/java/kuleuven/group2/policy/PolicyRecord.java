@@ -45,7 +45,7 @@ public class PolicyRecord {
 	public PolicyRecord(TestSortingPolicy policy, int weight) {
 		checkNotNull(policy);
 		this.policy = policy;
-		this.weight = (weight >= 1) ? weight : DEFAULT_WEIGHT;
+		setWeight(weight);
 	}
 	
 	/**
@@ -71,9 +71,19 @@ public class PolicyRecord {
 	public int getWeight() {
 		return this.weight;
 	}
-	
+
+	/**
+	 * Sets the weight of this polcy record.
+	 * 
+	 * @param weight
+	 *            The new weight of this policy record.
+	 */
+	public void setWeight(int weight) {
+		this.weight = (weight >= 1) ? weight : DEFAULT_WEIGHT;
+	}
+
 	/**
 	 * The weight of this policy record.
 	 */
-	private final int weight;
+	private int weight;
 }

@@ -134,6 +134,24 @@ public class CompositePolicy implements TestSortingPolicy {
 		checkNotNull(record);
 		this.policies.add(index, record);
 	}
+
+	/**
+	 * Replaces the policy record at the given index
+	 * with the given policy record.
+	 * 
+	 * @param	index
+	 * 			The index at which to replace.
+	 * @param	record
+	 * 			The replacement policy record.
+	 * @throws	IndexOutOfBoundsException
+	 * 			If the index is out of range.
+	 * 			| (index < 0 || index >= getNbOfPolicies())
+	 */
+	public void setPolicyRecordAt(int index, PolicyRecord record) 
+			throws IndexOutOfBoundsException {
+		checkNotNull(record);
+		this.policies.set(index, record);
+	}
 	
 	/**
 	 * Removes the given test sorting policy.
@@ -155,7 +173,7 @@ public class CompositePolicy implements TestSortingPolicy {
 	 * 			The index.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
-	 * 			| (index < 0 || index > getNbOfPolicies())
+	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
 	public void removePolicyAt(int index) 
 			throws IndexOutOfBoundsException {
@@ -184,7 +202,7 @@ public class CompositePolicy implements TestSortingPolicy {
 	 * 			The index.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
-	 * 			| (index < 0 || index > getNbOfPolicies())
+	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
 	public PolicyRecord getPolicyAt(int index)
 			throws IndexOutOfBoundsException {
