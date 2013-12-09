@@ -1,4 +1,4 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.rewrite;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.compile.NameUtils;
+import kuleuven.group2.rewrite.OssRewriterLoader;
 
 import org.junit.Before;
 import org.junit.Test;

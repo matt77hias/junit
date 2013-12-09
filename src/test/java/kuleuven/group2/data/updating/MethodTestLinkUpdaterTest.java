@@ -9,6 +9,7 @@ import kuleuven.group2.data.TestedMethod;
 import kuleuven.group2.data.signature.JavaSignature;
 import kuleuven.group2.data.signature.JavaSignatureParser;
 import kuleuven.group2.data.signature.JavaSignatureParserTest;
+import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.testrunner.TestRunner;
 
 import org.junit.After;

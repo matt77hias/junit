@@ -1,4 +1,4 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.rewrite;
 
 import static org.junit.Assert.assertTrue;
 
