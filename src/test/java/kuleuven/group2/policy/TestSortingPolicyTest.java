@@ -88,36 +88,38 @@ public abstract class TestSortingPolicyTest {
 		Failure failure5 = new Failure(Description.EMPTY, ex5);
 		Failure failure6 = new Failure(Description.EMPTY, ex6);
 		
-		// Add test runs
-		test1.addTestRun(TestRun.createFailed(new Date(1), failure1));
-		test1.addTestRun(TestRun.createFailed(new Date(2), failure2));
-		test1.addTestRun(TestRun.createSuccessful(new Date(3)));
-		test1.addTestRun(TestRun.createFailed(new Date(4), failure3));
-		test1.addTestRun(TestRun.createSuccessful(new Date(5)));
-		
-		test2.addTestRun(TestRun.createFailed(new Date(6), failure5));
-		test2.addTestRun(TestRun.createSuccessful(new Date(7)));
-		test2.addTestRun(TestRun.createSuccessful(new Date(8)));
-		test2.addTestRun(TestRun.createFailed(new Date(9), failure6));
-		test2.addTestRun(TestRun.createSuccessful(new Date(10)));
-		
-		test3.addTestRun(TestRun.createFailed(new Date(11), failure6));
-		test3.addTestRun(TestRun.createFailed(new Date(12), failure5));
-		test3.addTestRun(TestRun.createSuccessful(new Date(13)));
-		test3.addTestRun(TestRun.createFailed(new Date(14), failure6));
-		test3.addTestRun(TestRun.createSuccessful(new Date(15)));
-		test3.addTestRun(TestRun.createFailed(new Date(16), failure5));
-		
-		test4.addTestRun(TestRun.createSuccessful(new Date(17)));
-		test4.addTestRun(TestRun.createSuccessful(new Date(18)));
-		test4.addTestRun(TestRun.createSuccessful(new Date(19)));
-		test4.addTestRun(TestRun.createSuccessful(new Date(20)));
-		test4.addTestRun(TestRun.createSuccessful(new Date(21)));
-
+		// Add tests
 		testDatabase.addTest(test1);
 		testDatabase.addTest(test2);
 		testDatabase.addTest(test3);
 		testDatabase.addTest(test4);
+
+		// Add test runs
+		testDatabase.addTestRun(TestRun.createFailed(new Date(1), failure1), test1);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(1), failure1), test1);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(2), failure2), test1);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(3)), test1);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(4), failure3), test1);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(5)), test1);
+
+		testDatabase.addTestRun(TestRun.createFailed(new Date(6), failure5), test2);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(7)), test2);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(8)), test2);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(9), failure6), test2);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(10)), test2);
+
+		testDatabase.addTestRun(TestRun.createFailed(new Date(11), failure6), test3);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(12), failure5), test3);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(13)), test3);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(14), failure6), test3);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(15)), test3);
+		testDatabase.addTestRun(TestRun.createFailed(new Date(16), failure5), test3);
+
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(17)), test4);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(18)), test4);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(19)), test4);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(20)), test4);
+		testDatabase.addTestRun(TestRun.createSuccessful(new Date(21)), test4);
 	}
 	
 	public abstract void correct_order_test();

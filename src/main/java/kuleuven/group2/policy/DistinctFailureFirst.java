@@ -124,10 +124,9 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 						// New distinct failure cause
 						// Prioritize this test
 						distinctCauses.add(element);
-						if (!isPrioritized) {
-							priority.add(test);
-							isPrioritized = true;
-						}
+						priority.add(test);
+						isPrioritized = true;
+						break;
 					}
 				}
 			}
