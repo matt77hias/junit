@@ -14,8 +14,10 @@ public class FrequentFailureTest extends TestSortingPolicyTest {
 		TestSortingPolicy policy = new FrequentFailureFirst();
 		List<kuleuven.group2.data.Test> result = policy.getSortedTests(testDatabase);
 		
-		assertTrue(result.get(0) == test3);
-		assertTrue(result.get(1) == test1);
+		// Both of these tests have the same number of failures
+		// TODO Use a more deterministic test fixture?
+		assertTrue(result.get(0) == test1 || result.get(0) == test3);
+		assertTrue(result.get(1) == test1 || result.get(1) == test3);
 		assertTrue(result.get(2) == test2);
 		assertTrue(result.get(3) == test4);
 		
