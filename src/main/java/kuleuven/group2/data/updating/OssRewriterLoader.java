@@ -6,6 +6,8 @@ import be.kuleuven.cs.ossrewriter.Monitor;
 import be.kuleuven.cs.ossrewriter.MonitorEntrypoint;
 import be.kuleuven.cs.ossrewriter.OSSRewriter;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.sun.tools.attach.VirtualMachine;
 
 /**
@@ -76,19 +78,136 @@ public class OssRewriterLoader {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
-		OSSRewriter.enable();
-		OSSRewriter.retransformAllClasses();
 	}
 
+	/*
+	 * Enabling/disabling
+	 */
+
+	/**
+	 * Start rewriting and re-transform all classes.
+	 * 
+	 * @see #enable(boolean)
+	 */
+	public void enable() {
+		enable(true);
+	}
+
+	/**
+	 * Start rewriting.
+	 * 
+	 * @param retransformAllClasses
+	 *            If all loaded classes should be re-transformed as well.
+	 */
+	public void enable(boolean retransformAllClasses) {
+		ensureLoaded();
+		if (!OSSRewriter.isEnabled()) {
+			OSSRewriter.enable();
+			OSSRewriter.retransformAllClasses();
+		}
+	}
+
+	/**
+	 * Stop rewriting.
+	 */
+	public void disable() {
+		ensureLoaded();
+		if (OSSRewriter.isEnabled()) {
+			OSSRewriter.disable();
+		}
+	}
+
+	/*
+	 * Monitoring
+	 */
+
+	/**
+	 * Register a monitor.
+	 * 
+	 * @param monitor
+	 *            The monitor to be registered.
+	 */
 	public void registerMonitor(Monitor monitor) {
 		ensureLoaded();
 		MonitorEntrypoint.register(monitor);
 	}
 
+	/**
+	 * Unregister a monitor.
+	 * 
+	 * @param monitor
+	 *            The monitor to be unregistered.
+	 */
 	public void unregisterMonitor(Monitor monitor) {
 		ensureLoaded();
 		MonitorEntrypoint.unregister(monitor);
+	}
+
+	/*
+	 * Transformation filtering
+	 */
+
+	protected Predicate<String> transformFilter = Predicates.alwaysTrue();
+
+	/**
+	 * Set the (inclusion) filter to use when transforming classes.
+	 * 
+	 * <p>
+	 * The filter receives the full class name. The class will be transformed
+	 * iff the filter returns {@code true} for that class.
+	 * </p>
+	 * 
+	 * @param filter
+	 *            The new transformation filter.
+	 */
+	public void setTransformFilter(final Predicate<String> filter) {
+		transformFilter = filter;
+		updateExclusionFilter();
+	}
+
+	/**
+	 * Removes the transformation filter.
+	 */
+	public void removeTransformFilter() {
+		setTransformFilter(null);
+	}
+
+	/**
+	 * Updates the rewriter's exclusion filter using the configured
+	 * {@link #transformFilter}.
+	 */
+	protected void updateExclusionFilter() {
+		ensureLoaded();
+		if (transformFilter == null) {
+			// No filter set
+			OSSRewriter.resetUserExclusionFilter();
+		} else {
+			/*
+			 * OSS Rewriter uses an exclusion filter, so we need to invert our
+			 * inclusion filter
+			 */
+			Predicate<String> exclusionFilter = Predicates.not(transformFilter);
+			OSSRewriter.setUserExclusionFilter(new PredicateAdapter<String>(exclusionFilter));
+		}
+	}
+
+	/**
+	 * Adapts a {@link com.google.common.base.Predicate} to be used as a
+	 * {@link be.kuleuven.cs.ossrewriter.Predicate}.
+	 */
+	protected static class PredicateAdapter<T> implements be.kuleuven.cs.ossrewriter.Predicate<T> {
+
+		private final Predicate<T> predicate;
+
+		public PredicateAdapter(Predicate<T> predicate) {
+			this.predicate = predicate;
+		}
+
+		@Override
+		public boolean apply(T value) {
+			return predicate.apply(value);
+		}
+
 	}
 
 }

@@ -19,10 +19,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MethodTestLinkUpdaterTest {
+
+	private static OssRewriterLoader ossRewriterLoader = OssRewriterLoader.getInstance();
 	
 	private TestDatabase database;
 	private MethodTestLinkUpdater updater;
-	CurrentTestHolder currentTestHolder;
+	private CurrentTestHolder currentTestHolder;
 	
 	private static String getFalsePath = "kuleuven/group2/data/methodlink/MethodLinkerTest$TestedClass.getFalse()Z";
 	@SuppressWarnings("unused")
@@ -46,9 +48,8 @@ public class MethodTestLinkUpdaterTest {
 	public void setUp() throws Exception {
 		database = new TestDatabase();
 		database.addMethod(getTrue);
-		OssRewriterLoader loader = new OssRewriterLoader();
 		currentTestHolder = new CurrentTestHolder();
-		updater = new MethodTestLinkUpdater(database, loader);
+		updater = new MethodTestLinkUpdater(database, ossRewriterLoader);
 		updater.registerTestHolder(currentTestHolder);
 	}
 
@@ -77,8 +78,6 @@ public class MethodTestLinkUpdaterTest {
 	
 	@Test
 	public void testWithOssRewriter() throws Exception {
-		OssRewriterLoader ossRewriterLoader = OssRewriterLoader.getInstance();
-		
 		TestRunner testRunner = new TestRunner(getClass().getClassLoader());
 		updater.registerTestHolder(testRunner);
 		
@@ -86,9 +85,11 @@ public class MethodTestLinkUpdaterTest {
 		database.addMethod(new TestedMethod(new JavaSignatureParser(signature).parseSignature()));
 		
 		ossRewriterLoader.registerMonitor(updater);
+		ossRewriterLoader.enable();
 		
 		testRunner.runTestMethods(new kuleuven.group2.data.Test(JavaSignatureParserTest.class.getName(), "testMethod2Arg"));
-		
+
+		ossRewriterLoader.disable();
 		ossRewriterLoader.unregisterMonitor(updater);
 		
 		assertTrue(database.containsMethodTestLink(

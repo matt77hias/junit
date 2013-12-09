@@ -66,9 +66,11 @@ public class OssRewriterLoaderTest {
 			}
 		};
 		ossRewriterLoader.registerMonitor(monitor);
+		ossRewriterLoader.enable();
 
 		a.visit();
 
+		ossRewriterLoader.disable();
 		ossRewriterLoader.unregisterMonitor(monitor);
 
 		assertTrue(visitedMethodsTracker
