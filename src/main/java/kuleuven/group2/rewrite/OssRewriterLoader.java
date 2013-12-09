@@ -1,5 +1,7 @@
 package kuleuven.group2.rewrite;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.management.ManagementFactory;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
@@ -160,8 +162,8 @@ public class OssRewriterLoader {
 	 * @param filter
 	 *            The new transformation filter.
 	 */
-	public void setTransformFilter(final Predicate<String> filter) {
-		transformFilter = filter;
+	public void setTransformFilter(Predicate<String> filter) {
+		transformFilter = checkNotNull(filter);
 		updateExclusionFilter();
 	}
 
@@ -169,7 +171,7 @@ public class OssRewriterLoader {
 	 * Removes the transformation filter.
 	 */
 	public void removeTransformFilter() {
-		setTransformFilter(null);
+		setTransformFilter(Predicates.<String> alwaysTrue());
 	}
 
 	/**
@@ -178,17 +180,12 @@ public class OssRewriterLoader {
 	 */
 	protected void updateExclusionFilter() {
 		ensureLoaded();
-		if (transformFilter == null) {
-			// No filter set
-			OSSRewriter.resetUserExclusionFilter();
-		} else {
-			/*
-			 * OSS Rewriter uses an exclusion filter, so we need to invert our
-			 * inclusion filter
-			 */
-			Predicate<String> exclusionFilter = Predicates.not(transformFilter);
-			OSSRewriter.setUserExclusionFilter(new PredicateAdapter<String>(exclusionFilter));
-		}
+		/*
+		 * OSS Rewriter uses an exclusion filter, so we need to invert our
+		 * inclusion filter
+		 */
+		Predicate<String> exclusionFilter = Predicates.not(transformFilter);
+		OSSRewriter.setUserExclusionFilter(new PredicateAdapter<String>(exclusionFilter));
 	}
 
 	/**
