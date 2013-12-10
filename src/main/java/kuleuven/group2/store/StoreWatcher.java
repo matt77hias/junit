@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kuleuven.group2.util.Consumer;
-import kuleuven.group2.util.UnsafeConsumer;
 
 /**
  * A {@code StoreWatcher} listens and notifies its consumers of changed
@@ -23,7 +22,7 @@ public class StoreWatcher implements StoreListener {
 
 	protected final Store store;
 	protected StoreFilter filter;
-	protected final List<UnsafeConsumer<StoreEvent>> consumers = new ArrayList<UnsafeConsumer<StoreEvent>>();
+	protected final List<Consumer<StoreEvent>> consumers = new ArrayList<Consumer<StoreEvent>>();
 
 	public StoreWatcher(Store store) {
 		this(store, StoreFilter.ALL);
@@ -76,12 +75,8 @@ public class StoreWatcher implements StoreListener {
 	}
 
 	protected void fireSourceEvent(StoreEvent event) {
-		for (UnsafeConsumer<StoreEvent> consumer : consumers) {
-			try {
-				consumer.consume(event);
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-			}
+		for (Consumer<StoreEvent> consumer : consumers) {
+			consumer.consume(event);
 		}
 	}
 

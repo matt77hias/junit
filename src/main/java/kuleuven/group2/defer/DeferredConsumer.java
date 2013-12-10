@@ -26,12 +26,12 @@ public class DeferredConsumer<T> implements Consumer<T> {
 	protected final DeferredTaskRunner runner;
 	protected final Deque<T> queue = new ConcurrentLinkedDeque<T>();
 
-	public DeferredConsumer(Consumer<? super List<T>> batchConsumer) throws IllegalArgumentException {
+	public DeferredConsumer(UnsafeConsumer<? super List<T>> batchConsumer) throws IllegalArgumentException {
 		checkNotNull(batchConsumer);
 		this.runner = new DeferredTaskRunner(createRunnable(batchConsumer));
 	}
 
-	public DeferredConsumer(Consumer<? super List<T>> batchConsumer, long delay, TimeUnit timeUnit)
+	public DeferredConsumer(UnsafeConsumer<? super List<T>> batchConsumer, long delay, TimeUnit timeUnit)
 			throws IllegalArgumentException {
 		checkNotNull(batchConsumer);
 		this.runner = new DeferredTaskRunner(createRunnable(batchConsumer), delay, timeUnit);
@@ -50,7 +50,7 @@ public class DeferredConsumer<T> implements Consumer<T> {
 	 * @param batchConsumer
 	 * @return
 	 */
-	protected Runnable createRunnable(Consumer<? super List<T>> batchConsumer) {
+	protected Runnable createRunnable(UnsafeConsumer<? super List<T>> batchConsumer) {
 		return new BatchRunnable(batchConsumer);
 	}
 
@@ -72,7 +72,7 @@ public class DeferredConsumer<T> implements Consumer<T> {
 
 		protected final UnsafeConsumer<? super List<T>> batchConsumer;
 
-		public BatchRunnable(Consumer<? super List<T>> batchConsumer) {
+		public BatchRunnable(UnsafeConsumer<? super List<T>> batchConsumer) {
 			this.batchConsumer = batchConsumer;
 		}
 
