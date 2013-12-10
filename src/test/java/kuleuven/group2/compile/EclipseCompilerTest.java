@@ -161,6 +161,7 @@ public class EclipseCompilerTest {
 				"}";
 		//@formatter:on
 		sourceStore.write(testFolder + "\\src\\sub\\" + NameUtils.toSourceName(className), source.getBytes());
+		sourceStore.write("D:\\testdaemontest\\src\\sub\\" + NameUtils.toSourceName(className), source.getBytes());
 
 		compiler.compileAll();
 		
