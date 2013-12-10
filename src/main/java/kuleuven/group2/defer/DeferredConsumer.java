@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 import kuleuven.group2.util.Consumer;
+import kuleuven.group2.util.UnsafeConsumer;
 
 /**
  * A deferred consumer will amass given input in a deferred manner
@@ -69,7 +70,7 @@ public class DeferredConsumer<T> implements Consumer<T> {
 
 	public class BatchRunnable implements Runnable {
 
-		protected final Consumer<? super List<T>> batchConsumer;
+		protected final UnsafeConsumer<? super List<T>> batchConsumer;
 
 		public BatchRunnable(Consumer<? super List<T>> batchConsumer) {
 			this.batchConsumer = batchConsumer;

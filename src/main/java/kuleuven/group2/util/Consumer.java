@@ -8,8 +8,8 @@ package kuleuven.group2.util;
  * @author Group2
  * @version 11 November 2013
  */
-public interface Consumer<T> {
+public interface Consumer<T> extends UnsafeConsumer<T>{
 
-	public void consume(T item) throws Exception;
+	public void consume(T item);
 
 }
