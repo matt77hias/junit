@@ -2,8 +2,10 @@ package kuleuven.group2.ui;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -11,7 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import kuleuven.group2.ui.model.PoliciesModel;
 import kuleuven.group2.ui.model.PolicyModel;
 
 public class ConfigurationController {
@@ -29,7 +30,7 @@ public class ConfigurationController {
 	private ComboBox<PolicyModel> policyField;
 
 	private final ObjectProperty<PolicyModel> selectedPolicy = new SimpleObjectProperty<PolicyModel>();
-	private final PoliciesModel policies = new PoliciesModel(PoliciesModel.DEFAULTS);
+	private final ListProperty<PolicyModel> policies = new SimpleListProperty<>();
 
 	private BooleanBinding configured;
 	private BooleanProperty canConfigure = new SimpleBooleanProperty();
@@ -71,6 +72,10 @@ public class ConfigurationController {
 		return binaryField.directoryProperty();
 	}
 
+	public ListProperty<PolicyModel> policiesProperty() {
+		return policies;
+	}
+
 	public ObjectProperty<PolicyModel> selectedPolicyProperty() {
 		return selectedPolicy;
 	}
@@ -99,9 +104,9 @@ public class ConfigurationController {
 		protected void updateItem(PolicyModel model, boolean empty) {
 			super.updateItem(model, empty);
 			if (!empty) {
-				setText(model.getName());
+				textProperty().bind(model.nameProperty());
 			} else {
-				setText(null);
+				textProperty().unbind();
 			}
 		}
 	}

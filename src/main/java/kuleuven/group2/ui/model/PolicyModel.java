@@ -14,16 +14,16 @@ public class PolicyModel {
 		this.policy = policy;
 	}
 
-	public StringProperty nameProperty() {
-		return name;
-	}
-
 	public String getName() {
 		return nameProperty().get();
 	}
 
 	public void setName(String name) {
 		nameProperty().set(name);
+	}
+
+	public StringProperty nameProperty() {
+		return name;
 	}
 
 	public TestSortingPolicy getPolicy() {

@@ -4,10 +4,7 @@ import java.io.IOException;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -18,8 +15,8 @@ import kuleuven.group2.Pipeline;
 import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.Store;
+import kuleuven.group2.ui.model.PoliciesModel;
 import kuleuven.group2.ui.model.PolicyModel;
-import kuleuven.group2.ui.model.TestBatchModel;
 import kuleuven.group2.ui.model.TestBatchesModel;
 
 public class MainController implements EventHandler<WindowEvent> {
@@ -38,6 +35,9 @@ public class MainController implements EventHandler<WindowEvent> {
 	private Configuration configuration;
 
 	@FXML
+	private PolicyComposer policyComposer;
+
+	@FXML
 	private TestResults testResults;
 
 	@FXML
@@ -50,27 +50,8 @@ public class MainController implements EventHandler<WindowEvent> {
 	 * Properties
 	 */
 
-	public StringProperty classSourcesDirProperty() {
-		return configuration.classSourceDirProperty();
-	}
-
-	public StringProperty testSourcesDirProperty() {
-		return configuration.testSourceDirProperty();
-	}
-
-	public StringProperty binariesDirProperty() {
-		return configuration.binaryDirProperty();
-	}
-
-	public ObjectProperty<PolicyModel> policyProperty() {
-		return configuration.selectedPolicyProperty();
-	}
-
-	public ListProperty<TestBatchModel> testBatchesProperty() {
-		return testResults.batchesProperty();
-	}
-
 	private final BooleanProperty running = new SimpleBooleanProperty(false);
+	private final PoliciesModel policiesModel = new PoliciesModel();
 	private final TestBatchesModel testBatchesModel = new TestBatchesModel();
 
 	public boolean isConfigured() {
@@ -104,7 +85,7 @@ public class MainController implements EventHandler<WindowEvent> {
 		buttonStop.disableProperty().bind(configured().not().or(running.not()));
 
 		// Update policy in pipeline
-		policyProperty().addListener(new ChangeListener<PolicyModel>() {
+		configuration.selectedPolicyProperty().addListener(new ChangeListener<PolicyModel>() {
 			@Override
 			public void changed(ObservableValue<? extends PolicyModel> observable, PolicyModel oldValue,
 					PolicyModel newValue) {
@@ -112,15 +93,22 @@ public class MainController implements EventHandler<WindowEvent> {
 			}
 		});
 
+		// Bind policies model
+		configuration.policiesProperty().bind(policiesModel.getAllPolicies());
+		configuration.selectedPolicyProperty().set(policiesModel.getAllPolicies().get(0));
+
+		policyComposer.allPoliciesProperty().bind(policiesModel.getAllPolicies());
+		policyComposer.compositePoliciesProperty().bind(policiesModel.getCompositePolicies());
+
 		// Bind test batches model
-		testBatchesProperty().bind(testBatchesModel);
+		testResults.batchesProperty().bind(testBatchesModel);
 	}
 
 	protected void setup() throws IOException {
-		Store classSourceStore = new DirectoryStore(classSourcesDirProperty().get());
-		Store testSourceStore = new DirectoryStore(testSourcesDirProperty().get());
-		Store binaryStore = new DirectoryStore(binariesDirProperty().get());
-		TestSortingPolicy sortPolicy = policyProperty().get().getPolicy();
+		Store classSourceStore = new DirectoryStore(configuration.classSourceDirProperty().get());
+		Store testSourceStore = new DirectoryStore(configuration.testSourceDirProperty().get());
+		Store binaryStore = new DirectoryStore(configuration.binaryDirProperty().get());
+		TestSortingPolicy sortPolicy = configuration.selectedPolicyProperty().get().getPolicy();
 		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
 		pipeline.getTestDatabase().addListener(testBatchesModel);
 	}
@@ -152,7 +140,7 @@ public class MainController implements EventHandler<WindowEvent> {
 	}
 
 	public void setPolicy(PolicyModel policyModel) {
-		policyProperty().set(policyModel);
+		configuration.selectedPolicyProperty().set(policyModel);
 		if (pipeline != null) {
 			pipeline.setSortPolicy(policyModel.getPolicy());
 		}

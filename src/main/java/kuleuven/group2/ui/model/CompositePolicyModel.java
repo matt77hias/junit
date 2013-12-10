@@ -1,5 +1,7 @@
 package kuleuven.group2.ui.model;
 
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -7,7 +9,8 @@ import kuleuven.group2.policy.CompositePolicy;
 
 public class CompositePolicyModel extends PolicyModel {
 
-	private final ObservableList<PolicyRecordModel> records = FXCollections.observableArrayList();
+	private final SimpleListProperty<PolicyRecordModel> records = new SimpleListProperty<>(
+			FXCollections.<PolicyRecordModel> observableArrayList());
 
 	public CompositePolicyModel(String name, CompositePolicy policy) {
 		super(name, policy);
@@ -20,6 +23,10 @@ public class CompositePolicyModel extends PolicyModel {
 	}
 
 	public ObservableList<PolicyRecordModel> getRecords() {
+		return recordsProperty().get();
+	}
+
+	public ReadOnlyListProperty<PolicyRecordModel> recordsProperty() {
 		return records;
 	}
 

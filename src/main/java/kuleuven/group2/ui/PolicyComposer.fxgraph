@@ -1,0 +1,80 @@
+package kuleuven.group2.ui
+
+import javafx.scene.layout.GridPane
+import javafx.scene.layout.ColumnConstraints
+import javafx.scene.control.TableView
+import javafx.scene.control.ListView
+import javafx.scene.control.Label
+import javafx.scene.control.TextArea
+import javafx.geometry.Insets
+import kuleuven.group2.ui.model.CompositePolicyModel
+import kuleuven.group2.ui.model.PolicyRecordModel
+import kuleuven.group2.ui.PolicyComposerController
+import javafx.scene.layout.RowConstraints
+import javafx.scene.layout.HBox
+import javafx.scene.control.Button
+
+component PolicyComposer controlledby PolicyComposerController {
+	GridPane {
+		hgap : 5,
+		vgap : 5,
+		columnConstraints : [
+			ColumnConstraints {
+				hgrow : "SOMETIMES"
+			},
+			ColumnConstraints {
+				hgrow : "ALWAYS"
+			}
+		],
+		rowConstraints : [
+			RowConstraints {
+				vgrow : "ALWAYS"
+			},
+			RowConstraints {
+				vgrow : "NEVER"
+			}
+		],
+		children : [
+			TableView < CompositePolicyModel > id policiesTable {
+				static columnIndex : 0, static rowIndex : 0,
+				editable : true,
+				placeholder : Label {
+					text : "No composed policies"
+				}
+			},
+			HBox {
+				static columnIndex : 0, static rowIndex : 1,
+				children : [
+					Button {
+						text : "Add",
+						onAction : controllermethod addComposedPolicy
+					},
+					Button {
+						text : "Remove",
+						onAction : controllermethod removeComposedPolicies
+					}
+				]
+			},
+			TableView < PolicyRecordModel > id policyRecordsTable {
+				static columnIndex : 1, static rowIndex : 0, static hgrow : "ALWAYS",
+				editable : false,
+				placeholder : Label {
+					text : "No policy records in the selected composed policy"
+				}
+			},
+			HBox {
+				static columnIndex : 1, static rowIndex : 1,
+				children : [
+					Button {
+						text : "Add",
+						onAction : controllermethod addPolicyRecord
+					},
+					Button {
+						text : "Remove",
+						onAction : controllermethod removePolicyRecords
+					}
+				]
+			}
+		]
+	}
+}
