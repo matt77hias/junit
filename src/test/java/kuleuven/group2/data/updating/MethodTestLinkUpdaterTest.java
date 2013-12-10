@@ -110,7 +110,7 @@ public class MethodTestLinkUpdaterTest {
 		ossRewriterLoader.disable();
 		ossRewriterLoader.unregisterMonitor(updater);
 
-		System.out.println(database.getLinkedMethods(new kuleuven.group2.data.Test(testClassName, testMethodName)));
+		//System.out.println(database.getLinkedMethods(new kuleuven.group2.data.Test(testClassName, testMethodName)));
 		assertTrue(database.containsMethodTestLink(database.getMethod(testedSignature), test));
 	}
 	
