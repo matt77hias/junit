@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,66 +16,64 @@ import kuleuven.group2.data.TestRun;
 
 public class TestRunModel {
 
-	private final Test test;
 	private final TestRun run;
 
 	private final StringProperty testClassName = new SimpleStringProperty();
 	private final StringProperty testMethodName = new SimpleStringProperty();
 	private final BooleanProperty successfulRun = new SimpleBooleanProperty();
 	private final BooleanProperty failedRun = new SimpleBooleanProperty();
-	private final ObjectProperty<Date> timeStamp = new SimpleObjectProperty<Date>();
+	private final ObjectProperty<Date> timestamp = new SimpleObjectProperty<Date>();
 	private final ObjectProperty<Throwable> exception = new SimpleObjectProperty<Throwable>();
 	private final ObjectProperty<StackTraceElement[]> trace = new SimpleObjectProperty<StackTraceElement[]>();
 
-	public TestRunModel(Test test, TestRun testRun) {
-		this.test = test;
+	public TestRunModel(TestRun testRun) {
 		this.run = testRun;
 
 		// Fill in properties
-		testClassName.set(test.getTestClassName());
-		testMethodName.set(test.getTestMethodName());
+		testClassName.set(testRun.getTest().getTestClassName());
+		testMethodName.set(testRun.getTest().getTestMethodName());
 		successfulRun.set(testRun.isSuccessfulRun());
 		failedRun.set(testRun.isFailedRun());
-		timeStamp.set(testRun.getTimeStamp());
+		timestamp.set(testRun.getTimestamp());
 		if (failedRun.get()) {
 			exception.set(testRun.getException());
 			trace.set(testRun.getTrace());
 		}
 	}
 
-	public Test getTest() {
-		return test;
-	}
-
 	public TestRun getRun() {
 		return run;
 	}
 
-	public StringProperty testClassNameProperty() {
+	public Test getTest() {
+		return getRun().getTest();
+	}
+
+	public ReadOnlyStringProperty testClassNameProperty() {
 		return testClassName;
 	}
 
-	public StringProperty testMethodNameProperty() {
+	public ReadOnlyStringProperty testMethodNameProperty() {
 		return testMethodName;
 	}
 
-	public BooleanProperty successfulRunProperty() {
+	public ReadOnlyBooleanProperty successfulRunProperty() {
 		return successfulRun;
 	}
 
-	public BooleanProperty failedRunProperty() {
+	public ReadOnlyBooleanProperty failedRunProperty() {
 		return failedRun;
 	}
 
-	public ObjectProperty<Date> timeStampProperty() {
-		return timeStamp;
+	public ReadOnlyObjectProperty<Date> timestampProperty() {
+		return timestamp;
 	}
 
-	public ObjectProperty<Throwable> exceptionProperty() {
+	public ReadOnlyObjectProperty<Throwable> exceptionProperty() {
 		return exception;
 	}
 
-	public ObjectProperty<StackTraceElement[]> traceProperty() {
+	public ReadOnlyObjectProperty<StackTraceElement[]> traceProperty() {
 		return trace;
 	}
 

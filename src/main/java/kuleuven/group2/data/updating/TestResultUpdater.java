@@ -3,10 +3,12 @@ package kuleuven.group2.data.updating;
 import java.util.Date;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestBatch;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestRun;
 
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
@@ -19,10 +21,16 @@ import org.junit.runner.notification.RunListener;
 public class TestResultUpdater extends RunListener {
 
 	protected final TestDatabase testDatabase;
+	protected TestBatch currentTestBatch;
 	protected boolean isCurrentTestSuccessful = true;
 
 	public TestResultUpdater(TestDatabase testDatabase) {
 		this.testDatabase = testDatabase;
+	}
+
+	@Override
+	public void testRunStarted(Description description) throws Exception {
+		currentTestBatch = testDatabase.createTestBatch(new Date());
 	}
 
 	@Override
@@ -33,16 +41,21 @@ public class TestResultUpdater extends RunListener {
 	@Override
 	public void testFinished(Description description) throws Exception {
 		if (isCurrentTestSuccessful) {
-			TestRun testRun = TestRun.createSuccessful(new Date());
-			testDatabase.addTestRun(testRun, getTest(description));
+			Test test = getTest(description);
+			TestRun testRun = TestRun.createSuccessful(test, new Date());
+			testDatabase.addTestRun(testRun, currentTestBatch);
 		}
+	}
+
+	@Override
+	public void testRunFinished(Result result) throws Exception {
+		testDatabase.finishTestBatch(currentTestBatch, new Date());
 	}
 
 	private Test getTest(Description description) {
 		String testClassName = description.getClassName();
 		String testMethodName = description.getMethodName();
-		Test test = new Test(testClassName, testMethodName);
-		return test;
+		return testDatabase.getOrCreateTest(testClassName, testMethodName);
 	}
 
 	@Override
@@ -56,8 +69,9 @@ public class TestResultUpdater extends RunListener {
 	}
 
 	private void generalTestFailure(Failure failure) {
-		TestRun testRun = TestRun.createFailed(new Date(), failure);
-		testDatabase.addTestRun(testRun, getTest(failure.getDescription()));
+		Test test = getTest(failure.getDescription());
+		TestRun testRun = TestRun.createFailed(test, new Date(), failure);
+		testDatabase.addTestRun(testRun, currentTestBatch);
 		isCurrentTestSuccessful = false;
 	}
 

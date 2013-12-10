@@ -31,6 +31,10 @@ public class NameUtils {
 		return slashesToDots(resourceName.substring(0, resourceName.lastIndexOf(".")));
 	}
 
+	public static String toInternalName(String className) {
+		return dotsToSlashes(className);
+	}
+
 	public static String slashesToDots(String resourceName) {
 		return resourceName.replace('/', '.').replace('\\', '.');
 	}

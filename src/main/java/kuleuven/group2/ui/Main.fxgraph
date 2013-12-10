@@ -1,14 +1,14 @@
 package kuleuven.group2.ui
 
 import javafx.scene.layout.BorderPane
-import javafx.geometry.Insets
+import javafx.scene.layout.HBox
 import javafx.scene.control.TabPane
 import javafx.scene.control.Tab
-import javafx.scene.layout.HBox
 import javafx.scene.control.Button
+import javafx.geometry.Insets
 import kuleuven.group2.ui.MainController
 import kuleuven.group2.ui.Configuration
-import kuleuven.group2.ui.TestRuns
+import kuleuven.group2.ui.TestResults
 
 component Main controlledby MainController {
 	BorderPane {
@@ -27,8 +27,8 @@ component Main controlledby MainController {
 					}
 				},
 				Tab {
-					text : "Test runs",
-					content : TestRuns id testRuns {
+					text : "Test results",
+					content : TestResults id testResults {
 						padding : Insets {
 							top : 5,
 							bottom : 5,

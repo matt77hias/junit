@@ -84,5 +84,10 @@ public class StoreClassLoaderTest {
 			}
 		}
 	}
+	
+	@Test(expected=ClassNotFoundException.class)
+	public void testLoadClassNotInStore() throws ClassNotFoundException {
+		classLoader.loadClass("NonExistingClass");
+	}
 
 }
