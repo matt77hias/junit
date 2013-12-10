@@ -16,7 +16,7 @@ import com.google.common.collect.Sets;
  * @author Group2
  * @version 18 November 2013
  */
-public abstract class SourceEventHandler implements UnsafeConsumer<List<StoreEvent>>{
+public abstract class SourceEventHandler implements UnsafeConsumer<List<StoreEvent>> {
 
 	public abstract void setup() throws Exception;
 

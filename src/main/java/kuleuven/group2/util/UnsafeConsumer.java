@@ -1,8 +1,7 @@
 package kuleuven.group2.util;
 
 /**
- * An interface implemented by classes that consume objects of type T, but
- * an throw exceptions while doing that.
+ * An consumer of items which may throw exceptions while consuming.
  * 
  * @param <T>
  * 
@@ -12,5 +11,5 @@ package kuleuven.group2.util;
 public interface UnsafeConsumer<T> {
 
 	public void consume(T item) throws Exception;
-	
+
 }
