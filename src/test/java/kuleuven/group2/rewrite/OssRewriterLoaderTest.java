@@ -85,7 +85,16 @@ public class OssRewriterLoaderTest {
 		ossRewriterLoader.unregisterMonitor(monitor);
 
 		assertTrue(visitedMethodsTracker.methodIsVisited(NameUtils.toInternalName(A.class.getName()) + ".visit()V"));
-		assertEquals(1, visitedMethodsTracker.visitedMethodNames.size());
+		int actualMethodCount = 0;
+		for (String methodName : visitedMethodsTracker.visitedMethodNames) {
+			if (! methodName.contains("kuleuven/group2/rewrite/OssRewriterLoaderTest$A")) {
+				fail();
+			}
+			if (methodName.contains(".visit()V")) {
+				actualMethodCount++;
+			}
+		}
+		assertEquals(1, actualMethodCount);
 	}
 
 }
