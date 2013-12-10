@@ -47,7 +47,7 @@ public class ClassSourceEventHandler extends SourceEventHandler {
 	}
 
 	@Override
-	public void handleEvents(List<StoreEvent> events) throws Exception {
+	public void consume(List<StoreEvent> events) throws Exception {
 		// Collect changes in class sources
 		Changes changes = collectChanges(events, classSourceStore);
 

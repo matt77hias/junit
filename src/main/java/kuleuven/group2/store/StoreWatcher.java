@@ -76,7 +76,11 @@ public class StoreWatcher implements StoreListener {
 
 	protected void fireSourceEvent(StoreEvent event) {
 		for (Consumer<StoreEvent> consumer : consumers) {
-			consumer.consume(event);
+			try {
+				consumer.consume(event);
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 

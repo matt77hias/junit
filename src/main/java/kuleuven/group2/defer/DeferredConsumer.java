@@ -91,7 +91,7 @@ public class DeferredConsumer<T> implements Consumer<T> {
 				} catch (Throwable e) {
 					// Consumer failed, re-insert
 					queue.addAll(items);
-					throw e;
+					System.err.println(e.getMessage());
 				}
 			}
 		}

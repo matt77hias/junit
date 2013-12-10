@@ -90,7 +90,7 @@ public class ClassSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertTrue(testDatabase.containsMethod(new JavaSignatureParser("A.foo()Z").parseSignature()));
 	}
@@ -116,7 +116,7 @@ public class ClassSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertTrue(testDatabase.containsMethod(new JavaSignatureParser("A.bar()Z").parseSignature()));
 		assertFalse(testDatabase.containsMethod(new JavaSignatureParser("A.foo()Z").parseSignature()));
@@ -142,7 +142,7 @@ public class ClassSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertTrue(testDatabase.containsMethod(new JavaSignatureParser("A.bar()Z").parseSignature()));
 		assertFalse(testDatabase.containsMethod(new JavaSignatureParser("A.foo()Z").parseSignature()));
@@ -164,7 +164,7 @@ public class ClassSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertEquals(0, testDatabase.getMethodsIn(className).size());
 	}

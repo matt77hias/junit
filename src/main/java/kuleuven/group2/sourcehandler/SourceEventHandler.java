@@ -6,6 +6,7 @@ import java.util.Set;
 
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
+import kuleuven.group2.util.Consumer;
 
 import com.google.common.collect.Sets;
 
@@ -15,11 +16,12 @@ import com.google.common.collect.Sets;
  * @author Group2
  * @version 18 November 2013
  */
-public abstract class SourceEventHandler {
+public abstract class SourceEventHandler implements Consumer<List<StoreEvent>>{
 
 	public abstract void setup() throws Exception;
 
-	public abstract void handleEvents(List<StoreEvent> events) throws Exception;
+	@Override
+	public abstract void consume(List<StoreEvent> events) throws Exception;
 
 	protected Changes collectChanges(List<StoreEvent> events) {
 		return collectChanges(events, null);

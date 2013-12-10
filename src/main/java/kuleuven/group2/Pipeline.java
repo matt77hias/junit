@@ -2,6 +2,8 @@ package kuleuven.group2;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import kuleuven.group2.classloader.ReloadingStoreClassLoader;
@@ -11,7 +13,6 @@ import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
 import kuleuven.group2.policy.TestSortingPolicy;
-import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.rewrite.BinaryStoreTransformFilter;
 import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
@@ -21,6 +22,7 @@ import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
+import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.util.Consumer;
 
 /**
@@ -73,8 +75,7 @@ public class Pipeline {
 
 	protected final StoreWatcher classSourceWatcher;
 	protected final StoreWatcher testSourceWatcher;
-	protected final SourceEventHandler classSourceEventHandler;
-	protected final SourceEventHandler testSourceEventHandler;
+	protected final Collection<SourceEventHandler> storeEventConsumers = new HashSet<SourceEventHandler>();
 
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
@@ -97,10 +98,12 @@ public class Pipeline {
 
 		this.classSourceWatcher = new StoreWatcher(classSourceStore, StoreFilter.SOURCE);
 		this.testSourceWatcher = new StoreWatcher(testSourceStore, StoreFilter.SOURCE);
-		this.classSourceEventHandler = new ClassSourceEventHandler(classSourceStore, binaryStore, testDatabase,
+		SourceEventHandler classSourceEventHandler = new ClassSourceEventHandler(classSourceStore, binaryStore, testDatabase,
 				testClassLoader);
-		this.testSourceEventHandler = new TestSourceEventHandler(testSourceStore, binaryStore, testDatabase,
+		SourceEventHandler testSourceEventHandler = new TestSourceEventHandler(testSourceStore, binaryStore, testDatabase,
 				testClassLoader);
+		storeEventConsumers.add(classSourceEventHandler);
+		storeEventConsumers.add(testSourceEventHandler);
 
 		this.task = new PipelineTask();
 		this.deferredTask = new DeferredConsumer<>(task);
@@ -135,9 +138,7 @@ public class Pipeline {
 	private void firstRun() {
 		reloadClasses();
 
-		setupSources();
-
-		setupTestSources();
+		setupSourceEventHandlers();
 
 		Test[] sortedTests = sortTests();
 
@@ -149,8 +150,6 @@ public class Pipeline {
 
 		handleSourceEvents(events);
 
-		handleTestSourceEvents(events);
-
 		Test[] sortedTests = sortTests();
 
 		runTests(sortedTests);
@@ -159,41 +158,28 @@ public class Pipeline {
 	private void reloadClasses() {
 		testClassLoader.reload();
 	}
-
-	private void setupSources() {
-		try {
-			classSourceEventHandler.setup();
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
+	
+	private void setupSourceEventHandlers() {
+		for(SourceEventHandler handler : storeEventConsumers) {
+			try{
+				handler.setup();
+			} catch (Exception e) {
+				// TODO show in GUI?
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 
 	private void handleSourceEvents(List<StoreEvent> events) {
-		try {
-			classSourceEventHandler.handleEvents(events);
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
+		for(SourceEventHandler handler : storeEventConsumers) {
+			try {
+				handler.consume(events);
+			} catch (Exception e) {
+				// TODO Show in GUI?
+				System.err.println(e.getMessage());
+			}
 		}
-	}
-
-	private void setupTestSources() {
-		try {
-			testSourceEventHandler.setup();
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
-		}
-	}
-
-	private void handleTestSourceEvents(List<StoreEvent> events) {
-		try {
-			testSourceEventHandler.handleEvents(events);
-		} catch (Exception e) {
-			// TODO Show in GUI?
-			System.err.println(e.getMessage());
-		}
+			
 	}
 
 	private Test[] sortTests() {
