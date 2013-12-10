@@ -31,8 +31,11 @@ public class MethodHasher {
 	 * 
 	 * @param classBytes
 	 *            The class bytecode to read.
+	 * @throws RuntimeException
+	 * 			  When the class bytes are invalid
 	 */
-	public MethodHasher(byte[] classBytes) {
+	public MethodHasher(byte[] classBytes) 
+		throws RuntimeException{
 		this(new ClassReader(classBytes));
 	}
 

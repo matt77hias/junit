@@ -81,5 +81,10 @@ public class JavaSignatureParserTest {
 
 		assertTrue(signature.getPackageName().isEmpty());
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidSignature() {
+		new JavaSignatureParser("invalid()V").parseSignature();
+	}
 
 }

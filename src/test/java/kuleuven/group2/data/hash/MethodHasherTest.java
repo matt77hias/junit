@@ -66,10 +66,15 @@ public class MethodHasherTest {
 		assertTrue(mapWithMethodHashes.containsKey("foo()Z"));
 	}
 	
-	/* Not tested due to precondition in constructor
-	@Test
+	/*
+	 * The precondition for the constructor expects valid class bytes
+	 * here we see if we will atleast get notified if invalid class bytes are passed
+	 * This is necessary because the constructor itself will not throw the exception and
+	 * we can't guarantee which exception will be thrown
+	 */
+	@Test(expected=RuntimeException.class)
 	public void testConstructorInvalidCompiled() {
-		MethodHasher methodHasher = new MethodHasher("invalid".getBytes());
-	}*/
+		new MethodHasher("invalid".getBytes());
+	}
 
 }

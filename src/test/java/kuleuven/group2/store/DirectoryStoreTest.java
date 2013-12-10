@@ -1,6 +1,6 @@
 package kuleuven.group2.store;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -43,12 +43,18 @@ public class DirectoryStoreTest {
 		FileUtils.deleteRecursively(root, true);
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void testInvalidRoot() throws IllegalArgumentException, IOException {
+		new DirectoryStore("invalid");
+	}
+	
 	@Test
-	public void getAll_recursive() throws IOException {
+	public void getAllRecursive() throws IOException {
 		Path pathA = Paths.get("foo/bar/A");
 		Path pathB = Paths.get("bar/baz/B");
 		Path fullPathA = root.resolve(pathA);
 		Path fullPathB = root.resolve(pathB);
+		
 		Files.createDirectories(fullPathA.getParent());
 		Files.write(fullPathA, Collections.singleton("A"), Charset.defaultCharset());
 		Files.createDirectories(fullPathB.getParent());
@@ -57,6 +63,38 @@ public class DirectoryStoreTest {
 		Collection<String> resources = store.getAll();
 		assertTrue(resources.contains(pathA.toString()));
 		assertTrue(resources.contains(pathB.toString()));
+	}
+	
+	@Test
+	public void testGetFiltered() throws IOException {
+		String fileA = "a.java";
+		String fileB = "b.c";
+		Path pathA = Paths.get(fileA);
+		Path pathB = Paths.get(fileB);
+		Path fullPathA = root.resolve(pathA);
+		Path fullPathB = root.resolve(pathB);
+		
+		Files.write(fullPathA, Collections.singleton(fileA), Charset.defaultCharset());
+		Files.write(fullPathB, Collections.singleton(fileB), Charset.defaultCharset());
+
+		Collection<String> resources = store.getFiltered(StoreFilter.SOURCE);
+		assertTrue(resources.contains(pathA.toString()));
+		assertFalse(resources.contains(pathB.toString()));
+	}
+	
+	@Test
+	public void testWriteAndRead() throws IOException {
+		String fileA = "a.txt";
+		Path pathA = Paths.get(fileA);
+		Path fullPathA = root.resolve(pathA);
+		Files.write(fullPathA, Collections.singleton(fileA), Charset.defaultCharset());
+		
+		String contents = "hello world";
+		store.write(pathA.toString(), contents.getBytes());
+		
+		byte[] contentBytes = store.read(pathA.toString());
+		String contentString = new String(contentBytes, "UTF-8");
+		assertEquals(contents, contentString);
 	}
 
 }

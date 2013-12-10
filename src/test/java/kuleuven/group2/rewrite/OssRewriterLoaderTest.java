@@ -1,6 +1,6 @@
 package kuleuven.group2.rewrite;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,8 @@ import kuleuven.group2.rewrite.OssRewriterLoader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.base.Predicate;
 
 import be.kuleuven.cs.ossrewriter.Monitor;
 
@@ -68,8 +70,14 @@ public class OssRewriterLoaderTest {
 				visitedMethodsTracker.addVisitedMethod(arg0);
 			}
 		};
+		ossRewriterLoader.setTransformFilter(new Predicate<String>() {
+			@Override
+			public boolean apply(String input) {
+				return input.contains("kuleuven/group2/rewrite/OssRewriterLoaderTest$A");
+			}
+		});
 		ossRewriterLoader.registerMonitor(monitor);
-		ossRewriterLoader.enable();
+		ossRewriterLoader.enable(false);
 
 		a.visit();
 
@@ -77,6 +85,7 @@ public class OssRewriterLoaderTest {
 		ossRewriterLoader.unregisterMonitor(monitor);
 
 		assertTrue(visitedMethodsTracker.methodIsVisited(NameUtils.toInternalName(A.class.getName()) + ".visit()V"));
+		assertEquals(1, visitedMethodsTracker.visitedMethodNames.size());
 	}
 
 }
