@@ -8,11 +8,12 @@ import kuleuven.group2.classloader.ReloadingStoreClassLoader;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
-import kuleuven.group2.data.updating.OssRewriterLoader;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
 import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.testrunner.TestRunner;
+import kuleuven.group2.rewrite.BinaryStoreTransformFilter;
+import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
 import kuleuven.group2.sourcehandler.TestSourceEventHandler;
@@ -88,6 +89,7 @@ public class Pipeline {
 		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
 		this.testRunner = new TestRunner(testClassLoader);
 		this.rewriterLoader = OssRewriterLoader.getInstance();
+		rewriterLoader.setTransformFilter(new BinaryStoreTransformFilter(binaryStore));
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
 		methodTestLinkUpdater.registerTestHolder(testRunner);
 		this.testResultUpdater = new TestResultUpdater(testDatabase);
@@ -124,6 +126,8 @@ public class Pipeline {
 		testSourceStore.addStoreListener(testSourceWatcher);
 		classSourceStore.startListening();
 		testSourceStore.startListening();
+		// Start rewriting
+		rewriterLoader.enable();
 		// First setup
 		firstRun();
 	}
@@ -213,6 +217,8 @@ public class Pipeline {
 		testSourceStore.removeStoreListener(testSourceWatcher);
 		classSourceStore.stopListening();
 		testSourceStore.stopListening();
+		// Stop rewriting
+		rewriterLoader.disable();
 		// TODO Stop current test run as well?
 	}
 

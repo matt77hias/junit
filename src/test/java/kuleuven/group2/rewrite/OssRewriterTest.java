@@ -1,10 +1,12 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.rewrite;
 
 import static org.junit.Assert.assertTrue;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
+
+import kuleuven.group2.compile.NameUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +33,7 @@ public class OssRewriterTest {
 
 		try {
 			VirtualMachine vm = VirtualMachine.attach(pid);
-	        vm.loadAgent("res\\ossrewriter-1.0.jar", "");
+			vm.loadAgent("res\\ossrewriter-1.0.jar", "");
 			vm.detach();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -39,8 +41,8 @@ public class OssRewriterTest {
 
 		OSSRewriter.enable();
 		OSSRewriter.setUserExclusionFilter(new Predicate<String>() {
-			public boolean apply(String arg0) {
-				return arg0.startsWith("org/junit");
+			public boolean apply(String value) {
+				return value.startsWith("org/junit");
 			}
 		});
 		OSSRewriter.retransformAllClasses();
@@ -98,14 +100,14 @@ public class OssRewriterTest {
 		});
 
 		a.visit();
-		
-		assertTrue(visitedMethodsTracker.methodIsVisited("kuleuven/group2/data/updating/OssRewriterTest$A.visit()V"));
+
+		assertTrue(visitedMethodsTracker.methodIsVisited(NameUtils.toInternalName(A.class.getName()) + ".visit()V"));
 	}
-	
+
 	@Test
 	public void retransformClassesAfterReloadTest() throws ClassNotFoundException {
-		getClass().getClassLoader().loadClass(OssRewriterTest.A.class.getName());
-		
+		getClass().getClassLoader().loadClass(A.class.getName());
+
 		methodIsVisitedTest();
 	}
 

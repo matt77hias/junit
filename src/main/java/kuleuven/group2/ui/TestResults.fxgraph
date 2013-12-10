@@ -2,30 +2,45 @@ package kuleuven.group2.ui
 
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
+import javafx.scene.layout.HBox
 import javafx.scene.layout.ColumnConstraints
+import javafx.scene.control.SplitPane
 import javafx.scene.control.TableView
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.geometry.Insets
+import kuleuven.group2.ui.TestResultsController
 import kuleuven.group2.ui.TestRunsController
+import kuleuven.group2.ui.model.TestBatchModel
 import kuleuven.group2.ui.model.TestRunModel
 
-component TestRuns controlledby TestRunsController {
+component TestResults controlledby TestResultsController {
 	VBox {
+		spacing : 5,
 		children : [
-			TableView < TestRunModel > id runsTable {
+			HBox {
 				static vgrow : "ALWAYS",
-				editable : false
+				spacing : 5,
+				children : [
+					TableView < TestBatchModel > id batchesTable {
+						editable : false,
+						tableMenuButtonVisible : true,
+						placeholder : Label {
+							text : "No batches"
+						}
+					},
+					TableView < TestRunModel > id runsTable {
+						static hgrow : "ALWAYS",
+						editable : false,
+						placeholder : Label {
+							text : "Select a batch to show its test runs"
+						}
+					}
+				]
 			},
 			GridPane id selectedRunDetail {
 				hgap : 5,
 				vgap : 5,
-				padding : Insets {
-					top : 5,
-					bottom : 5,
-					left : 5,
-					right : 5
-				},
 				columnConstraints : [
 					ColumnConstraints {
 						minWidth : 100,
@@ -43,7 +58,7 @@ component TestRuns controlledby TestRunsController {
 						static rowIndex : 1, static columnIndex : 0, static valignment : "TOP",
 						text : "Time: "
 					},
-					Label id selectedRunTimeStamp {
+					Label id selectedRunTimestamp {
 						static rowIndex : 1, static columnIndex : 1
 					},
 					Label id selectedRunExceptionLabel {

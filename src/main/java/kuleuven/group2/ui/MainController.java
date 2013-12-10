@@ -2,7 +2,6 @@ package kuleuven.group2.ui;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -20,8 +19,8 @@ import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.ui.model.PolicyModel;
-import kuleuven.group2.ui.model.TestRunModel;
-import kuleuven.group2.ui.model.TestRunsModel;
+import kuleuven.group2.ui.model.TestBatchModel;
+import kuleuven.group2.ui.model.TestBatchesModel;
 
 public class MainController implements EventHandler<WindowEvent> {
 
@@ -39,7 +38,7 @@ public class MainController implements EventHandler<WindowEvent> {
 	private Configuration configuration;
 
 	@FXML
-	private TestRuns testRuns;
+	private TestResults testResults;
 
 	@FXML
 	private Button buttonStart;
@@ -67,12 +66,12 @@ public class MainController implements EventHandler<WindowEvent> {
 		return configuration.selectedPolicyProperty();
 	}
 
-	public ListProperty<TestRunModel> testRunsProperty() {
-		return testRuns.runsProperty();
+	public ListProperty<TestBatchModel> testBatchesProperty() {
+		return testResults.batchesProperty();
 	}
 
 	private final BooleanProperty running = new SimpleBooleanProperty(false);
-	private final TestRunsModel testRunsModel = new TestRunsModel();
+	private final TestBatchesModel testBatchesModel = new TestBatchesModel();
 
 	public boolean isConfigured() {
 		return running.get();
@@ -113,8 +112,8 @@ public class MainController implements EventHandler<WindowEvent> {
 			}
 		});
 
-		// Bind test runs list
-		testRunsProperty().bind(testRunsModel);
+		// Bind test batches model
+		testBatchesProperty().bind(testBatchesModel);
 	}
 
 	protected void setup() throws IOException {
@@ -123,7 +122,7 @@ public class MainController implements EventHandler<WindowEvent> {
 		Store binaryStore = new DirectoryStore(binariesDirProperty().get());
 		TestSortingPolicy sortPolicy = policyProperty().get().getPolicy();
 		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
-		pipeline.getTestDatabase().addListener(testRunsModel);
+		pipeline.getTestDatabase().addListener(testBatchesModel);
 	}
 
 	@FXML

@@ -1,9 +1,12 @@
-package kuleuven.group2.data.updating;
+package kuleuven.group2.rewrite;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kuleuven.group2.compile.NameUtils;
+import kuleuven.group2.rewrite.OssRewriterLoader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -66,13 +69,14 @@ public class OssRewriterLoaderTest {
 			}
 		};
 		ossRewriterLoader.registerMonitor(monitor);
+		ossRewriterLoader.enable();
 
 		a.visit();
 
+		ossRewriterLoader.disable();
 		ossRewriterLoader.unregisterMonitor(monitor);
 
-		assertTrue(visitedMethodsTracker
-				.methodIsVisited("kuleuven/group2/data/updating/OssRewriterLoaderTest$A.visit()V"));
+		assertTrue(visitedMethodsTracker.methodIsVisited(NameUtils.toInternalName(A.class.getName()) + ".visit()V"));
 	}
 
 }

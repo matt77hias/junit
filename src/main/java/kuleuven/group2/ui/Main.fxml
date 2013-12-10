@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import kuleuven.group2.ui.Configuration?>
-<?import kuleuven.group2.ui.TestRuns?>
+<?import kuleuven.group2.ui.TestResults?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.MainController">
 
@@ -27,13 +27,13 @@
 						</Configuration>
 					</content>
 				</Tab>
-				<Tab text="Test runs"> 
+				<Tab text="Test results"> 
 					<content>
-						<TestRuns fx:id="testRuns"> 
+						<TestResults fx:id="testResults"> 
 							<padding>
 								<Insets top="5" bottom="5" left="5" right="5"/> 
 							</padding>
-						</TestRuns>
+						</TestResults>
 					</content>
 				</Tab>
 			</tabs>
