@@ -3,7 +3,6 @@ package kuleuven.group2.data.updating;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import kuleuven.group2.data.TestDatabase;
-import kuleuven.group2.data.updating.TestResultUpdater;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -60,8 +59,10 @@ public class TestResultUpdaterTest {
 		
 		updater.testRunFinished(null);
 		
-		// there are now two runs in the database: one failed and one succeeded
-		assertEquals(2, database.getAllTestRuns().size());
+		// every test should have one run
+		for(kuleuven.group2.data.Test test : database.getAllTests()) {
+			assertEquals(1, test.getTestRuns().size());
+		}
 	}
 	
 	private class TestClass {

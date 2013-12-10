@@ -3,6 +3,7 @@ package kuleuven.group2.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class TestDatabase {
 	protected final ConcurrentMap<String, ConcurrentMap<JavaSignature, TestedMethod>> methods = new ConcurrentHashMap<>();
 
 	protected final ConcurrentMap<String, ConcurrentMap<String, Test>> tests = new ConcurrentHashMap<>();
+	protected final List<TestBatch> testBatches = new ArrayList<TestBatch>();
 
 	protected final Object linksLock = new Object();
 	protected final Multimap<TestedMethod, Test> methodToTestLinks = HashMultimap.create();
@@ -176,14 +178,11 @@ public class TestDatabase {
 	 * Test runs
 	 */
 
-	public void addTestRun(TestRun testRun, Test test) {
-		addTestRun(testRun, test.getTestClassName(), test.getTestMethodName());
-	}
-
-	protected void addTestRun(TestRun testRun, String testClassName, String testMethodName) {
-		Test test = getOrCreateTest(testClassName, testMethodName);
+	public void addTestRun(TestRun testRun, TestBatch testBatch) {
+		Test test = testRun.getTest();
 		test.addTestRun(testRun);
-		fireTestRunAdded(test, testRun);
+		testBatch.addTestRun(testRun);
+		fireTestRunAdded(testRun, testBatch);
 	}
 
 	public List<TestRun> getAllTestRuns() {
@@ -192,6 +191,26 @@ public class TestDatabase {
 			testRuns.addAll(test.getTestRuns());
 		}
 		return testRuns;
+	}
+
+	/*
+	 * Test batches
+	 */
+
+	public TestBatch createTestBatch(Date startDate) {
+		TestBatch testBatch = new TestBatch(startDate);
+		testBatches.add(testBatch);
+		fireTestBatchStarted(testBatch);
+		return testBatch;
+	}
+
+	public void finishTestBatch(TestBatch testBatch, Date endDate) {
+		testBatch.setEndDate(endDate);
+		fireTestBatchFinished(testBatch);
+	}
+
+	public List<TestBatch> getTestBatches() {
+		return Collections.unmodifiableList(testBatches);
 	}
 
 	/*
@@ -275,9 +294,21 @@ public class TestDatabase {
 		}
 	}
 
-	protected void fireTestRunAdded(Test test, TestRun testRun) {
+	protected void fireTestRunAdded(TestRun testRun, TestBatch testBatch) {
 		for (TestDatabaseListener listener : listeners) {
-			listener.testRunAdded(test, testRun);
+			listener.testRunAdded(testRun, testBatch);
+		}
+	}
+
+	protected void fireTestBatchStarted(TestBatch testBatch) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testBatchStarted(testBatch);
+		}
+	}
+
+	protected void fireTestBatchFinished(TestBatch testBatch) {
+		for (TestDatabaseListener listener : listeners) {
+			listener.testBatchFinished(testBatch);
 		}
 	}
 
