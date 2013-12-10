@@ -149,7 +149,7 @@ public class OssRewriterLoader {
 	 * Transformation filtering
 	 */
 
-	protected Predicate<String> transformFilter = Predicates.alwaysTrue();
+	protected Predicate<String> classTransformFilter = Predicates.alwaysTrue();
 
 	/**
 	 * Set the (inclusion) filter to use when transforming classes.
@@ -162,21 +162,21 @@ public class OssRewriterLoader {
 	 * @param filter
 	 *            The new transformation filter.
 	 */
-	public void setTransformFilter(Predicate<String> filter) {
-		transformFilter = checkNotNull(filter);
+	public void setClassTransformFilter(Predicate<String> filter) {
+		classTransformFilter = checkNotNull(filter);
 		updateExclusionFilter();
 	}
 
 	/**
 	 * Removes the transformation filter.
 	 */
-	public void removeTransformFilter() {
-		setTransformFilter(Predicates.<String> alwaysTrue());
+	public void removeClassTransformFilter() {
+		setClassTransformFilter(Predicates.<String> alwaysTrue());
 	}
 
 	/**
 	 * Updates the rewriter's exclusion filter using the configured
-	 * {@link #transformFilter}.
+	 * {@link #classTransformFilter}.
 	 */
 	protected void updateExclusionFilter() {
 		ensureLoaded();
@@ -184,7 +184,7 @@ public class OssRewriterLoader {
 		 * OSS Rewriter uses an exclusion filter, so we need to invert our
 		 * inclusion filter
 		 */
-		Predicate<String> exclusionFilter = Predicates.not(transformFilter);
+		Predicate<String> exclusionFilter = Predicates.not(classTransformFilter);
 		OSSRewriter.setUserExclusionFilter(new PredicateAdapter<String>(exclusionFilter));
 	}
 

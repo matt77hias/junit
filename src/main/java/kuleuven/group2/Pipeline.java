@@ -89,7 +89,7 @@ public class Pipeline {
 		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
 		this.testRunner = new TestRunner(testClassLoader);
 		this.rewriterLoader = OssRewriterLoader.getInstance();
-		rewriterLoader.setTransformFilter(new BinaryStoreTransformFilter(binaryStore));
+		rewriterLoader.setClassTransformFilter(new BinaryStoreTransformFilter(binaryStore));
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
 		methodTestLinkUpdater.registerTestHolder(testRunner);
 		this.testResultUpdater = new TestResultUpdater(testDatabase);

@@ -70,7 +70,7 @@ public class OssRewriterLoaderTest {
 				visitedMethodsTracker.addVisitedMethod(arg0);
 			}
 		};
-		ossRewriterLoader.setTransformFilter(new Predicate<String>() {
+		ossRewriterLoader.setClassTransformFilter(new Predicate<String>() {
 			@Override
 			public boolean apply(String input) {
 				return input.contains("kuleuven/group2/rewrite/OssRewriterLoaderTest$A");

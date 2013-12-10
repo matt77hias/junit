@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.common.base.Predicate;
+
 public class MethodTestLinkUpdaterTest {
 
 	private static OssRewriterLoader ossRewriterLoader = OssRewriterLoader.getInstance();
@@ -93,6 +95,13 @@ public class MethodTestLinkUpdaterTest {
 
 		database.addMethod(new TestedMethod(testedSignature));
 
+		ossRewriterLoader.setClassTransformFilter(new Predicate<String>() {
+			@Override
+			public boolean apply(String input) {
+				return input.contains(NameUtils.toInternalName("kuleuven.group2.data.signature.JavaSignatureParser"));
+			}
+		});
+		
 		ossRewriterLoader.registerMonitor(updater);
 		ossRewriterLoader.enable();
 
@@ -101,6 +110,7 @@ public class MethodTestLinkUpdaterTest {
 		ossRewriterLoader.disable();
 		ossRewriterLoader.unregisterMonitor(updater);
 
+		System.out.println(database.getLinkedMethods(new kuleuven.group2.data.Test(testClassName, testMethodName)));
 		assertTrue(database.containsMethodTestLink(database.getMethod(testedSignature), test));
 	}
 	
