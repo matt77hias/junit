@@ -45,7 +45,7 @@ public class DirectoryStoreTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testInvalidRoot() throws IllegalArgumentException, IOException {
-		new DirectoryStore("invalid");
+		new DirectoryStore("invalid*");
 	}
 	
 	@Test
@@ -95,6 +95,12 @@ public class DirectoryStoreTest {
 		byte[] contentBytes = store.read(pathA.toString());
 		String contentString = new String(contentBytes, "UTF-8");
 		assertEquals(contents, contentString);
+	}
+	
+	@Test
+	public void testNonExistingRoot () throws IllegalArgumentException, IOException {
+		String newPath = root + "/doesnotexist";
+		DirectoryStore directoryStore2 = new DirectoryStore(newPath);
 	}
 
 }

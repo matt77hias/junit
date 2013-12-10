@@ -31,12 +31,11 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 		if (root == null) {
 			throw new IllegalArgumentException("Root must be effective.");
 		}
-		if (!Files.isDirectory(root)) {
-			throw new IllegalArgumentException("Root must be a directory.");
-		}
 		// Make the root directory if it doesn't exit
 		if (!Files.exists(root)) {
 			Files.createDirectories(root);
+		} else if (!Files.isDirectory(root)) {
+			throw new IllegalArgumentException("Root must be a directory.");
 		}
 		this.root = root;
 		this.watcher = new DirectoryWatcher(root);
