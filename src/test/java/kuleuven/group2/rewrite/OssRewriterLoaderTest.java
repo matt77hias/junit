@@ -85,9 +85,6 @@ public class OssRewriterLoaderTest {
 		ossRewriterLoader.unregisterMonitor(monitor);
 
 		assertTrue(visitedMethodsTracker.methodIsVisited(NameUtils.toInternalName(A.class.getName()) + ".visit()V"));
-		for(String string : visitedMethodsTracker.visitedMethodNames) {
-			System.out.println(string);
-		}
 		assertEquals(1, visitedMethodsTracker.visitedMethodNames.size());
 	}
 
