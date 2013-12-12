@@ -37,16 +37,16 @@
 				<Button fx:id="removeComposed" text="Remove" onAction="#removeComposedPolicies"/> 
 			</children>
 		</HBox>
-		<TableView fx:id="policyRecordsTable" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"> 
+		<TableView fx:id="weightedPoliciesTable" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"> 
 			<placeholder>
-				<Label text="No policy records in the selected composed policy"/> 
+				<Label text="No weighted policies in the selected composed policy"/> 
 			</placeholder>
 		</TableView>
 		<HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
 			<children>
-				<ComboBox fx:id="newRecordPolicy"/> 
-				<Button fx:id="addRecord" text="Add" onAction="#addPolicyRecord"/> 
-				<Button fx:id="removeRecord" text="Remove" onAction="#removePolicyRecords"/> 
+				<ComboBox fx:id="newWeightedPolicy"/> 
+				<Button fx:id="addWeightedPolicy" text="Add" onAction="#addWeightedPolicy"/> 
+				<Button fx:id="removeWeightedPolicy" text="Remove" onAction="#removeWeightedPolicies"/> 
 			</children>
 		</HBox>
 	</children>

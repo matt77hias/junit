@@ -36,7 +36,7 @@ public class PolicyComposerController {
 	private TableView<CompositePolicyModel> policiesTable;
 
 	@FXML
-	private TableView<WeightedPolicyModel> policyRecordsTable;
+	private TableView<WeightedPolicyModel> weightedPoliciesTable;
 
 	@FXML
 	private TextField newComposedName;
@@ -48,13 +48,13 @@ public class PolicyComposerController {
 	private Button removeComposed;
 
 	@FXML
-	private ComboBox<PolicyModel> newRecordPolicy;
+	private ComboBox<PolicyModel> newWeightedPolicy;
 
 	@FXML
-	private Button addRecord;
+	private Button addWeightedPolicy;
 
 	@FXML
-	private Button removeRecord;
+	private Button removeWeightedPolicy;
 
 	/*
 	 * Properties
@@ -65,8 +65,8 @@ public class PolicyComposerController {
 
 	private final ObjectProperty<CompositePolicyModel> selectedPolicy = new SimpleObjectProperty<>();
 	private final StringProperty newPolicyName = new SimpleStringProperty();
-	private final ObjectProperty<WeightedPolicyModel> selectedRecord = new SimpleObjectProperty<>();
-	private final ObjectProperty<PolicyModel> selectedNewRecordPolicy = new SimpleObjectProperty<>();
+	private final ObjectProperty<WeightedPolicyModel> selectedWeightedPolicy = new SimpleObjectProperty<>();
+	private final ObjectProperty<PolicyModel> selectedNewWeightedPolicy = new SimpleObjectProperty<>();
 
 	public ListProperty<PolicyModel> allPoliciesProperty() {
 		return allPolicies;
@@ -80,7 +80,7 @@ public class PolicyComposerController {
 		return selectedPolicy;
 	}
 
-	public ListBinding<WeightedPolicyModel> recordsProperty() {
+	public ListBinding<WeightedPolicyModel> weightedPoliciesProperty() {
 		return new ListBinding<WeightedPolicyModel>() {
 			{
 				super.bind(selectedPolicyProperty());
@@ -92,20 +92,20 @@ public class PolicyComposerController {
 				if (selectedPolicy == null) {
 					return FXCollections.emptyObservableList();
 				}
-				return selectedPolicy.recordsProperty();
+				return selectedPolicy.weightedPoliciesProperty();
 			}
 		};
 	}
 
-	public ObjectProperty<WeightedPolicyModel> selectedRecordProperty() {
-		return selectedRecord;
+	public ObjectProperty<WeightedPolicyModel> selectedWeightedPolicyProperty() {
+		return selectedWeightedPolicy;
 	}
 
 	public StringProperty newPolicy_nameProperty() {
 		return newPolicyName;
 	}
 
-	public ListBinding<PolicyModel> newRecordPolicy_policiesProperty() {
+	public ListBinding<PolicyModel> newWeightedPolicy_policiesProperty() {
 		return new ListBinding<PolicyModel>() {
 			{
 				super.bind(allPoliciesProperty());
@@ -124,16 +124,16 @@ public class PolicyComposerController {
 		};
 	}
 
-	public ObjectProperty<PolicyModel> newRecordPolicy_policyProperty() {
-		return selectedNewRecordPolicy;
+	public ObjectProperty<PolicyModel> newWeightedPolicy_policyProperty() {
+		return selectedNewWeightedPolicy;
 	}
 
 	@FXML
 	public void initialize() {
 		setupPolicies();
 		setupPolicyButtons();
-		setupRecords();
-		setupRecordButtons();
+		setupWeightedPolicies();
+		setupWeightedPolicyButtons();
 	}
 
 	protected void setupPolicies() {
@@ -165,13 +165,13 @@ public class PolicyComposerController {
 		removeComposed.disableProperty().bind(selectedPolicyProperty().isNull());
 	}
 
-	protected void setupRecords() {
+	protected void setupWeightedPolicies() {
 		// Bind to model
-		policyRecordsTable.itemsProperty().bind(recordsProperty());
-		// Bind selected record
-		selectedRecordProperty().bind(policyRecordsTable.getSelectionModel().selectedItemProperty());
+		weightedPoliciesTable.itemsProperty().bind(weightedPoliciesProperty());
+		// Bind selected weighted policy
+		selectedWeightedPolicyProperty().bind(weightedPoliciesTable.getSelectionModel().selectedItemProperty());
 		// Disable when no composed policy selected
-		policyRecordsTable.disableProperty().bind(selectedPolicyProperty().isNull());
+		weightedPoliciesTable.disableProperty().bind(selectedPolicyProperty().isNull());
 
 		// Set up columns
 		TableColumn<WeightedPolicyModel, String> policyNameColumn = new TableColumn<>("Policy name");
@@ -184,26 +184,27 @@ public class PolicyComposerController {
 		weightColumn.setEditable(true);
 		weightColumn.setPrefWidth(60);
 
-		policyRecordsTable.getColumns().setAll(ImmutableList.of(policyNameColumn, weightColumn));
+		weightedPoliciesTable.getColumns().setAll(ImmutableList.of(policyNameColumn, weightColumn));
 	}
 
-	protected void setupRecordButtons() {
+	protected void setupWeightedPolicyButtons() {
 		// Bind to model
-		newRecordPolicy.itemsProperty().bind(newRecordPolicy_policiesProperty());
-		newRecordPolicy_policyProperty().bind(newRecordPolicy.valueProperty());
+		newWeightedPolicy.itemsProperty().bind(newWeightedPolicy_policiesProperty());
+		newWeightedPolicy_policyProperty().bind(newWeightedPolicy.valueProperty());
 
 		// Set up display
 		PolicyListCellFactory cellFactory = new PolicyListCellFactory();
-		newRecordPolicy.setButtonCell(cellFactory.call(null));
-		newRecordPolicy.setCellFactory(cellFactory);
+		newWeightedPolicy.setButtonCell(cellFactory.call(null));
+		newWeightedPolicy.setCellFactory(cellFactory);
 
 		// Disable when no composed policy selected
-		newRecordPolicy.disableProperty().bind(selectedPolicyProperty().isNull());
+		newWeightedPolicy.disableProperty().bind(selectedPolicyProperty().isNull());
 		// Disable when no new policy selected
-		addRecord.disableProperty().bind(
-				selectedPolicyProperty().isNull().or(newRecordPolicy_policyProperty().isNull()));
-		// Disable when no record selected
-		removeRecord.disableProperty().bind(selectedPolicyProperty().isNull().or(selectedRecordProperty().isNull()));
+		addWeightedPolicy.disableProperty().bind(
+				selectedPolicyProperty().isNull().or(newWeightedPolicy_policyProperty().isNull()));
+		// Disable when no weighted policy selected
+		removeWeightedPolicy.disableProperty().bind(
+				selectedPolicyProperty().isNull().or(selectedWeightedPolicyProperty().isNull()));
 	}
 
 	@FXML
@@ -218,14 +219,14 @@ public class PolicyComposerController {
 	}
 
 	@FXML
-	public void addPolicyRecord() {
-		PolicyModel policy = newRecordPolicy_policyProperty().get();
-		recordsProperty().add(new WeightedPolicyModel(policy, 5));
+	public void addWeightedPolicy() {
+		PolicyModel policy = newWeightedPolicy_policyProperty().get();
+		weightedPoliciesProperty().add(new WeightedPolicyModel(policy, 5));
 	}
 
 	@FXML
-	public void removePolicyRecords() {
-		recordsProperty().remove(policyRecordsTable.getSelectionModel().getSelectedItem());
+	public void removeWeightedPolicies() {
+		weightedPoliciesProperty().remove(weightedPoliciesTable.getSelectionModel().getSelectedItem());
 	}
 
 }

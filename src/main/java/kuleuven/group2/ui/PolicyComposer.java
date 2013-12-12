@@ -3,7 +3,6 @@ package kuleuven.group2.ui;
 import java.io.IOException;
 
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
@@ -27,10 +26,6 @@ public class PolicyComposer extends BorderPane {
 
 	public ListProperty<CompositePolicyModel> compositePoliciesProperty() {
 		return controller.compositePoliciesProperty();
-	}
-
-	public ObjectProperty<CompositePolicyModel> selectedPolicyProperty() {
-		return controller.selectedPolicyProperty();
 	}
 
 }

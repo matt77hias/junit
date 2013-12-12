@@ -12,19 +12,19 @@ import kuleuven.group2.policy.WeightedPolicy;
 
 public class WeightedPolicyModel {
 
-	private final WeightedPolicy policyRecord;
+	private final WeightedPolicy weightedPolicy;
 	private final ObjectProperty<PolicyModel> policy = new SimpleObjectProperty<>();
 	private final IntegerProperty weight = new SimpleIntegerProperty();
 
 	public WeightedPolicyModel(PolicyModel policy, int weight) {
-		this.policyRecord = new WeightedPolicy(policy.getPolicy(), weight);
+		this.weightedPolicy = new WeightedPolicy(policy.getPolicy(), weight);
 		this.policy.set(policy);
-		this.weight.set(policyRecord.getWeight());
+		this.weight.set(weightedPolicy.getWeight());
 		this.weight.addListener(new WeightChangeListener());
 	}
 
-	public WeightedPolicy getRecord() {
-		return policyRecord;
+	public WeightedPolicy getWeightedPolicy() {
+		return weightedPolicy;
 	}
 
 	public PolicyModel getPolicy() {
@@ -55,9 +55,9 @@ public class WeightedPolicyModel {
 		@Override
 		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 			int newWeight = newValue.intValue();
-			policyRecord.setWeight(newWeight);
+			weightedPolicy.setWeight(newWeight);
 			// The new value may be invalid, so check the result
-			int actualWeight = getRecord().getWeight();
+			int actualWeight = getWeightedPolicy().getWeight();
 			if (newWeight != actualWeight) {
 				setWeight(actualWeight);
 			}
