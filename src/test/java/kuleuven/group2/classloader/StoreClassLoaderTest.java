@@ -2,6 +2,10 @@ package kuleuven.group2.classloader;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 
 import kuleuven.group2.compile.EclipseCompiler;
@@ -14,6 +18,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.google.common.io.ByteStreams;
 
 public class StoreClassLoaderTest {
 
@@ -83,6 +89,20 @@ public class StoreClassLoaderTest {
 				assertNotNull(method.getAnnotation(Test.class));
 			}
 		}
+	}
+	
+	@Test
+	public void testFindResource() throws IOException {
+		String sourceString = "hello world";
+		String sourceName = "A";
+		binaryStore.write(sourceName, sourceString.getBytes());
+		
+		InputStream inputStream = classLoader.getResourceAsStream(sourceName);
+		
+		byte[] bytes = ByteStreams.toByteArray(inputStream);
+		String readString = new String(bytes);
+		
+		assertEquals(sourceString, readString);
 	}
 	
 	@Test(expected=ClassNotFoundException.class)
