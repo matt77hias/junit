@@ -2,6 +2,7 @@ package kuleuven.group2.policy;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.LinkedHashMultiset;
 
 /**
  * A composite policy using a Round Robin strategy.
@@ -36,30 +37,41 @@ public class RoundRobinPolicy extends CompositePolicy {
 
 	@Override
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-//		List<LinkedHashSet<Test>> rrqueue = new ArrayList<>();
-//		List<Test> result = new ArrayList<Test>();
-//		for (WeightedPolicy wp : this.policies) {
-//			List<Test> sorted = wp.getTestSortingPolicy().getSortedTests(testDatabase, tests);
-//			rrqueue.add(new LinkedHashSet<Test>(sorted), wp.getWeight());
-//		}
-//
-//		Iterator<LinkedHashSet<Test>> it = Iterators.cycle(rrqueue);
-//		for (int i = 0; i < tests.size(); i++) {
-//			Test victim = null;
-//			while (it.hasNext()) {
-//				LinkedHashSet<Test> set = it.next();
-//				if (!set.isEmpty()) {
-//					victim = set.iterator().next();
-//					break;
-//				}
-//			}
-//			result.add(victim);
-//			for (LinkedHashSet<Test> set : rrqueue) {
-//				set.remove(victim);
-//			}
-//		}
+		List<LinkedHashSet<Test>> sets = new ArrayList<>(this.policies.size());
+		List<Iterable<LinkedHashSet<Test>>> weightedSets = new ArrayList<>(this.policies.size());
+		List<Test> result = new ArrayList<>(tests.size());
 
-		return null;
+		// Collect sorted tests from weighted policies
+		for (WeightedPolicy wp : this.policies) {
+			List<Test> sorted = wp.getTestSortingPolicy().getSortedTests(testDatabase, tests);
+			LinkedHashSet<Test> sortedSet = new LinkedHashSet<Test>(sorted);
+			sets.add(sortedSet);
+			weightedSets.add(Collections.nCopies(wp.getWeight(), sortedSet));
+		}
+
+		// Create cyclic weighted queue
+		Iterable<LinkedHashSet<Test>> queue = Iterables.concat(weightedSets);
+		Iterator<LinkedHashSet<Test>> it = Iterators.cycle(queue);
+
+		for (int i = 0; i < tests.size(); i++) {
+			Test test = null;
+			// Find non-empty set and take its next test
+			while (it.hasNext()) {
+				LinkedHashSet<Test> set = it.next();
+				if (!set.isEmpty()) {
+					test = set.iterator().next();
+					break;
+				}
+			}
+			// Add to result
+			result.add(test);
+			// Remove from all tests
+			for (LinkedHashSet<Test> set : sets) {
+				set.remove(test);
+			}
+		}
+
+		return result;
 	}
 
 }
