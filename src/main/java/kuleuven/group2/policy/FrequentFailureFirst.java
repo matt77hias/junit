@@ -3,6 +3,7 @@ package kuleuven.group2.policy;
 import java.util.Comparator;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the frequent failure first policy.
@@ -102,7 +103,7 @@ public class FrequentFailureFirst extends ComparingPolicy implements Comparator<
 	}
 
 	@Override
-	protected Comparator<? super Test> getComparator() {
+	protected Comparator<? super Test> getComparator(TestDatabase testDatabase) {
 		return this;
 	}
 	

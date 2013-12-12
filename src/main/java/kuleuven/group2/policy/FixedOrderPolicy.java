@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 import com.google.common.collect.Ordering;
 
@@ -34,7 +35,7 @@ public class FixedOrderPolicy extends ComparingPolicy {
 	}
 
 	@Override
-	protected Comparator<? super Test> getComparator() {
+	protected Comparator<? super Test> getComparator(TestDatabase testDatabase) {
 		return ordering;
 	}
 

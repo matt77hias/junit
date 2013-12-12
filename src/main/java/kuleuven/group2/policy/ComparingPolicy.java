@@ -25,15 +25,17 @@ public abstract class ComparingPolicy implements TestSortingPolicy {
 	@Override
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
 		List<Test> result = new ArrayList<Test>(tests);
-		Collections.sort(result, getComparator());
+		Collections.sort(result, getComparator(testDatabase));
 		return result;
 	}
 
 	/**
 	 * Get the comparator to use for sorting the tests.
 	 * 
+	 * @param testDatabase
+	 *            The test database.
 	 * @return The comparator.
 	 */
-	protected abstract Comparator<? super Test> getComparator();
+	protected abstract Comparator<? super Test> getComparator(TestDatabase testDatabase);
 
 }

@@ -1,127 +1,61 @@
 package kuleuven.group2.policy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.Comparator;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.TestedMethod;
 
+import com.google.common.primitives.Longs;
+
 /**
  * A class representing the changed code first policy.
  * 
- * @author	Group 2
- * @version	17 November 2013
+ * @author Group 2
+ * @version 17 November 2013
  * 
  */
-public class ChangedCodeFirst implements TestSortingPolicy {
+public class ChangedCodeFirst extends ComparingPolicy {
 
 	/**
 	 * Creates a new changed code first policy.
 	 */
 	public ChangedCodeFirst() {
-		
-	}
-	
-	/**
-	 * Sorts the tests of the given test database according to this last failure policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @return	The tests of the given test database according to this
-	 * 			last failure policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-	
-	/**
-	 * A class of tuples.
-	 * 
-	 * @author 	Group 2
-	 * @version	18 November 2013
-	 */
-	private class Tuple implements Comparable<Tuple> {
-		
-		/**
-		 * The test of this tuple.
-		 */
-		private Test test;
-		
-		/**
-		 * The time in milliseconds of the last change of methods
-		 * used in the test of this tuple.
-		 */
-		private long time;
-		
-		/**
-		 * Creates a new tuple with given test and time.
-		 * 
-		 * @param	test
-		 * 			The test for this new tuple.
-		 * @param	time
-		 * 			The time for this new tuple.
-		 */
-		public Tuple(Test test, long time) {
-			this.test = test;
-			this.time = time;
-		}
 
-		/**
-		 * Compares the times of the given tuple to this
-		 * tuple's time.
-		 * 
-		 * @param	t2
-		 * 			The other tuple.
-		 * @return	Returns a number less than zero
-		 * 			if the time of this tuple is greater
-		 * 			than the time of the given tuple.
-		 * @return	Returns zero if the time of this
-		 * 			tuple and the given tuple are equal.
-		 * @return	Returns a number greater than zero
-		 * 			if the time of the given tuple is greater
-		 * 			than the time of this tuple.
-		 */
-		@Override
-		public int compareTo(Tuple t2) {
-			return Long.compare(t2.time, this.time);
-		}
 	}
-	
+
 	/**
-	 * Sorts the given tests according to this changed code first policy.
+	 * Get the last change time of a test. This is the latest change time of all
+	 * methods linked to the test.
 	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
+	 * @param testDatabase
+	 *            The test database.
+	 * @param test
+	 *            The test.
+	 * @return The latest change time, or {@link Long#MIN_VALUE} if the test was
+	 *         never changed.
 	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		int nb = tests.size();
-		Tuple[] tuples = new Tuple[nb];
-		int i=0;
-		for (Test test : tests) {
-			long optimal = Long.MIN_VALUE;
-			Test current = test;
-			for(TestedMethod t : testDatabase.getLinkedMethods(current)) {
-				long temp = t.getLastChange().getTime();
-				if (temp > optimal) {
-					optimal = temp;
-				}
+	protected long getLastChangeTime(TestDatabase testDatabase, Test test) {
+		long maxChangeTime = Long.MIN_VALUE;
+		for (TestedMethod method : testDatabase.getLinkedMethods(test)) {
+			long changeTime = method.getLastChange().getTime();
+			if (changeTime > maxChangeTime) {
+				maxChangeTime = changeTime;
 			}
-			tuples[i] = new Tuple(current, optimal);
-			i++;
 		}
-		Arrays.sort(tuples);
-		List<Test> result = new ArrayList<Test>();
-		for (i=0; i<nb; i++) {
-			result.add(tuples[i].test);
-		}
-		return result;
+		return maxChangeTime;
 	}
+
+	@Override
+	protected Comparator<? super Test> getComparator(final TestDatabase testDatabase) {
+		return new Comparator<Test>() {
+			@Override
+			public int compare(Test left, Test right) {
+				long leftTime = getLastChangeTime(testDatabase, left);
+				long rightTime = getLastChangeTime(testDatabase, right);
+				return Longs.compare(leftTime, rightTime);
+			}
+		};
+	}
+
 }
