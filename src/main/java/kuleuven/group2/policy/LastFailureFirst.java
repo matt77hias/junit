@@ -1,13 +1,8 @@
 package kuleuven.group2.policy;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the last failure first policy.
@@ -16,42 +11,13 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  * 
  */
-public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
+public class LastFailureFirst extends ComparingPolicy implements Comparator<Test> {
 	
 	/**
 	 * Creates a new last failure first policy.
 	 */
 	public LastFailureFirst() {
 		
-	}
-	
-	/**
-	 * Sorts the tests of the given test database according to this last failure policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @return	The tests of the given test database according to this
-	 * 			last failure policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-	
-	/**
-	 * Sorts the given tests according to this last failure first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		List<Test> result = new ArrayList<Test>(tests);
-		Collections.sort(result, this);
-		return result;
 	}
 
 	/**
@@ -77,4 +43,10 @@ public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
 		// o1.getLastFailureTime() < o2.getLastFailureTime() => result > 0
 		return o2.getLastFailureTime().compareTo(o1.getLastFailureTime());
 	}
+
+	@Override
+	protected Comparator<? super Test> getComparator() {
+		return this;
+	}
+
 }

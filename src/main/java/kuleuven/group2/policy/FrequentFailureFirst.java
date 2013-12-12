@@ -1,13 +1,8 @@
 package kuleuven.group2.policy;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the frequent failure first policy.
@@ -16,7 +11,7 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  * 
  */
-public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test> {
+public class FrequentFailureFirst extends ComparingPolicy implements Comparator<Test> {
 	
 	/**
 	 * The default depth of the level of history that's
@@ -84,35 +79,6 @@ public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test>
 	 * runs are not taken into account.
 	 */
 	private int depth;
-	
-	/**
-	 * Sorts the tests of the given test database according to this
-	 * frequent failure first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @return	The tests of the given test database according to this
-	 * 			frequent failure first policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-	
-	/**
-	 * Sorts the given tests according to this frequent failure first policy.
-	 * 
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 * 
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		List<Test> result = new ArrayList<Test>(tests);
-		Collections.sort(result, this);
-		return result;
-	}
 
 	/**
 	 * Compares the two given tests according to the frequent failure first policy.
@@ -134,4 +100,10 @@ public class FrequentFailureFirst implements TestSortingPolicy, Comparator<Test>
 		// If mathematics is our concern we can write our own floating point value compare method.
 		return Float.compare(o2.getFailurePercentage(getDepth()), o1.getFailurePercentage(getDepth()));
 	}
+
+	@Override
+	protected Comparator<? super Test> getComparator() {
+		return this;
+	}
+	
 }
