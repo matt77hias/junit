@@ -3,16 +3,16 @@ package kuleuven.group2.policy;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A class of policy records containing additional
+ * A class of weighted policy containing additional
  * policy information.
  * 
  * @author	Group 2
  * @version	4 December 2013
  */
-public class PolicyRecord {
+public class WeightedPolicy {
 	
 	/**
-	 * The default weight for policy records.
+	 * The default weight for weighted policies.
 	 * 
 	 * It's also the lowest possible weight.
 	 * 
@@ -29,7 +29,7 @@ public class PolicyRecord {
 	 * @param	policy
 	 * 			The test sorting policy.
 	 */
-	public PolicyRecord(TestSortingPolicy policy) {
+	public WeightedPolicy(TestSortingPolicy policy) {
 		this(policy, DEFAULT_WEIGHT);
 	}
 	
@@ -42,7 +42,7 @@ public class PolicyRecord {
 	 * @param	weight
 	 * 			The weight.
 	 */
-	public PolicyRecord(TestSortingPolicy policy, int weight) {
+	public WeightedPolicy(TestSortingPolicy policy, int weight) {
 		checkNotNull(policy);
 		this.policy = policy;
 		setWeight(weight);

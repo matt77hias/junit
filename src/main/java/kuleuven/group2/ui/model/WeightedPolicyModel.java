@@ -8,22 +8,22 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import kuleuven.group2.policy.PolicyRecord;
+import kuleuven.group2.policy.WeightedPolicy;
 
-public class PolicyRecordModel {
+public class WeightedPolicyModel {
 
-	private final PolicyRecord policyRecord;
+	private final WeightedPolicy policyRecord;
 	private final ObjectProperty<PolicyModel> policy = new SimpleObjectProperty<>();
 	private final IntegerProperty weight = new SimpleIntegerProperty();
 
-	public PolicyRecordModel(PolicyModel policy, int weight) {
-		this.policyRecord = new PolicyRecord(policy.getPolicy(), weight);
+	public WeightedPolicyModel(PolicyModel policy, int weight) {
+		this.policyRecord = new WeightedPolicy(policy.getPolicy(), weight);
 		this.policy.set(policy);
 		this.weight.set(policyRecord.getWeight());
 		this.weight.addListener(new WeightChangeListener());
 	}
 
-	public PolicyRecord getRecord() {
+	public WeightedPolicy getRecord() {
 		return policyRecord;
 	}
 

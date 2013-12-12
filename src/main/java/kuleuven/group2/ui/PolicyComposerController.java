@@ -20,7 +20,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import kuleuven.group2.policy.RoundRobinPolicy;
 import kuleuven.group2.ui.model.CompositePolicyModel;
 import kuleuven.group2.ui.model.PolicyModel;
-import kuleuven.group2.ui.model.PolicyRecordModel;
+import kuleuven.group2.ui.model.WeightedPolicyModel;
 import kuleuven.group2.ui.util.NumberFieldCellFactory;
 import kuleuven.group2.ui.util.PolicyListCellFactory;
 
@@ -36,7 +36,7 @@ public class PolicyComposerController {
 	private TableView<CompositePolicyModel> policiesTable;
 
 	@FXML
-	private TableView<PolicyRecordModel> policyRecordsTable;
+	private TableView<WeightedPolicyModel> policyRecordsTable;
 
 	@FXML
 	private TextField newComposedName;
@@ -65,7 +65,7 @@ public class PolicyComposerController {
 
 	private final ObjectProperty<CompositePolicyModel> selectedPolicy = new SimpleObjectProperty<>();
 	private final StringProperty newPolicyName = new SimpleStringProperty();
-	private final ObjectProperty<PolicyRecordModel> selectedRecord = new SimpleObjectProperty<>();
+	private final ObjectProperty<WeightedPolicyModel> selectedRecord = new SimpleObjectProperty<>();
 	private final ObjectProperty<PolicyModel> selectedNewRecordPolicy = new SimpleObjectProperty<>();
 
 	public ListProperty<PolicyModel> allPoliciesProperty() {
@@ -80,14 +80,14 @@ public class PolicyComposerController {
 		return selectedPolicy;
 	}
 
-	public ListBinding<PolicyRecordModel> recordsProperty() {
-		return new ListBinding<PolicyRecordModel>() {
+	public ListBinding<WeightedPolicyModel> recordsProperty() {
+		return new ListBinding<WeightedPolicyModel>() {
 			{
 				super.bind(selectedPolicyProperty());
 			}
 
 			@Override
-			protected ObservableList<PolicyRecordModel> computeValue() {
+			protected ObservableList<WeightedPolicyModel> computeValue() {
 				CompositePolicyModel selectedPolicy = selectedPolicyProperty().get();
 				if (selectedPolicy == null) {
 					return FXCollections.emptyObservableList();
@@ -97,7 +97,7 @@ public class PolicyComposerController {
 		};
 	}
 
-	public ObjectProperty<PolicyRecordModel> selectedRecordProperty() {
+	public ObjectProperty<WeightedPolicyModel> selectedRecordProperty() {
 		return selectedRecord;
 	}
 
@@ -174,13 +174,13 @@ public class PolicyComposerController {
 		policyRecordsTable.disableProperty().bind(selectedPolicyProperty().isNull());
 
 		// Set up columns
-		TableColumn<PolicyRecordModel, String> policyNameColumn = new TableColumn<>("Policy name");
-		policyNameColumn.setCellValueFactory(new PropertyValueFactory<PolicyRecordModel, String>("policyName"));
+		TableColumn<WeightedPolicyModel, String> policyNameColumn = new TableColumn<>("Policy name");
+		policyNameColumn.setCellValueFactory(new PropertyValueFactory<WeightedPolicyModel, String>("policyName"));
 		policyNameColumn.setPrefWidth(120);
 
-		TableColumn<PolicyRecordModel, Number> weightColumn = new TableColumn<>("Weight");
-		weightColumn.setCellValueFactory(new PropertyValueFactory<PolicyRecordModel, Number>("weight"));
-		weightColumn.setCellFactory(new NumberFieldCellFactory<PolicyRecordModel>());
+		TableColumn<WeightedPolicyModel, Number> weightColumn = new TableColumn<>("Weight");
+		weightColumn.setCellValueFactory(new PropertyValueFactory<WeightedPolicyModel, Number>("weight"));
+		weightColumn.setCellFactory(new NumberFieldCellFactory<WeightedPolicyModel>());
 		weightColumn.setEditable(true);
 		weightColumn.setPrefWidth(60);
 
@@ -220,7 +220,7 @@ public class PolicyComposerController {
 	@FXML
 	public void addPolicyRecord() {
 		PolicyModel policy = newRecordPolicy_policyProperty().get();
-		recordsProperty().add(new PolicyRecordModel(policy, 5));
+		recordsProperty().add(new WeightedPolicyModel(policy, 5));
 	}
 
 	@FXML

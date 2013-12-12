@@ -9,7 +9,7 @@ import javafx.scene.control.TextArea
 import javafx.geometry.Insets
 import kuleuven.group2.ui.model.PolicyModel
 import kuleuven.group2.ui.model.CompositePolicyModel
-import kuleuven.group2.ui.model.PolicyRecordModel
+import kuleuven.group2.ui.model.WeightedPolicyModel
 import kuleuven.group2.ui.PolicyComposerController
 import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.HBox
@@ -62,7 +62,7 @@ component PolicyComposer controlledby PolicyComposerController {
 					}
 				]
 			},
-			TableView < PolicyRecordModel > id policyRecordsTable {
+			TableView < WeightedPolicyModel > id policyRecordsTable {
 				static columnIndex : 1, static rowIndex : 0, static hgrow : "ALWAYS",
 				editable : true,
 				placeholder : Label {

@@ -26,72 +26,72 @@ public abstract class CompositePolicy implements TestSortingPolicy {
 	////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * The policy records of this composite sorting policy.
+	 * The weighted policies of this composite sorting policy.
 	 */
-	protected LinkedList<PolicyRecord> policies = new LinkedList<PolicyRecord>();
+	protected LinkedList<WeightedPolicy> policies = new LinkedList<WeightedPolicy>();
 	
 	/**
 	 * Appends the given test sorting policy to the
-	 * records of this composite sorting policy.
+	 * weightedPolicys of this composite sorting policy.
 	 * 
 	 * @param	policy
 	 * 			The test sorting policy that has to be
-	 * 			added to the  policy records of
+	 * 			added to the  weighted policies of
 	 * 			this composite sorting policy.
 	 */
 	public void addLastPolicy(TestSortingPolicy policy) {
 		checkNotNull(policy);
-		this.policies.addLast(new PolicyRecord(policy));
+		this.policies.addLast(new WeightedPolicy(policy));
 	}
 	
 	/**
-	 * Appends the given policy record to the
-	 * policy records of this composite sorting
+	 * Appends the given weighted policy to the
+	 * weighted policies of this composite sorting
 	 * policy.
 	 * 
-	 * @param	record
-	 * 			The policy record that has to be
-	 * 			added to the policy records of
+	 * @param	weightedPolicy
+	 * 			The weighted policy that has to be
+	 * 			added to the weighted policies of
 	 * 			this composite sorting policy.
 	 */
-	public void addLastPolicyRecord(PolicyRecord record) {
-		checkNotNull(record);
-		this.policies.addLast(record);
+	public void addLastWeightedPolicy(WeightedPolicy weightedPolicy) {
+		checkNotNull(weightedPolicy);
+		this.policies.addLast(weightedPolicy);
 	}
 	
 	/**
 	 * Adds the given test sorting policy to the front
-	 * of the policy records of this composite sorting
+	 * of the weighted policies of this composite sorting
 	 * policy.
 	 * 
 	 * @param	policy
 	 * 			The test sorting policy that has to be
-	 * 			added to the policy records of
+	 * 			added to the weighted policies of
 	 * 			this composite sorting policy.
 	 */
 	public void addFirstPolicy(TestSortingPolicy policy) {
 		checkNotNull(policy);
-		this.policies.addFirst(new PolicyRecord(policy));
+		this.policies.addFirst(new WeightedPolicy(policy));
 	}
 	
 	/**
-	 * Adds the given policy record to the front
-	 * of the policy records of this composite sorting
+	 * Adds the given weighted policy to the front
+	 * of the weighted policies of this composite sorting
 	 * policy.
 	 * 
-	 * @param	record
+	 * @param	weightedPolicy
 	 * 			The test sorting policy that has to be
-	 * 			added to the policy records of
+	 * 			added to the weighted policies of
 	 * 			this composite sorting policy.
 	 */
-	public void addFirstPolicyRecord(PolicyRecord record) {
-		checkNotNull(record);
-		this.policies.addFirst(record);
+	public void addFirstWeightedPolicy(WeightedPolicy weightedPolicy) {
+		checkNotNull(weightedPolicy);
+		this.policies.addFirst(weightedPolicy);
 	}
 	
 	/**
 	 * Adds the given test sorting policy at the given index
-	 * of the policy records of this composite sorting
+	 * of the weighted policies of this composite sorting
 	 * policy.
 	 * 
 	 * @param	index
@@ -99,7 +99,7 @@ public abstract class CompositePolicy implements TestSortingPolicy {
 	 * @param	policy
 	 * 			The test sorting policy that has to be
 	 * 			added at the given index to the policy
-	 * 			records of this composite sorting policy.
+	 * 			weightedPolicys of this composite sorting policy.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index > getNbOfPolicies())
@@ -107,63 +107,63 @@ public abstract class CompositePolicy implements TestSortingPolicy {
 	public void addPolicyAt(int index, TestSortingPolicy policy) 
 			throws IndexOutOfBoundsException {
 		checkNotNull(policy);
-		this.policies.add(index, new PolicyRecord(policy));
+		this.policies.add(index, new WeightedPolicy(policy));
 	}
 	
 	/**
-	 * Adds the given policy record at the given index
-	 * of the policy records of this composite sorting
+	 * Adds the given weighted policy at the given index
+	 * of the weighted policies of this composite sorting
 	 * policy.
 	 * 
 	 * @param	index
 	 * 			The index.
-	 * @param	record
-	 * 			The policy record that has to be
+	 * @param	weightedPolicy
+	 * 			The weighted policy that has to be
 	 * 			added at the given index to the
-	 * 			policy records of this composite sorting policy.
+	 * 			weighted policies of this composite sorting policy.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index > getNbOfPolicies())
 	 */
-	public void addPolicyRecordAt(int index, PolicyRecord record) 
+	public void addWeightedPolicyAt(int index, WeightedPolicy weightedPolicy) 
 			throws IndexOutOfBoundsException {
-		checkNotNull(record);
-		this.policies.add(index, record);
+		checkNotNull(weightedPolicy);
+		this.policies.add(index, weightedPolicy);
 	}
 
 	/**
-	 * Replaces the policy record at the given index
-	 * with the given policy record.
+	 * Replaces the weighted policy at the given index
+	 * with the given weighted policy.
 	 * 
 	 * @param	index
 	 * 			The index at which to replace.
-	 * @param	record
-	 * 			The replacement policy record.
+	 * @param	weightedPolicy
+	 * 			The replacement weighted policy.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
-	public void setPolicyRecordAt(int index, PolicyRecord record) 
+	public void setWeightedPolicyAt(int index, WeightedPolicy weightedPolicy) 
 			throws IndexOutOfBoundsException {
-		checkNotNull(record);
-		this.policies.set(index, record);
+		checkNotNull(weightedPolicy);
+		this.policies.set(index, weightedPolicy);
 	}
 	
 	/**
 	 * Removes the given test sorting policy.
 	 * 
-	 * @param	record
-	 * 			The policy record that has to be
-	 * 			removed from the policy records
+	 * @param	weightedPolicy
+	 * 			The weighted policy that has to be
+	 * 			removed from the weighted policies
 	 * 			of this composite sorting policy.	
 	 */
-	public void removePolicy(PolicyRecord record) {
-		checkNotNull(record);
-		this.policies.remove(record);
+	public void removeWeightedPolicy(WeightedPolicy weightedPolicy) {
+		checkNotNull(weightedPolicy);
+		this.policies.remove(weightedPolicy);
 	}
 	
 	/**
-	 * Removes the policy record at the given index.
+	 * Removes the weighted policy at the given index.
 	 * 
 	 * @param	index
 	 * 			The index.
@@ -171,27 +171,27 @@ public abstract class CompositePolicy implements TestSortingPolicy {
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
-	public void removePolicyAt(int index) 
+	public void removeWeightedPolicyAt(int index) 
 			throws IndexOutOfBoundsException {
 		this.policies.remove(index);
 	}
 	
 	/**
 	 * Checks if this composite test sorting policy
-	 * contains the given policy record as one
-	 * of its policy records.
+	 * contains the given weighted policy as one
+	 * of its weighted policies.
 	 * [only first level considered]
 	 * 
-	 * @param	record
-	 * 			The policy record that has to
+	 * @param	weightedPolicy
+	 * 			The weighted policy that has to
 	 * 			be checked.
 	 */
-	public boolean contains(PolicyRecord record) {
-		return this.policies.contains(record);
+	public boolean contains(WeightedPolicy weightedPolicy) {
+		return this.policies.contains(weightedPolicy);
 	}
 	
 	/**
-	 * Returns the policy record at the given
+	 * Returns the weighted policy at the given
 	 * index of this composite test sorting policy.
 	 * 
 	 * @param	index
@@ -200,32 +200,32 @@ public abstract class CompositePolicy implements TestSortingPolicy {
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
-	public PolicyRecord getPolicyAt(int index)
+	public WeightedPolicy getWeightedPolicyAt(int index)
 			throws IndexOutOfBoundsException {
 		return this.policies.get(index);
 	}
 	
 	/**
-	 * Returns the number policy records
+	 * Returns the number weighted policies
 	 * of this composite test sorting policy.
 	 * [only first level considered]
 	 * 
-	 * @return	Returns the number policy records
+	 * @return	Returns the number weighted policies
 	 * 			of this composite test sorting policy.
 	 */
-	public int getNbOfPolicyRecords() {
+	public int getNbOfWeightedPolicies() {
 		return this.policies.size();
 	}
 	
 	/**
-	 * Returns the policy records of this
+	 * Returns the weighted policies of this
 	 * composite test sorting policy.
 	 * [only first level considered]
 	 * 
-	 * @return	The policy records of this
+	 * @return	The weighted policies of this
 	 * 			composite test sorting policy.
 	 */
-	public List<PolicyRecord> getPolicyRecords() {
+	public List<WeightedPolicy> getWeightedPolicies() {
 		return ImmutableList.copyOf(this.policies);
 	}
 }

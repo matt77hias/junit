@@ -9,8 +9,8 @@ import kuleuven.group2.policy.CompositePolicy;
 
 public class CompositePolicyModel extends PolicyModel {
 
-	private final SimpleListProperty<PolicyRecordModel> records = new SimpleListProperty<>(
-			FXCollections.<PolicyRecordModel> observableArrayList());
+	private final SimpleListProperty<WeightedPolicyModel> records = new SimpleListProperty<>(
+			FXCollections.<WeightedPolicyModel> observableArrayList());
 
 	public CompositePolicyModel(String name, CompositePolicy policy) {
 		super(name, policy);
@@ -22,11 +22,11 @@ public class CompositePolicyModel extends PolicyModel {
 		return (CompositePolicy) super.getPolicy();
 	}
 
-	public ObservableList<PolicyRecordModel> getRecords() {
+	public ObservableList<WeightedPolicyModel> getRecords() {
 		return recordsProperty().get();
 	}
 
-	public ReadOnlyListProperty<PolicyRecordModel> recordsProperty() {
+	public ReadOnlyListProperty<WeightedPolicyModel> recordsProperty() {
 		return records;
 	}
 
@@ -35,30 +35,30 @@ public class CompositePolicyModel extends PolicyModel {
 	 * models list} to the managed {@link CompositePolicyModel#getPolicy()
 	 * composite policy}.
 	 */
-	protected class PoliciesChangeListener implements ListChangeListener<PolicyRecordModel> {
+	protected class PoliciesChangeListener implements ListChangeListener<WeightedPolicyModel> {
 
 		@Override
-		public void onChanged(ListChangeListener.Change<? extends PolicyRecordModel> c) {
+		public void onChanged(ListChangeListener.Change<? extends WeightedPolicyModel> c) {
 			CompositePolicy policy = getPolicy();
 			while (c.next()) {
 				if (c.wasPermutated()) {
 					// Permute
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
 						int newIndex = c.getPermutation(i);
-						PolicyRecordModel permutedModel = c.getList().get(newIndex);
-						policy.setPolicyRecordAt(newIndex, permutedModel.getRecord());
+						WeightedPolicyModel permutedModel = c.getList().get(newIndex);
+						policy.setWeightedPolicyAt(newIndex, permutedModel.getRecord());
 					}
 				} else if (c.wasUpdated()) {
 					// Update, ignore
 				} else {
 					// Remove
-					for (PolicyRecordModel removedModel : c.getRemoved()) {
-						policy.removePolicy(removedModel.getRecord());
+					for (WeightedPolicyModel removedModel : c.getRemoved()) {
+						policy.removeWeightedPolicy(removedModel.getRecord());
 					}
 					// Add
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
-						PolicyRecordModel addedModel = c.getList().get(i);
-						policy.addPolicyRecordAt(i, addedModel.getRecord());
+						WeightedPolicyModel addedModel = c.getList().get(i);
+						policy.addWeightedPolicyAt(i, addedModel.getRecord());
 					}
 				}
 			}
