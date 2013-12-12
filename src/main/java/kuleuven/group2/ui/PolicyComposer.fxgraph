@@ -62,25 +62,25 @@ component PolicyComposer controlledby PolicyComposerController {
 					}
 				]
 			},
-			TableView < WeightedPolicyModel > id policyRecordsTable {
+			TableView < WeightedPolicyModel > id weightedPoliciesTable {
 				static columnIndex : 1, static rowIndex : 0, static hgrow : "ALWAYS",
 				editable : true,
 				placeholder : Label {
-					text : "No policy records in the selected composed policy"
+					text : "No weighted policies in the selected composed policy"
 				}
 			},
 			HBox {
 				static columnIndex : 1, static rowIndex : 1,
 				spacing : 5,
 				children : [
-					ComboBox < PolicyModel > id newRecordPolicy,
-					Button id addRecord {
+					ComboBox < PolicyModel > id newWeightedPolicy,
+					Button id addWeightedPolicy {
 						text : "Add",
-						onAction : controllermethod addPolicyRecord
+						onAction : controllermethod addWeightedPolicy
 					},
-					Button id removeRecord {
+					Button id removeWeightedPolicy {
 						text : "Remove",
-						onAction : controllermethod removePolicyRecords
+						onAction : controllermethod removeWeightedPolicies
 					}
 				]
 			}

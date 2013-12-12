@@ -16,14 +16,14 @@ public class WeightedPolicy {
 	 * 
 	 * It's also the lowest possible weight.
 	 * 
-	 * If weight1 > weight2 then the record
+	 * If weight1 > weight2 then the weighted policy
 	 * associated with weight1 has higher priority
-	 * then the record associated with weight2.
+	 * than the weighted policy associated with weight2.
 	 */
 	public static final int DEFAULT_WEIGHT = 1;
 	
 	/**
-	 * Creates a new policy record with given test sorting
+	 * Creates a new weighted policy with given test sorting
 	 * policy and default weight.
 	 * 
 	 * @param	policy
@@ -34,7 +34,7 @@ public class WeightedPolicy {
 	}
 	
 	/**
-	 * Creates a new policy record with given test sorting
+	 * Creates a new weighted policy with given test sorting
 	 * policy and weight.
 	 * 
 	 * @param	policy
@@ -49,41 +49,41 @@ public class WeightedPolicy {
 	}
 	
 	/**
-	 * Returns the test sorting policy of this policy record.
+	 * Returns the test sorting policy of this weighted policy.
 	 * 
-	 * @return	The test sorting policy of this policy record.
+	 * @return	The test sorting policy of this weighted policy.
 	 */
 	public TestSortingPolicy getTestSortingPolicy() {
 		return this.policy;
 	}
 	
 	/**
-	 * The test sorting policy of this test
-	 * sorting record.
+	 * The test sorting policy of this weighted policy.
 	 */
 	private final TestSortingPolicy policy;
 	
 	/**
-	 * Returns the weight of this policy record.
+	 * Returns the weight of this weighted policy.
 	 * 
-	 * @return	The weight of this policy record.
+	 * @return	The weight of this weighted policy.
 	 */
 	public int getWeight() {
 		return this.weight;
 	}
 
 	/**
-	 * Sets the weight of this polcy record.
+	 * Sets the weight of this weighted policy.
 	 * 
 	 * @param weight
-	 *            The new weight of this policy record.
+	 *            The new weight of this weighted policy.
 	 */
 	public void setWeight(int weight) {
 		this.weight = (weight >= 1) ? weight : DEFAULT_WEIGHT;
 	}
 
 	/**
-	 * The weight of this policy record.
+	 * The weight of this weighted policy.
 	 */
 	private int weight;
+
 }
