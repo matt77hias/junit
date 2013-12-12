@@ -23,6 +23,7 @@ import kuleuven.group2.rewrite.OssRewriterLoaderTest;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandlerTest;
 import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest;
 import kuleuven.group2.store.DirectoryStoreTest;
+import kuleuven.group2.store.MemoryStoreTest;
 import kuleuven.group2.testrunner.TestRunnerTest;
 
 import org.junit.runner.RunWith;
@@ -66,6 +67,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		TestSourceEventHandlerTest.class,
 
 		DirectoryStoreTest.class,
+		MemoryStoreTest.class,
 
 		TestRunnerTest.class
 })
