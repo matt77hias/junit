@@ -17,7 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import kuleuven.group2.policy.CompositePolicy;
+import kuleuven.group2.policy.RoundRobinPolicy;
 import kuleuven.group2.ui.model.CompositePolicyModel;
 import kuleuven.group2.ui.model.PolicyModel;
 import kuleuven.group2.ui.model.PolicyRecordModel;
@@ -209,7 +209,7 @@ public class PolicyComposerController {
 	@FXML
 	public void addComposedPolicy() {
 		String policyName = newPolicy_nameProperty().get();
-		compositePoliciesProperty().add(new CompositePolicyModel(policyName, new CompositePolicy()));
+		compositePoliciesProperty().add(new CompositePolicyModel(policyName, new RoundRobinPolicy()));
 	}
 
 	@FXML
