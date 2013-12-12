@@ -1,6 +1,5 @@
 package kuleuven.group2.policy;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,21 +7,18 @@ import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestDatabase;
-
-public class CompositePolicy implements TestSortingPolicy {
+/**
+ * A class of composite policies.
+ * 
+ * @author	Group 2
+ * @version	12 December 2013
+ */
+public abstract class CompositePolicy implements TestSortingPolicy {
 	
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Creates a new composite policy.
+	 */
+	protected CompositePolicy() {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////
