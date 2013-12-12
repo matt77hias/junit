@@ -7,12 +7,15 @@ import javafx.scene.control.ListView
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.geometry.Insets
+import kuleuven.group2.ui.model.PolicyModel
 import kuleuven.group2.ui.model.CompositePolicyModel
 import kuleuven.group2.ui.model.PolicyRecordModel
 import kuleuven.group2.ui.PolicyComposerController
 import javafx.scene.layout.RowConstraints
 import javafx.scene.layout.HBox
 import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
+import javafx.scene.control.TextField
 
 component PolicyComposer controlledby PolicyComposerController {
 	GridPane {
@@ -44,12 +47,16 @@ component PolicyComposer controlledby PolicyComposerController {
 			},
 			HBox {
 				static columnIndex : 0, static rowIndex : 1,
+				spacing : 5,
 				children : [
-					Button {
+					TextField id newComposedName {
+						text : "New policy"
+					},
+					Button id addComposed {
 						text : "Add",
 						onAction : controllermethod addComposedPolicy
 					},
-					Button {
+					Button id removeComposed {
 						text : "Remove",
 						onAction : controllermethod removeComposedPolicies
 					}
@@ -57,19 +64,21 @@ component PolicyComposer controlledby PolicyComposerController {
 			},
 			TableView < PolicyRecordModel > id policyRecordsTable {
 				static columnIndex : 1, static rowIndex : 0, static hgrow : "ALWAYS",
-				editable : false,
+				editable : true,
 				placeholder : Label {
 					text : "No policy records in the selected composed policy"
 				}
 			},
 			HBox {
 				static columnIndex : 1, static rowIndex : 1,
+				spacing : 5,
 				children : [
-					Button {
+					ComboBox < PolicyModel > id newRecordPolicy,
+					Button id addRecord {
 						text : "Add",
 						onAction : controllermethod addPolicyRecord
 					},
-					Button {
+					Button id removeRecord {
 						text : "Remove",
 						onAction : controllermethod removePolicyRecords
 					}

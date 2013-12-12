@@ -5,17 +5,24 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import kuleuven.group2.policy.CompositePolicy;
 import kuleuven.group2.ui.model.CompositePolicyModel;
 import kuleuven.group2.ui.model.PolicyModel;
 import kuleuven.group2.ui.model.PolicyRecordModel;
+import kuleuven.group2.ui.util.NumberFieldCellFactory;
+import kuleuven.group2.ui.util.PolicyListCellFactory;
 
 import com.google.common.collect.ImmutableList;
 
@@ -31,13 +38,35 @@ public class PolicyComposerController {
 	@FXML
 	private TableView<PolicyRecordModel> policyRecordsTable;
 
+	@FXML
+	private TextField newComposedName;
+
+	@FXML
+	private Button addComposed;
+
+	@FXML
+	private Button removeComposed;
+
+	@FXML
+	private ComboBox<PolicyModel> newRecordPolicy;
+
+	@FXML
+	private Button addRecord;
+
+	@FXML
+	private Button removeRecord;
+
 	/*
 	 * Properties
 	 */
 
 	private final ListProperty<PolicyModel> allPolicies = new SimpleListProperty<>();
 	private final ListProperty<CompositePolicyModel> compositePolicies = new SimpleListProperty<>();
+
 	private final ObjectProperty<CompositePolicyModel> selectedPolicy = new SimpleObjectProperty<>();
+	private final StringProperty newPolicyName = new SimpleStringProperty();
+	private final ObjectProperty<PolicyRecordModel> selectedRecord = new SimpleObjectProperty<>();
+	private final ObjectProperty<PolicyModel> selectedNewRecordPolicy = new SimpleObjectProperty<>();
 
 	public ListProperty<PolicyModel> allPoliciesProperty() {
 		return allPolicies;
@@ -51,7 +80,7 @@ public class PolicyComposerController {
 		return selectedPolicy;
 	}
 
-	public ListBinding<PolicyRecordModel> selectedPolicy_recordsProperty() {
+	public ListBinding<PolicyRecordModel> recordsProperty() {
 		return new ListBinding<PolicyRecordModel>() {
 			{
 				super.bind(selectedPolicyProperty());
@@ -68,10 +97,43 @@ public class PolicyComposerController {
 		};
 	}
 
+	public ObjectProperty<PolicyRecordModel> selectedRecordProperty() {
+		return selectedRecord;
+	}
+
+	public StringProperty newPolicy_nameProperty() {
+		return newPolicyName;
+	}
+
+	public ListBinding<PolicyModel> newRecordPolicy_policiesProperty() {
+		return new ListBinding<PolicyModel>() {
+			{
+				super.bind(allPoliciesProperty());
+				super.bind(selectedPolicyProperty());
+			}
+
+			@Override
+			protected ObservableList<PolicyModel> computeValue() {
+				ObservableList<PolicyModel> policies = allPoliciesProperty().get();
+				if (policies == null) return null;
+				policies = FXCollections.observableArrayList(policies);
+				// TODO Also remove recursively dependent policies?
+				policies.remove(selectedPolicyProperty().get());
+				return policies;
+			}
+		};
+	}
+
+	public ObjectProperty<PolicyModel> newRecordPolicy_policyProperty() {
+		return selectedNewRecordPolicy;
+	}
+
 	@FXML
 	public void initialize() {
 		setupPolicies();
+		setupPolicyButtons();
 		setupRecords();
+		setupRecordButtons();
 	}
 
 	protected void setupPolicies() {
@@ -79,6 +141,9 @@ public class PolicyComposerController {
 		policiesTable.itemsProperty().bindBidirectional(compositePoliciesProperty());
 		// Bind selected policy
 		selectedPolicyProperty().bind(policiesTable.getSelectionModel().selectedItemProperty());
+
+		// Disable when no policy selected
+		removeComposed.disableProperty().bind(selectedPolicyProperty().isNull());
 
 		// Set up columns
 		TableColumn<CompositePolicyModel, String> nameColumn = new TableColumn<>("Name");
@@ -90,9 +155,23 @@ public class PolicyComposerController {
 		policiesTable.getColumns().setAll(ImmutableList.of(nameColumn));
 	}
 
+	protected void setupPolicyButtons() {
+		// Bind to model
+		newPolicy_nameProperty().bind(newComposedName.textProperty());
+
+		// Disable when name is empty
+		addComposed.disableProperty().bind(newPolicy_nameProperty().isEqualTo(""));
+		// Disable when no policy selected
+		removeComposed.disableProperty().bind(selectedPolicyProperty().isNull());
+	}
+
 	protected void setupRecords() {
 		// Bind to model
-		policyRecordsTable.itemsProperty().bind(selectedPolicy_recordsProperty());
+		policyRecordsTable.itemsProperty().bind(recordsProperty());
+		// Bind selected record
+		selectedRecordProperty().bind(policyRecordsTable.getSelectionModel().selectedItemProperty());
+		// Disable when no composed policy selected
+		policyRecordsTable.disableProperty().bind(selectedPolicyProperty().isNull());
 
 		// Set up columns
 		TableColumn<PolicyRecordModel, String> policyNameColumn = new TableColumn<>("Policy name");
@@ -101,14 +180,36 @@ public class PolicyComposerController {
 
 		TableColumn<PolicyRecordModel, Number> weightColumn = new TableColumn<>("Weight");
 		weightColumn.setCellValueFactory(new PropertyValueFactory<PolicyRecordModel, Number>("weight"));
+		weightColumn.setCellFactory(new NumberFieldCellFactory<PolicyRecordModel>());
+		weightColumn.setEditable(true);
 		weightColumn.setPrefWidth(60);
 
 		policyRecordsTable.getColumns().setAll(ImmutableList.of(policyNameColumn, weightColumn));
 	}
 
+	protected void setupRecordButtons() {
+		// Bind to model
+		newRecordPolicy.itemsProperty().bind(newRecordPolicy_policiesProperty());
+		newRecordPolicy_policyProperty().bind(newRecordPolicy.valueProperty());
+
+		// Set up display
+		PolicyListCellFactory cellFactory = new PolicyListCellFactory();
+		newRecordPolicy.setButtonCell(cellFactory.call(null));
+		newRecordPolicy.setCellFactory(cellFactory);
+
+		// Disable when no composed policy selected
+		newRecordPolicy.disableProperty().bind(selectedPolicyProperty().isNull());
+		// Disable when no new policy selected
+		addRecord.disableProperty().bind(
+				selectedPolicyProperty().isNull().or(newRecordPolicy_policyProperty().isNull()));
+		// Disable when no record selected
+		removeRecord.disableProperty().bind(selectedPolicyProperty().isNull().or(selectedRecordProperty().isNull()));
+	}
+
 	@FXML
 	public void addComposedPolicy() {
-		compositePoliciesProperty().add(new CompositePolicyModel("New composed policy", new CompositePolicy()));
+		String policyName = newPolicy_nameProperty().get();
+		compositePoliciesProperty().add(new CompositePolicyModel(policyName, new CompositePolicy()));
 	}
 
 	@FXML
@@ -118,12 +219,13 @@ public class PolicyComposerController {
 
 	@FXML
 	public void addPolicyRecord() {
-		selectedPolicy_recordsProperty().add(new PolicyRecordModel(allPoliciesProperty().get(0), 5));
+		PolicyModel policy = newRecordPolicy_policyProperty().get();
+		recordsProperty().add(new PolicyRecordModel(policy, 5));
 	}
 
 	@FXML
 	public void removePolicyRecords() {
-		selectedPolicy_recordsProperty().remove(policyRecordsTable.getSelectionModel().getSelectedItem());
+		recordsProperty().remove(policyRecordsTable.getSelectionModel().getSelectedItem());
 	}
 
 }

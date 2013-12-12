@@ -10,10 +10,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.util.Callback;
 import kuleuven.group2.ui.model.PolicyModel;
+import kuleuven.group2.ui.util.PolicyListCellFactory;
 
 public class ConfigurationController {
 
@@ -90,25 +88,6 @@ public class ConfigurationController {
 
 	public BooleanProperty canConfigure() {
 		return canConfigure;
-	}
-
-	protected static class PolicyListCellFactory implements Callback<ListView<PolicyModel>, ListCell<PolicyModel>> {
-		@Override
-		public ListCell<PolicyModel> call(ListView<PolicyModel> view) {
-			return new PolicyListCell();
-		}
-	}
-
-	protected static class PolicyListCell extends ListCell<PolicyModel> {
-		@Override
-		protected void updateItem(PolicyModel model, boolean empty) {
-			super.updateItem(model, empty);
-			if (!empty) {
-				textProperty().bind(model.nameProperty());
-			} else {
-				textProperty().unbind();
-			}
-		}
 	}
 
 }
