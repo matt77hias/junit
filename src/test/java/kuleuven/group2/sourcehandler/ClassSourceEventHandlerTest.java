@@ -169,4 +169,24 @@ public class ClassSourceEventHandlerTest {
 		assertEquals(0, testDatabase.getMethodsIn(className).size());
 	}
 
+	@Test
+	public void testSetup() throws Exception {
+		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
+		String source =
+				"public class " + className + " {\n" +
+						"public boolean foo() { return true; }\n" +
+						"}";
+
+		classSourceStore.write(sourceName, source.getBytes());
+		
+		sourceEventHandler.setup();
+		
+		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
+		/*
+		 * constructor + foo
+		 */
+		assertEquals(2, testDatabase.getMethodsIn(className).size());
+	}
+	
 }

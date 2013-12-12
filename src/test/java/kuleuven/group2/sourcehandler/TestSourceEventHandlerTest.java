@@ -117,5 +117,27 @@ public class TestSourceEventHandlerTest {
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "initializationError")));
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "foo")));
 	}
+	
+	@Test
+	public void testSetup() throws Exception {
+		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
+		String source =
+				"import org.junit.Test; \n" + 
+						"public class " + className + " {\n" +
+						"@Test\n" +
+						"public void foo() { int i = 0; }\n" +
+						"}";
+
+		classSourceStore.write(sourceName, source.getBytes());
+		
+		sourceEventHandler.setup();
+		
+		assertTrue(binaryStore.contains(NameUtils.toBinaryName(className)));
+		/*
+		 * constructor + foo
+		 */
+		assertEquals(1, testDatabase.getTestsIn(className).size());
+	}
 
 }
