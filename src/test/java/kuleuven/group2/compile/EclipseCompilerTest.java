@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import kuleuven.group2.classloader.StoreClassLoader;
 import kuleuven.group2.store.DirectoryStore;
@@ -186,6 +187,20 @@ public class EclipseCompilerTest {
 		CompilationResult compilationResult = compiler.compileAll();
 		
 		assertTrue(compilationResult.getErrors().size() > 0);
+	}
+	
+	@Test
+	public void testCompileNonExistingSource() {
+		CompilationResult compilationResult = compiler.compile(Arrays.asList("nonExisting"));
+		
+		assertTrue(compilationResult.getErrors().size() > 0);
+		boolean hasSourceNotFoundProblem = false;
+		for (CompilationProblem compilationProblem : compilationResult.getErrors()) {
+			if (compilationProblem.getResourceName().equals("nonExisting") && compilationProblem instanceof SourceNotFoundProblem) {
+				hasSourceNotFoundProblem = true;
+			}
+		}
+		assertTrue(hasSourceNotFoundProblem);
 	}
 	
 	protected Object invokeMethod(String className, String methodName) throws ReflectiveOperationException {
