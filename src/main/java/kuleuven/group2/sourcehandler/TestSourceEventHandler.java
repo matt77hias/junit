@@ -46,7 +46,7 @@ public class TestSourceEventHandler extends SourceEventHandler {
 	}
 
 	@Override
-	public void handleEvents(List<StoreEvent> events) throws Exception {
+	public void consume(List<StoreEvent> events) throws Exception{
 		// Collect changes in test sources
 		Changes changes = collectChanges(events, testSourceStore);
 

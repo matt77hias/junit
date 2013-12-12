@@ -92,7 +92,7 @@ public class TestSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertNotNull(testDatabase.getTest(className, "foo"));
 	}
@@ -112,7 +112,7 @@ public class TestSourceEventHandlerTest {
 		
 		classSourceStore.stopListening();
 		
-		sourceEventHandler.handleEvents(events);
+		sourceEventHandler.consume(events);
 
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "initializationError")));
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "foo")));
