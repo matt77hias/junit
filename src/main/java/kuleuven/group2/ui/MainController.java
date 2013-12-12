@@ -141,7 +141,7 @@ public class MainController implements EventHandler<WindowEvent> {
 
 	public void setPolicy(PolicyModel policyModel) {
 		configuration.selectedPolicyProperty().set(policyModel);
-		if (pipeline != null) {
+		if (pipeline != null && policyModel != null) {
 			pipeline.setSortPolicy(policyModel.getPolicy());
 		}
 	}
