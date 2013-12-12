@@ -54,15 +54,9 @@ public class RoundRobinPolicy extends CompositePolicy {
 		Iterator<LinkedHashSet<Test>> it = Iterators.cycle(queue);
 
 		for (int i = 0; i < tests.size(); i++) {
-			Test test = null;
-			// Find non-empty set and take its next test
-			while (it.hasNext()) {
-				LinkedHashSet<Test> set = it.next();
-				if (!set.isEmpty()) {
-					test = set.iterator().next();
-					break;
-				}
-			}
+			// Get next test
+			LinkedHashSet<Test> currentSet = it.next();
+			Test test = currentSet.iterator().next();
 			// Add to result
 			result.add(test);
 			// Remove from all tests

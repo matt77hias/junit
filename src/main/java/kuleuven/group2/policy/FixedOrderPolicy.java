@@ -1,9 +1,11 @@
 package kuleuven.group2.policy;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
 
 import com.google.common.collect.Ordering;
 
@@ -16,6 +18,17 @@ import com.google.common.collect.Ordering;
 public class FixedOrderPolicy extends ComparingPolicy {
 
 	protected final Ordering<Test> ordering;
+	
+	/**
+	 * Creates a new fixed order policy with all the tests
+	 * from the given test database.
+	 * 
+	 * @param	testDatabase
+	 * 			The test database.
+	 */
+	public FixedOrderPolicy(TestDatabase testDatabase) {
+		this(new ArrayList<Test>(testDatabase.getAllTests()));
+	}
 
 	/**
 	 * Create a new fixed order policy using the given ordered list of tests.

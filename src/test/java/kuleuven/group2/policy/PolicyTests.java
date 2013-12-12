@@ -8,7 +8,10 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 		DistinctFailureFirstTest.class,
 		FrequentFailureTest.class,
-		LastFailureFirstTest.class
+		LastFailureFirstTest.class,
+		FixedOrderPolicyTest.class,
+		RoundRobinPolicyTest.class,
+		CompositePolicyTest.class
 })
 public class PolicyTests {
 
