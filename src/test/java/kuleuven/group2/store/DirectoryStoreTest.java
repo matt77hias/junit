@@ -7,9 +7,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import kuleuven.group2.store.MemoryStoreTest.TestMemoryStoreListener;
 import kuleuven.group2.util.FileUtils;
 
 import org.junit.After;
@@ -103,4 +106,98 @@ public class DirectoryStoreTest {
 		DirectoryStore directoryStore2 = new DirectoryStore(newPath);
 	}
 
+	
+	@Test
+	public void testFireAdded() {
+		String fileA = "a.txt";
+		
+		TestDirectoryStoreListener testDirectoryStoreListener = new TestDirectoryStoreListener();
+		store.addStoreListener(testDirectoryStoreListener);
+		
+		store.startListening();
+		
+		String contents = "hello world";
+		store.write(fileA, contents.getBytes());
+		
+		store.stopListening();
+		
+		assertTrue(testDirectoryStoreListener.addedResources.contains(fileA));
+	}
+	
+	@Test
+	public void testFireRemoved() throws InterruptedException {
+		String fileA = "a.txt";
+		
+		String contents = "hello world";
+		store.write(fileA, contents.getBytes());
+		
+		TestDirectoryStoreListener testDirectoryStoreListener = new TestDirectoryStoreListener();
+		store.addStoreListener(testDirectoryStoreListener);
+		
+		store.startListening();
+
+		store.remove(fileA);
+		
+		store.stopListening();
+		
+		assertTrue(testDirectoryStoreListener.removedResources.contains(fileA));
+	}
+	
+	@Test
+	public void testNoFireRemovedOnUnexistingResource() {
+		String fileA = "a.txt";
+		
+		TestDirectoryStoreListener testDirectoryStoreListener = new TestDirectoryStoreListener();
+		store.addStoreListener(testDirectoryStoreListener);
+		
+		store.startListening();
+		
+		store.remove(fileA);
+		
+		store.stopListening();
+		
+		assertFalse(testDirectoryStoreListener.removedResources.contains(fileA));
+	}
+	
+	@Test
+	public void testFireChanged() {
+		String fileA = "a.txt";
+		
+		TestDirectoryStoreListener testDirectoryStoreListener = new TestDirectoryStoreListener();
+		store.addStoreListener(testDirectoryStoreListener);
+		
+		String contents = "hello world";
+		store.write(fileA, contents.getBytes());
+		
+		store.startListening();
+		
+		store.write(fileA, contents.getBytes());
+		
+		store.stopListening();
+		
+		assertTrue(testDirectoryStoreListener.changedResources.contains(fileA));
+	}
+	
+	protected class TestDirectoryStoreListener implements StoreListener {
+
+		protected List<String> changedResources = new ArrayList<>();
+		protected List<String> addedResources = new ArrayList<>();
+		protected List<String> removedResources = new ArrayList<>();
+		
+		@Override
+		public void resourceAdded(String resourceName) {
+			addedResources.add(resourceName);
+		}
+
+		@Override
+		public void resourceChanged(String resourceName) {
+			changedResources.add(resourceName);
+		}
+
+		@Override
+		public void resourceRemoved(String resourceName) {
+			removedResources.add(resourceName);
+		}
+		
+	}
 }
