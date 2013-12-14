@@ -148,6 +148,31 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 	}
 	
 	@Test
+	public void correct_order_test_multipleLevels() {
+		List<kuleuven.group2.data.Test> list1 = ImmutableList.of(test1, test2, test3, test4);
+		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
+		
+		TestSortingPolicy policy = new LastFailureFirst();
+		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list1);
+		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list2);
+		
+		RoundRobinPolicy rrp_low = new RoundRobinPolicy();
+		rrp_low.addLastPolicy(fixed1);
+		rrp_low.addLastPolicy(fixed2);
+		
+		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
+		rrp_high.addLastPolicy(policy);
+		rrp_high.addLastPolicy(rrp_low);
+		
+		List<kuleuven.group2.data.Test> result =  rrp_high.getSortedTests(super.testDatabase);
+		assertTrue(result.get(0) == test3);
+		assertTrue(result.get(1) == test1);
+		assertTrue(result.get(2) == test2);
+		assertTrue(result.get(3) == test4);
+		
+	}
+	
+	@Test
 	public void correct_order_test_noWeightedPolicies() {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
