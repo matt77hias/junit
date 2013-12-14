@@ -146,6 +146,18 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		assertTrue(result.get(2) == test1);
 		assertTrue(result.get(3) == test4);
 	}
+	
+	@Test
+	public void correct_order_test_noWeightedPolicies() {
+		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
+		
+		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		List<kuleuven.group2.data.Test> result =  rrp.getSortedTests(super.testDatabase, list);
+		assertTrue(result.get(0) == test1);
+		assertTrue(result.get(1) == test2);
+		assertTrue(result.get(2) == test3);
+		assertTrue(result.get(3) == test4);
+	}
 
 	@Override @Test
 	public void immutable_input_test() {
