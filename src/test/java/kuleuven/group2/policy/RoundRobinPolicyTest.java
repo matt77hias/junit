@@ -148,6 +148,38 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 	}
 	
 	@Test
+	public void correct_order_test_selfDirectContaining() {
+		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
+		
+		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
+		
+		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
+		rrp_high.addLastPolicy(fixed1);
+		rrp_high.addLastPolicy(rrp_high);
+		
+		rrp_high.getSortedTests(super.testDatabase);
+	}
+	
+	@Test
+	public void correct_order_test_selfIndirectContaining() {
+		List<kuleuven.group2.data.Test> list1 = ImmutableList.of(test1, test2, test3, test4);
+		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
+		
+		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list1);
+		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list2);
+		
+		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
+		RoundRobinPolicy rrp_low = new RoundRobinPolicy();
+		rrp_high.addLastPolicy(fixed1);
+		rrp_low.addLastPolicy(fixed2);
+		
+		rrp_high.addLastPolicy(rrp_low);
+		rrp_low.addLastPolicy(rrp_high);
+		
+		rrp_high.getSortedTests(super.testDatabase);
+	}
+	
+	@Test
 	public void correct_order_test_multipleLevels() {
 		List<kuleuven.group2.data.Test> list1 = ImmutableList.of(test1, test2, test3, test4);
 		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
@@ -169,7 +201,6 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		assertTrue(result.get(1) == test1);
 		assertTrue(result.get(2) == test2);
 		assertTrue(result.get(3) == test4);
-		
 	}
 	
 	@Test
