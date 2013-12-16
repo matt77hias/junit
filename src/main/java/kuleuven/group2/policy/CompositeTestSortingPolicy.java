@@ -215,7 +215,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	public void addLastNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException{
-		addLastWeightedTestSortingPolicy(new WeightedTestSortingPolicy(policy));
+		addLastWeightedTestSortingPolicy(encapsulate(policy));
 	}
 	
 	/**
@@ -247,7 +247,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	public void addFirstNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException {
-		addFirstWeightedTestSortingPolicy(new WeightedTestSortingPolicy(policy));
+		addFirstWeightedTestSortingPolicy(encapsulate(policy));
 	}
 	
 	/**
@@ -285,7 +285,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	public void addNonWeightedTestSortingPolicyAt(int index, NonWeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException, IndexOutOfBoundsException {
-		addWeightedTestSortingPolicyAt(index, new WeightedTestSortingPolicy(policy));
+		addWeightedTestSortingPolicyAt(index, encapsulate(policy));
 	}
 	
 	/**
@@ -324,7 +324,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	public void setNonWeightedTestSortingPolicyAt(int index, NonWeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException, IndexOutOfBoundsException {
-		setWeightedTestSortingPolicyAt(index, new WeightedTestSortingPolicy(policy));
+		setWeightedTestSortingPolicyAt(index, encapsulate(policy));
 	}
 
 	/**
@@ -441,5 +441,20 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 			temp.add(wpolicy.getNonWeightedTestSortingPolicy());
 		}
 		return ImmutableList.copyOf(temp);
+	}
+	
+	/**
+	 * Encapsulates the given non-weighted test sorting policy
+	 * in a weighted test sorting policy with default weight.
+	 * 
+	 * @param 	policy
+	 * 			The non-weighted test sorting policy that has
+	 * 			to be encapsulated.
+	 * @return	A weighted test sorting policy with default weight
+	 * 			and the given non-weighted test sorting policy as
+	 * 			its non-weighted test sorting policy.
+	 */
+	public static WeightedTestSortingPolicy encapsulate(NonWeightedTestSortingPolicy policy) {
+		return new WeightedTestSortingPolicy(policy);
 	}
 }
