@@ -24,6 +24,8 @@ public abstract class SingleTestSortingPolicy implements NonWeightedTestSortingP
 	 * Checks if this test sorting policy contains the given
 	 * test sorting policy.
 	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
 	 * @return	True if and only if this test sorting policy
 	 * 			contains the given test sorting policy. This
 	 * 			means the given test sorting policy refers to

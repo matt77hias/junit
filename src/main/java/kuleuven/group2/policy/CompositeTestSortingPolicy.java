@@ -29,6 +29,8 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * Checks if this composite test sorting policy contains the given
 	 * test sorting policy.
 	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
 	 * @return	True if and only if this composite test sorting policy
 	 * 			contains the given test sorting policy or refers itself
 	 * 			to the given test sorting policy.
@@ -44,6 +46,55 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Checks if this composite test sorting policy can have the
+	 * given test sorting policy as one of its test sorting policies.
+	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
+	 * @return	True if and only if this composite test sorting policy
+	 * 			can have the given test sorting policy as one of its
+	 * 			test sorting policies. This is always the case for non
+	 * 			composite test sorting policies. A composite test sorting
+	 * 			policy is allowed if this composite test sorting policy
+	 * 			doesn't contain that composite test sorting policy.
+	 */
+	public boolean canHaveAsTestSortingPolicy(TestSortingPolicy policy) {
+		// Cast can be avoided by introducing a method in the whole
+		// test sorting policy hierarchy. We choose not to do this,
+		// because we don't want to contaminate the test sorting
+		// policy hierarchy with support just for the composite
+		// test sorting policy.
+		if (getClass().isInstance(policy)) {
+			return !contains(policy);
+		} else {
+			return true;
+		}
+	}
+	
+	/**
+	 * Checks if this composite test sorting policy can have the
+	 * given test sorting policy as one of its test sorting policies.
+	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
+	 * @throws	IllegalArgumentException
+	 * 			If and only if this composite test sorting policy
+	 * 			cannot have the given test sorting policy as one of its
+	 * 			test sorting policies. This is never the case for non
+	 * 			composite test sorting policies. A composite test sorting
+	 * 			policy is allowed if this composite test sorting policy
+	 * 			doesn't contain that composite test sorting policy.
+	 * 			Otherwise this exception is thrown.
+	 */
+	public void checkCanHaveAsTestSortingPolicy(TestSortingPolicy policy) 
+			throws IllegalArgumentException {
+		if (canHaveAsTestSortingPolicy(policy)) {
+			throw new IllegalArgumentException(
+				"This composite test sorting policy cannot contain the test sorting policy.");
+		}
 	}
 	
 	/**
@@ -78,9 +129,9 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 			added to the  weighted policies of this composite
 	 * 			test sorting policy.
 	 */
-	public void addLastNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) {
-		checkNotNull(policy);
-		this.policies.addLast(new WeightedTestSortingPolicy(policy));
+	public void addLastNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException{
+		addLastWeightedTestSortingPolicy(new WeightedTestSortingPolicy(policy));
 	}
 	
 	/**
@@ -88,14 +139,16 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * weighted test sorting policies of this composite test sorting
 	 * policy.
 	 * 
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The weighted test sorting policy that has to be
 	 * 			added to the weighted test sorting policies of
 	 * 			this composite test sorting policy.
 	 */
-	public void addLastWeightedTestSortingPolicy(WeightedTestSortingPolicy WeightedTestSortingPolicy) {
-		checkNotNull(WeightedTestSortingPolicy);
-		this.policies.addLast(WeightedTestSortingPolicy);
+	public void addLastWeightedTestSortingPolicy(WeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException {
+		checkNotNull(policy);
+		checkCanHaveAsTestSortingPolicy(policy);
+		this.policies.addLast(policy);
 	}
 	
 	/**
@@ -108,9 +161,9 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 			added to the weighted policies of
 	 * 			this composite test sorting policy.
 	 */
-	public void addFirstNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) {
-		checkNotNull(policy);
-		this.policies.addFirst(new WeightedTestSortingPolicy(policy));
+	public void addFirstNonWeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException {
+		addFirstWeightedTestSortingPolicy(new WeightedTestSortingPolicy(policy));
 	}
 	
 	/**
@@ -118,14 +171,16 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * of the weighted policies of this composite sorting
 	 * policy.
 	 * 
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The test sorting policy that has to be
 	 * 			added to the weighted test sorting policies
 	 * 			of this composite test sorting policy.
 	 */
-	public void addFirstWeightedTestSortingPolicy(WeightedTestSortingPolicy WeightedTestSortingPolicy) {
-		checkNotNull(WeightedTestSortingPolicy);
-		this.policies.addFirst(WeightedTestSortingPolicy);
+	public void addFirstWeightedTestSortingPolicy(WeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException {
+		checkNotNull(policy);
+		checkCanHaveAsTestSortingPolicy(policy);
+		this.policies.addFirst(policy);
 	}
 	
 	/**
@@ -145,9 +200,8 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 			| (index < 0 || index > getNbOfPolicies())
 	 */
 	public void addNonWeightedTestSortingPolicyAt(int index, NonWeightedTestSortingPolicy policy) 
-			throws IndexOutOfBoundsException {
-		checkNotNull(policy);
-		this.policies.add(index, new WeightedTestSortingPolicy(policy));
+			throws IllegalArgumentException, IndexOutOfBoundsException {
+		addWeightedTestSortingPolicyAt(index, new WeightedTestSortingPolicy(policy));
 	}
 	
 	/**
@@ -157,7 +211,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 
 	 * @param	index
 	 * 			The index.
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The weighted test sorting policy that has to be
 	 * 			added at the given index to the weighted test
 	 * 			sorting policies of this composite test sorting policy.
@@ -165,10 +219,28 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index > getNbOfPolicies())
 	 */
-	public void addWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy WeightedTestSortingPolicy) 
-			throws IndexOutOfBoundsException {
-		checkNotNull(WeightedTestSortingPolicy);
-		this.policies.add(index, WeightedTestSortingPolicy);
+	public void addWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException, IndexOutOfBoundsException {
+		checkNotNull(policy);
+		checkCanHaveAsTestSortingPolicy(policy);
+		this.policies.add(index, policy);
+	}
+	
+	/**
+	 * Replaces the weighted test sorting policy at the given index
+	 * with the given non-weighted test sorting policy.
+	 * 
+	 * @param	index
+	 * 			The index at which to replace.
+	 * @param	policy
+	 * 			The replacement non-weighted test sorting policy.
+	 * @throws	IndexOutOfBoundsException
+	 * 			If the index is out of range.
+	 * 			| (index < 0 || index >= getNbOfPolicies())
+	 */
+	public void setNonWeightedTestSortingPolicyAt(int index, NonWeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException, IndexOutOfBoundsException {
+		setWeightedTestSortingPolicyAt(index, new WeightedTestSortingPolicy(policy));
 	}
 
 	/**
@@ -177,29 +249,30 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * 
 	 * @param	index
 	 * 			The index at which to replace.
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The replacement weighted test sorting policy.
 	 * @throws	IndexOutOfBoundsException
 	 * 			If the index is out of range.
 	 * 			| (index < 0 || index >= getNbOfPolicies())
 	 */
-	public void setWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy WeightedTestSortingPolicy) 
-			throws IndexOutOfBoundsException {
-		checkNotNull(WeightedTestSortingPolicy);
-		this.policies.set(index, WeightedTestSortingPolicy);
+	public void setWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy policy) 
+			throws IllegalArgumentException, IndexOutOfBoundsException {
+		checkNotNull(policy);
+		checkCanHaveAsTestSortingPolicy(policy);
+		this.policies.set(index, policy);
 	}
 	
 	/**
 	 * Removes the given weighted test sorting policy.
 	 * 
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The weighted test sorting policy that has to be
 	 * 			removed from the weighted test sorting policies
 	 * 			of this composite test sorting policy.	
 	 */
-	public void removeWeightedTestSortingPolicy(WeightedTestSortingPolicy WeightedTestSortingPolicy) {
-		checkNotNull(WeightedTestSortingPolicy);
-		this.policies.remove(WeightedTestSortingPolicy);
+	public void removeWeightedTestSortingPolicy(WeightedTestSortingPolicy policy) {
+		checkNotNull(policy);
+		this.policies.remove(policy);
 	}
 	
 	/**
@@ -222,12 +295,12 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 * as one of its weighted test sorting policies.
 	 * [only first level considered]
 	 * 
-	 * @param	WeightedTestSortingPolicy
+	 * @param	policy
 	 * 			The weighted test sorting policy that has to
 	 * 			be checked.
 	 */
-	public boolean containsDirectly(WeightedTestSortingPolicy WeightedTestSortingPolicy) {
-		return this.policies.contains(WeightedTestSortingPolicy);
+	public boolean containsDirectly(WeightedTestSortingPolicy policy) {
+		return this.policies.contains(policy);
 	}
 	
 	/**

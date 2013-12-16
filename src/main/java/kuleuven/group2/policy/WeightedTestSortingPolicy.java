@@ -125,6 +125,8 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * Checks if this weighted test sorting policy contains the given
 	 * test sorting policy.
 	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
 	 * @return	True if and only if this test sorting policy
 	 * 			contains the given test sorting policy.
 	 */
