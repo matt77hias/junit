@@ -2,10 +2,8 @@ package kuleuven.group2.classloader;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.lang.reflect.Method;
 
 import kuleuven.group2.compile.EclipseCompiler;
