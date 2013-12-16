@@ -130,6 +130,9 @@ public class TestDatabase {
 		}
 		return false;
 	}
+	public boolean containsTest(Test test) {
+		return containsTest(test.getTestClassName(), test.getTestMethodName());
+	}
 
 	public Test getTest(String testClassName, String testMethodName) {
 		Map<String, Test> testMap = getTestMap(testClassName);
@@ -180,6 +183,15 @@ public class TestDatabase {
 
 	public void addTestRun(TestRun testRun, TestBatch testBatch) {
 		Test test = testRun.getTest();
+		
+		if (! containsTest(test)) {
+			throw new IllegalArgumentException("Test " + test + " is not in the database!");
+		}
+		
+		if (! containsTestBatch(testBatch)) {
+			throw new IllegalArgumentException("TestBatch " + testBatch + " is not in the database!");
+		}
+		
 		test.addTestRun(testRun);
 		testBatch.addTestRun(testRun);
 		fireTestRunAdded(testRun, testBatch);
@@ -212,6 +224,10 @@ public class TestDatabase {
 	public List<TestBatch> getTestBatches() {
 		return Collections.unmodifiableList(testBatches);
 	}
+	
+	protected boolean containsTestBatch(TestBatch testBatch) {
+		return getTestBatches().contains(testBatch);
+	}
 
 	/*
 	 * Method-test links
@@ -236,7 +252,6 @@ public class TestDatabase {
 	}
 
 	public Collection<TestedMethod> getLinkedMethods(Test test) {
-		// System.out.println(testToMethodLinks);
 		Collection<TestedMethod> linkedMethods = testToMethodLinks.get(test);
 		if (linkedMethods == null) {
 			return Collections.emptySet();

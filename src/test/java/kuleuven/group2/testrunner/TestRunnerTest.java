@@ -19,6 +19,7 @@ public class TestRunnerTest {
 	protected TestRunner testRunner;
 	protected kuleuven.group2.data.Test testMethod2Arg;
 	protected kuleuven.group2.data.Test testMethodFail;
+	protected kuleuven.group2.data.Test testMethodNonExisting;
 	protected JUnitCore junitCore;
 	
 	protected boolean listenerVisited;
@@ -43,8 +44,13 @@ public class TestRunnerTest {
 				);
 		
 		testMethodFail = new kuleuven.group2.data.Test(
-				kuleuven.group2.testrunner.TestRunnerTest.class.getName(),
+				kuleuven.group2.testrunner.FailTest.class.getName(),
 				"fail"
+				);
+		
+		testMethodNonExisting = new kuleuven.group2.data.Test(
+				"nonExistingClass",
+				"nonExistingMethod"
 				);
 		
 		listenerVisited = false;
@@ -63,8 +69,8 @@ public class TestRunnerTest {
 		assertEquals(1, testMethod2ArgResult.getRunCount());
 	}
 	
-	/*@Test
-	public void testFailedSimple() {
+    @Test
+	public void testFailedSimple() throws Exception {
 		Result[] result = testRunner.runTestMethods(testMethodFail);
 		Result testMethodFailResult = result[0];
 		
@@ -72,13 +78,31 @@ public class TestRunnerTest {
 		assertEquals(1, testMethodFailResult.getRunCount());
 		assertEquals(1, testMethodFailResult.getFailureCount());
 	}
-
-	// used as failing test
-	@Test
-	public void fail() {
-		assertTrue(false);
-	}*/
 	
+    @Test
+	public void testFailedClassNotFound() throws Exception {
+		Result[] result = testRunner.runTestMethods(testMethodNonExisting);
+		
+		assertNull(result[0]);
+	}
+    
+    @Test
+	public void testMultiple() throws Exception {
+		Result[] result = testRunner.runTestMethods(testMethodNonExisting, testMethod2Arg, testMethodFail);
+		Result testMethodResult1 = result[0];
+		Result testMethodResult2 = result[1];
+		Result testMethodResult3 = result[2];
+	
+		assertNull(testMethodResult1);
+
+		assertTrue(testMethodResult2.wasSuccessful());
+		assertEquals(1, testMethodResult2.getRunCount());
+		
+		assertFalse(testMethodResult3.wasSuccessful());
+		assertEquals(1, testMethodResult3.getRunCount());
+		assertEquals(1, testMethodResult3.getFailureCount());
+	}
+   
 	@Test
 	public void testRunListener() throws Exception {
 		testRunner.addRunListener(new RunListener() {
