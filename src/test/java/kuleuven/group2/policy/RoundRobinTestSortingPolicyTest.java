@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 
-public class RoundRobinPolicyTest extends TestSortingPolicyTest {
+public class RoundRobinTestSortingPolicyTest extends TestSortingPolicyTest {
 
 	@Override
 	public void correct_order_test() {
@@ -21,9 +21,9 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastWeightedPolicy(new WeightedPolicy(policy, 1));
 		rrp.addLastPolicy(fixed1);
 		
@@ -39,11 +39,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastWeightedPolicy(new WeightedPolicy(policy, 1));
 		rrp.addLastPolicy(fixed1);
 		rrp.addLastPolicy(fixed2);
@@ -61,11 +61,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test4, test2, test3, test1);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastPolicy(policy);
 		rrp.addLastPolicy(policy);
 		rrp.addLastPolicy(fixed1);
@@ -84,11 +84,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test4, test2, test3, test1);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastWeightedPolicy(new WeightedPolicy(policy, 2));
 		rrp.addLastPolicy(fixed1);
 		rrp.addLastPolicy(fixed2);
@@ -106,11 +106,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test4, test2, test3, test1);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastPolicy(policy);
 		rrp.addLastPolicy(policy);
 		rrp.addLastPolicy(policy);
@@ -130,11 +130,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test4, test2, test3, test1);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastWeightedPolicy(new WeightedPolicy(policy, 3));
 		rrp.addLastPolicy(fixed1);
 		rrp.addLastPolicy(fixed2);
@@ -151,9 +151,9 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 	public void correct_order_test_selfDirectContaining() {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp_high = new RoundRobinTestSortingPolicy();
 		rrp_high.addLastPolicy(fixed1);
 		rrp_high.addLastPolicy(rrp_high);
 		
@@ -165,11 +165,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list1 = ImmutableList.of(test1, test2, test3, test4);
 		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
 		
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list1);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list2);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list1);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list2);
 		
-		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
-		RoundRobinPolicy rrp_low = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp_high = new RoundRobinTestSortingPolicy();
+		RoundRobinTestSortingPolicy rrp_low = new RoundRobinTestSortingPolicy();
 		rrp_high.addLastPolicy(fixed1);
 		rrp_low.addLastPolicy(fixed2);
 		
@@ -185,14 +185,14 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list1);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list2);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list1);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list2);
 		
-		RoundRobinPolicy rrp_low = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp_low = new RoundRobinTestSortingPolicy();
 		rrp_low.addLastPolicy(fixed1);
 		rrp_low.addLastPolicy(fixed2);
 		
-		RoundRobinPolicy rrp_high = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp_high = new RoundRobinTestSortingPolicy();
 		rrp_high.addLastPolicy(policy);
 		rrp_high.addLastPolicy(rrp_low);
 		
@@ -207,7 +207,7 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 	public void correct_order_test_noWeightedPolicies() {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		List<kuleuven.group2.data.Test> result =  rrp.getSortedTests(super.testDatabase, list);
 		assertTrue(result.get(0) == test1);
 		assertTrue(result.get(1) == test2);
@@ -220,11 +220,11 @@ public class RoundRobinPolicyTest extends TestSortingPolicyTest {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
 		TestSortingPolicy policy = new LastFailureFirst();
-		FixedOrderPolicy fixed1 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed2 = new FixedOrderPolicy(list);
-		FixedOrderPolicy fixed3 = new FixedOrderPolicy(list);
+		FixedOrderTestSortingPolicy fixed1 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed2 = new FixedOrderTestSortingPolicy(list);
+		FixedOrderTestSortingPolicy fixed3 = new FixedOrderTestSortingPolicy(list);
 		
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		rrp.addLastWeightedPolicy(new WeightedPolicy(policy, 1));
 		rrp.addLastPolicy(fixed1);
 		rrp.addLastPolicy(fixed2);

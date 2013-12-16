@@ -13,7 +13,7 @@ import com.google.common.collect.Ordering;
  * @author Group 2
  * @version 12 December 2013
  */
-public class FixedOrderPolicy extends ComparingPolicy {
+public class FixedOrderTestSortingPolicy extends ComparingTestSortingPolicy {
 
 	protected final Ordering<Test> ordering;
 
@@ -29,7 +29,7 @@ public class FixedOrderPolicy extends ComparingPolicy {
 	 * @param orderedTests
 	 *            The ordered list of tests.
 	 */
-	public FixedOrderPolicy(List<Test> orderedTests) {
+	public FixedOrderTestSortingPolicy(List<Test> orderedTests) {
 		this.ordering = Ordering.explicit(orderedTests);
 	}
 

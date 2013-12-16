@@ -7,11 +7,11 @@ import java.util.List;
 import org.junit.Test;
 
 
-public class CompositePolicyTest {
+public class CompositeTestSortingPolicyTest {
 
 	@Test
 	public void addLastPolicy_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -29,7 +29,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void addLastWeightedPolicy_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -48,7 +48,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void addFirstPolicy_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -66,7 +66,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void addFirstWeightedPolicy_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -85,7 +85,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void addPolicyAt_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -103,7 +103,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void addWeightedPolicyAt_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -122,7 +122,7 @@ public class CompositePolicyTest {
 
 	@Test
 	public void setWeightedPolicyAt_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -139,7 +139,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void removeWeightedPolicy_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedPolicies(), 0);
 		
 		TestSortingPolicy p1 = new LastFailureFirst();
@@ -166,7 +166,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void removeWeightedPolicyAt_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedPolicies(), 0);
 		
 		TestSortingPolicy p1 = new LastFailureFirst();
@@ -195,7 +195,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void contains_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedPolicies(), 0);
 		
 		TestSortingPolicy p1 = new LastFailureFirst();
@@ -236,7 +236,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void getWeightedPolicyAt_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		TestSortingPolicy p1 = new LastFailureFirst();
 		TestSortingPolicy p2 = new FrequentFailureFirst();
 		TestSortingPolicy p3 = new DistinctFailureFirst();
@@ -253,7 +253,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void getNbOfWeightedPolicies_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedPolicies(), 0);
 		
 		TestSortingPolicy p1 = new LastFailureFirst();
@@ -279,7 +279,7 @@ public class CompositePolicyTest {
 	
 	@Test
 	public void getWeightedPolicies_test() {
-		RoundRobinPolicy rrp = new RoundRobinPolicy();
+		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedPolicies(), 0);
 		
 		TestSortingPolicy p1 = new LastFailureFirst();

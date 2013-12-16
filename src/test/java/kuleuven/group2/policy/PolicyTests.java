@@ -9,9 +9,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		DistinctFailureFirstTest.class,
 		FrequentFailureTest.class,
 		LastFailureFirstTest.class,
-		FixedOrderPolicyTest.class,
-		RoundRobinPolicyTest.class,
-		CompositePolicyTest.class
+		FixedOrderTestSortingPolicyTest.class,
+		RoundRobinTestSortingPolicyTest.class,
+		CompositeTestSortingPolicyTest.class
 })
 public class PolicyTests {
 

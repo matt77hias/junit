@@ -11,7 +11,7 @@ import kuleuven.group2.data.Test;
  * @version	17 November 2013
  * 
  */
-public class FrequentFailureFirst extends ComparingPolicy implements Comparator<Test> {
+public class FrequentFailureFirst extends ComparingTestSortingPolicy implements Comparator<Test> {
 	
 	/**
 	 * The default depth of the level of history that's

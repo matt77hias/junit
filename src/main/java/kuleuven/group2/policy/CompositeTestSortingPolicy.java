@@ -13,12 +13,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author	Group 2
  * @version	12 December 2013
  */
-public abstract class CompositePolicy implements TestSortingPolicy {
+public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	
 	/**
 	 * Creates a new composite policy.
 	 */
-	protected CompositePolicy() {
+	protected CompositeTestSortingPolicy() {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////

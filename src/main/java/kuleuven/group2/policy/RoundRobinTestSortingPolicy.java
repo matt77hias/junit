@@ -19,7 +19,7 @@ import com.google.common.collect.Iterators;
  * @author Group 2
  * @version 12 December 2013
  */
-public class RoundRobinPolicy extends CompositePolicy {
+public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 
 	/**
 	 * Sorts the tests of the given test database according to this composite
