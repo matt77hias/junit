@@ -131,6 +131,6 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * 			contains the given test sorting policy.
 	 */
 	public boolean contains(TestSortingPolicy policy) {
-		return (this == policy) || (getNonWeightedTestSortingPolicy() == policy);
+		return (this == policy) || (getNonWeightedTestSortingPolicy().contains(policy));
 	}
 }

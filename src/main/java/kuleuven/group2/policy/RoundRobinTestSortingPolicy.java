@@ -1,14 +1,11 @@
 package kuleuven.group2.policy;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestDatabase;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -16,30 +13,45 @@ import com.google.common.collect.Iterators;
 /**
  * A composite policy using a Round Robin strategy.
  * 
- * @author Group 2
- * @version 12 December 2013
+ * @author 	Group 2
+ * @version 16 December 2013
  */
 public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 
+	/**
+	 * Combines the given sorted tests and returns the resulting tests
+	 * according to this round robin test sorting policy.
+	 * 
+	 * @pre		This round robin test sorting policy must have at
+	 * 			least one weighted test sorting policy.
+	 * 			| getNbOfWeightedTestSortingPolicies() != 0
+	 * @param 	sets
+	 * 			A list containing all the sorted tests from
+	 * 			this round robin test sorting policies direct weighted
+	 * 			test sorting policies' non-weighted test sorting policy
+	 * 			in the order of the appearance of the direct weighted
+	 * 			test sorting policies of this round robin test sorting
+	 * 			policy.
+	 * @param 	weightedSets
+	 * 			A list containing an iterable collection for this
+	 * 			round robin test sorting policies direct weighted
+	 * 			test sorting policies' non-weighted test sorting policy
+	 * 			in the order of the appearance of the direct weighted
+	 * 			test sorting policies of this round robin test sorting
+	 * 			policy and as many times as the weighted test sorting
+	 * 			policies weight.
+	 * @return	The tests that needs to be sorted.
+	 */
 	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		List<LinkedHashSet<Test>> sets = new ArrayList<>(this.policies.size());
-		List<Iterable<LinkedHashSet<Test>>> weightedSets = new ArrayList<>(this.policies.size());
-		List<Test> result = new ArrayList<>(tests.size());
-
-		// Collect sorted tests from weighted policies
-		for (WeightedTestSortingPolicy wp : this.policies) {
-			List<Test> sorted = wp.getNonWeightedTestSortingPolicy().getSortedTests(testDatabase, tests);
-			LinkedHashSet<Test> sortedSet = new LinkedHashSet<Test>(sorted);
-			sets.add(sortedSet);
-			weightedSets.add(Collections.nCopies(wp.getWeight(), sortedSet));
-		}
+	protected List<Test> combineSortedTests(List<LinkedHashSet<Test>> sets, List<Iterable<LinkedHashSet<Test>>> weightedSets) {
+		int size = sets.get(0).size();
+		List<Test> result = new ArrayList<Test>(size);
 
 		// Create cyclic weighted queue
 		Iterable<LinkedHashSet<Test>> queue = Iterables.concat(weightedSets);
 		Iterator<LinkedHashSet<Test>> it = Iterators.cycle(queue);
 
-		for (int i = 0; i < tests.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			// Get next test
 			LinkedHashSet<Test> currentSet = it.next();
 			Test test = currentSet.iterator().next();
@@ -53,5 +65,4 @@ public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 
 		return result;
 	}
-
 }

@@ -1,6 +1,9 @@
 package kuleuven.group2.policy;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +27,10 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	protected CompositeTestSortingPolicy() {
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Loop prevention
+	////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Checks if this composite test sorting policy contains the given
@@ -67,8 +74,8 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 		// because we don't want to contaminate the test sorting
 		// policy hierarchy with support just for the composite
 		// test sorting policy.
-		if (getClass().isInstance(policy)) {
-			return !contains(policy);
+		if (CompositeTestSortingPolicy.class.isInstance(policy)) {
+			return (!contains(policy)) && (!policy.contains(this));
 		} else {
 			return true;
 		}
@@ -91,25 +98,102 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	 */
 	public void checkCanHaveAsTestSortingPolicy(TestSortingPolicy policy) 
 			throws IllegalArgumentException {
-		if (canHaveAsTestSortingPolicy(policy)) {
+		if (!canHaveAsTestSortingPolicy(policy)) {
 			throw new IllegalArgumentException(
 				"This composite test sorting policy cannot contain the test sorting policy.");
 		}
 	}
 	
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Test sorting
+	////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	 * Sorts the tests of the given test database according to this composite
 	 * policy.
 	 * 
-	 * @param testDatabase
-	 *            The test database which contains the given tests.
-	 * @return The tests of the given test database according to this composite
-	 *         policy.
+	 * @param 	testDatabase
+	 *          The test database which contains the given tests.
+	 * @return 	The tests of the given test database according to this composite
+	 *         	policy.
 	 */
 	@Override
 	public final List<Test> getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
+	
+	/**
+	 * Sorts the given tests according to this composite
+	 * test sorting policy.
+	 * 
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
+	 * @param 	tests
+	 * 			The tests that needs to be sorted.
+	 * @post	The given collection may be modified.
+	 * @return	The tests of the given test database according to
+	 * 			this composite test sorting policy.
+	 */
+	@Override
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		if (getNbOfWeightedTestSortingPolicies() == 0) {
+			return ImmutableList.copyOf(tests);
+		}
+		return getCombinedSortedTests(testDatabase, tests);
+	}
+	
+	/**
+	 * Sorts the given tests according to this composite
+	 * test sorting policy.
+	 * 
+	 * @pre		This composite test sorting policy must have at
+	 * 			least one weighted test sorting policy.
+	 * 			| getNbOfWeightedTestSortingPolicies() != 0
+	 * @param	testDatabase
+	 * 			The test database which contains the given tests.
+	 * @param 	tests
+	 * 			The tests that needs to be sorted.
+	 */
+	protected List<Test> getCombinedSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		List<LinkedHashSet<Test>> sets = new ArrayList<LinkedHashSet<Test>>(getNbOfWeightedTestSortingPolicies());
+		List<Iterable<LinkedHashSet<Test>>> weightedSets = new ArrayList<Iterable<LinkedHashSet<Test>>>(getNbOfWeightedTestSortingPolicies());
+
+		// Collect sorted tests from weighted policies
+		for (WeightedTestSortingPolicy wp : this.policies) {
+			List<Test> sorted = wp.getNonWeightedTestSortingPolicy().getSortedTests(testDatabase, tests);
+			LinkedHashSet<Test> sortedSet = new LinkedHashSet<Test>(sorted);
+			sets.add(sortedSet);
+			weightedSets.add(Collections.nCopies(wp.getWeight(), sortedSet));
+		}
+		
+		return combineSortedTests(sets, weightedSets);
+	}
+	
+	/**
+	 * Combines the given sorted tests and returns the resulting tests
+	 * according to this composite test sorting policy.
+	 * 
+	 * @pre		This composite test sorting policy must have at
+	 * 			least one weighted test sorting policy.
+	 * 			| getNbOfWeightedTestSortingPolicies() != 0
+	 * @param 	sets
+	 * 			A list containing all the sorted tests from
+	 * 			this composite test sorting policies direct weighted
+	 * 			test sorting policies' non-weighted test sorting policy
+	 * 			in the order of the appearance of the direct weighted
+	 * 			test sorting policies of this composite test sorting
+	 * 			policy.
+	 * @param 	weightedSets
+	 * 			A list containing an iterable collection for this
+	 * 			composite test sorting policies direct weighted
+	 * 			test sorting policies' non-weighted test sorting policy
+	 * 			in the order of the appearance of the direct weighted
+	 * 			test sorting policies of this composite test sorting
+	 * 			policy and as many times as the weighted test sorting
+	 * 			policies weight.
+	 * @return	The tests that needs to be sorted.
+	 */
+	protected abstract List<Test> combineSortedTests(List<LinkedHashSet<Test>> sets, List<Iterable<LinkedHashSet<Test>>> weightedSets);
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	// Test sorting policies management
@@ -147,7 +231,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	public void addLastWeightedTestSortingPolicy(WeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException {
 		checkNotNull(policy);
-		checkCanHaveAsTestSortingPolicy(policy);
+		checkCanHaveAsTestSortingPolicy(policy.getNonWeightedTestSortingPolicy());
 		this.policies.addLast(policy);
 	}
 	
@@ -179,7 +263,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	public void addFirstWeightedTestSortingPolicy(WeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException {
 		checkNotNull(policy);
-		checkCanHaveAsTestSortingPolicy(policy);
+		checkCanHaveAsTestSortingPolicy(policy.getNonWeightedTestSortingPolicy());
 		this.policies.addFirst(policy);
 	}
 	
@@ -222,7 +306,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	public void addWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException, IndexOutOfBoundsException {
 		checkNotNull(policy);
-		checkCanHaveAsTestSortingPolicy(policy);
+		checkCanHaveAsTestSortingPolicy(policy.getNonWeightedTestSortingPolicy());
 		this.policies.add(index, policy);
 	}
 	
@@ -258,7 +342,7 @@ public abstract class CompositeTestSortingPolicy implements NonWeightedTestSorti
 	public void setWeightedTestSortingPolicyAt(int index, WeightedTestSortingPolicy policy) 
 			throws IllegalArgumentException, IndexOutOfBoundsException {
 		checkNotNull(policy);
-		checkCanHaveAsTestSortingPolicy(policy);
+		checkCanHaveAsTestSortingPolicy(policy.getNonWeightedTestSortingPolicy());
 		this.policies.set(index, policy);
 	}
 	

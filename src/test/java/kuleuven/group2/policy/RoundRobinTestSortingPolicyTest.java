@@ -147,7 +147,7 @@ public class RoundRobinTestSortingPolicyTest extends TestSortingPolicyTest {
 		assertTrue(result.get(3) == test4);
 	}
 	
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void correct_order_test_selfDirectContaining() {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test1, test2, test3, test4);
 		
@@ -160,7 +160,7 @@ public class RoundRobinTestSortingPolicyTest extends TestSortingPolicyTest {
 		rrp_high.getSortedTests(super.testDatabase);
 	}
 	
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void correct_order_test_selfIndirectContaining() {
 		List<kuleuven.group2.data.Test> list1 = ImmutableList.of(test1, test2, test3, test4);
 		List<kuleuven.group2.data.Test> list2 = ImmutableList.of(test2, test3, test4, test1);
