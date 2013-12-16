@@ -21,20 +21,6 @@ import com.google.common.collect.Iterators;
  */
 public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 
-	/**
-	 * Sorts the tests of the given test database according to this composite
-	 * policy.
-	 * 
-	 * @param testDatabase
-	 *            The test database which contains the given tests.
-	 * @return The tests of the given test database according to this composite
-	 *         policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-
 	@Override
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
 		List<LinkedHashSet<Test>> sets = new ArrayList<>(this.policies.size());

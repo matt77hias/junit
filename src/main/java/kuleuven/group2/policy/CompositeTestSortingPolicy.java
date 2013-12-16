@@ -3,6 +3,9 @@ package kuleuven.group2.policy;
 import java.util.LinkedList;
 import java.util.List;
 
+import kuleuven.group2.data.Test;
+import kuleuven.group2.data.TestDatabase;
+
 import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,6 +22,20 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	 * Creates a new composite policy.
 	 */
 	protected CompositeTestSortingPolicy() {
+	}
+	
+	/**
+	 * Sorts the tests of the given test database according to this composite
+	 * policy.
+	 * 
+	 * @param testDatabase
+	 *            The test database which contains the given tests.
+	 * @return The tests of the given test database according to this composite
+	 *         policy.
+	 */
+	@Override
+	public final List<Test> getSortedTests(TestDatabase testDatabase) {
+		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////

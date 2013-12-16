@@ -18,11 +18,6 @@ import kuleuven.group2.data.TestDatabase;
 public abstract class ComparingTestSortingPolicy extends SingleTestSortingPolicy {
 
 	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-
-	@Override
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
 		List<Test> result = new ArrayList<Test>(tests);
 		Collections.sort(result, getComparator());

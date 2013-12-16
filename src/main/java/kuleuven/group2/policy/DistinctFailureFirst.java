@@ -84,20 +84,6 @@ public class DistinctFailureFirst extends SingleTestSortingPolicy {
 	private int depth;
 
 	/**
-	 * Sorts the tests of the given test database according to this distinct
-	 * failure first policy.
-	 * 
-	 * @param testDatabase
-	 *            The test database which contains the given tests.
-	 * @return The tests of the given test database according to this distinct
-	 *         failure first policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-
-	/**
 	 * Sorts the given tests according to this changed code first policy.
 	 * 
 	 * @param testDatabase

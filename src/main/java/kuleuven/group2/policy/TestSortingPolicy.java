@@ -41,4 +41,6 @@ public interface TestSortingPolicy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
+	
+	
 }

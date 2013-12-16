@@ -26,19 +26,6 @@ public class ChangedCodeFirst extends SingleTestSortingPolicy {
 	}
 	
 	/**
-	 * Sorts the tests of the given test database according to this last failure policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @return	The tests of the given test database according to this
-	 * 			last failure policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
-	
-	/**
 	 * A class of tuples.
 	 * 
 	 * @author 	Group 2
