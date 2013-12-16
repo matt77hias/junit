@@ -1,6 +1,7 @@
 package kuleuven.group2.policy;
 
 import java.util.Collection;
+import java.util.List;
 
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
@@ -27,19 +28,7 @@ public interface TestSortingPolicy {
 	 * 			The test database which contains the given tests.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTests(TestDatabase testDatabase);
-	
-	/**
-	 * Sorts the given tests according to this policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @post	The given array may be modified.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests);
+	public List<Test> getSortedTests(TestDatabase testDatabase);
 		
 	/**
 	 * Sorts the given tests according to this policy.
@@ -51,5 +40,16 @@ public interface TestSortingPolicy {
 	 * @post	The given collection may be modified.
 	 * @return	The tests of the given test database according to this policy.
 	 */
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
+	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
+	
+	/**
+	 * Checks if this test sorting policy contains the given
+	 * test sorting policy.
+	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
+	 * @return	True if and only if this test sorting policy
+	 * 			contains the given test sorting policy.
+	 */
+	public boolean contains(TestSortingPolicy policy);
 }

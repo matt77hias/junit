@@ -100,6 +100,7 @@ public class DirectoryStoreTest {
 	@Test
 	public void testNonExistingRoot () throws IllegalArgumentException, IOException {
 		String newPath = root + "/doesnotexist";
+		@SuppressWarnings("unused")
 		DirectoryStore directoryStore2 = new DirectoryStore(newPath);
 	}
 

@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
@@ -56,6 +58,14 @@ public class Configuration extends BorderPane {
 
 	public StringProperty binaryDirProperty() {
 		return controller.binaryDirProperty();
+	}
+
+	public ObservableList<PolicyModel> getPolicies() {
+		return policiesProperty().get();
+	}
+
+	public ListProperty<PolicyModel> policiesProperty() {
+		return controller.policiesProperty();
 	}
 
 	public PolicyModel getPolicy() {

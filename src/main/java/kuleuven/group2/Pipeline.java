@@ -140,7 +140,7 @@ public class Pipeline {
 
 		setupSourceEventHandlers();
 
-		Test[] sortedTests = sortTests();
+		List<Test> sortedTests = sortTests();
 
 		runTests(sortedTests);
 	}
@@ -150,7 +150,7 @@ public class Pipeline {
 
 		handleSourceEvents(events);
 
-		Test[] sortedTests = sortTests();
+		List<Test> sortedTests = sortTests();
 
 		runTests(sortedTests);
 	}
@@ -182,11 +182,11 @@ public class Pipeline {
 			
 	}
 
-	private Test[] sortTests() {
+	private List<Test> sortTests() {
 		return sortPolicy.getSortedTests(testDatabase);
 	}
 
-	private void runTests(Test[] tests) {
+	private void runTests(List<Test> tests) {
 		try {
 			testRunner.runTestMethods(tests);
 		} catch (Exception e) {

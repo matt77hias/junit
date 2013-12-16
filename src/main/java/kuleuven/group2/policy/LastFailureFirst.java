@@ -1,11 +1,8 @@
 package kuleuven.group2.policy;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 
 import kuleuven.group2.data.Test;
-import kuleuven.group2.data.TestDatabase;
 
 /**
  * A class representing the last failure first policy.
@@ -14,57 +11,13 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  * 
  */
-public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
+public class LastFailureFirst extends ComparingTestSortingPolicy implements Comparator<Test> {
 	
 	/**
 	 * Creates a new last failure first policy.
 	 */
 	public LastFailureFirst() {
 		
-	}
-	
-	/**
-	 * Sorts the tests of the given test database according to this last failure policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @return	The tests of the given test database according to this
-	 * 			last failure policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase) {
-		Test[] result = testDatabase.getAllTests().toArray(new Test[0]);
-		return getSortedTests(testDatabase, result);
-	}
-	
-	/**
-	 * Sorts the given tests according to this last failure first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Test[] tests) {
-		Test[] results = tests.clone();
-		Arrays.sort(results, 0, results.length, this);
-		return results;
-	}
-	
-	/**
-	 * Sorts the given tests according to this last failure first policy.
-	 * 
-	 * @param	testDatabase
-	 * 			The test database which contains the given tests.
-	 * @param 	tests
-	 * 			The tests that needs to be sorted.
-	 * @return	The tests of the given test database according to this policy.
-	 */
-	@Override
-	public Test[] getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		return getSortedTests(testDatabase, tests.toArray(new Test[0]));
 	}
 
 	/**
@@ -90,4 +43,10 @@ public class LastFailureFirst implements TestSortingPolicy, Comparator<Test> {
 		// o1.getLastFailureTime() < o2.getLastFailureTime() => result > 0
 		return o2.getLastFailureTime().compareTo(o1.getLastFailureTime());
 	}
+
+	@Override
+	protected Comparator<Test> getComparator() {
+		return this;
+	}
+
 }

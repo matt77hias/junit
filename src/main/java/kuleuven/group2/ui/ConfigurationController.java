@@ -8,13 +8,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.util.Callback;
 import kuleuven.group2.ui.model.PolicyModel;
+import kuleuven.group2.ui.util.PolicyListCellFactory;
 
 public class ConfigurationController {
 
@@ -31,8 +28,7 @@ public class ConfigurationController {
 	private ComboBox<PolicyModel> policyField;
 
 	private final ObjectProperty<PolicyModel> selectedPolicy = new SimpleObjectProperty<PolicyModel>();
-	private final ListProperty<PolicyModel> policies = new SimpleListProperty<>(
-			FXCollections.observableArrayList(PolicyModel.ALL));
+	private final ListProperty<PolicyModel> policies = new SimpleListProperty<>();
 
 	private BooleanBinding configured;
 	private BooleanProperty canConfigure = new SimpleBooleanProperty();
@@ -74,6 +70,10 @@ public class ConfigurationController {
 		return binaryField.directoryProperty();
 	}
 
+	public ListProperty<PolicyModel> policiesProperty() {
+		return policies;
+	}
+
 	public ObjectProperty<PolicyModel> selectedPolicyProperty() {
 		return selectedPolicy;
 	}
@@ -88,25 +88,6 @@ public class ConfigurationController {
 
 	public BooleanProperty canConfigure() {
 		return canConfigure;
-	}
-
-	protected static class PolicyListCellFactory implements Callback<ListView<PolicyModel>, ListCell<PolicyModel>> {
-		@Override
-		public ListCell<PolicyModel> call(ListView<PolicyModel> view) {
-			return new PolicyListCell();
-		}
-	}
-
-	protected static class PolicyListCell extends ListCell<PolicyModel> {
-		@Override
-		protected void updateItem(PolicyModel model, boolean empty) {
-			super.updateItem(model, empty);
-			if (!empty) {
-				setText(model.getName());
-			} else {
-				setText(null);
-			}
-		}
 	}
 
 }
