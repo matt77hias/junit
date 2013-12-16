@@ -16,7 +16,7 @@ import kuleuven.group2.data.TestedMethod;
  * @version	17 November 2013
  * 
  */
-public class ChangedCodeFirst implements TestSortingPolicy {
+public class ChangedCodeFirst extends SingleTestSortingPolicy {
 
 	/**
 	 * Creates a new changed code first policy.

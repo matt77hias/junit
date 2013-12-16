@@ -102,7 +102,7 @@ public class FrequentFailureFirst extends ComparingTestSortingPolicy implements 
 	}
 
 	@Override
-	protected Comparator<? super Test> getComparator() {
+	protected Comparator<Test> getComparator() {
 		return this;
 	}
 	

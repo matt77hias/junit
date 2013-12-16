@@ -15,7 +15,7 @@ import kuleuven.group2.data.TestDatabase;
  * @author Group 2
  * @version 12 December 2013
  */
-public abstract class ComparingTestSortingPolicy implements TestSortingPolicy {
+public abstract class ComparingTestSortingPolicy extends SingleTestSortingPolicy {
 
 	@Override
 	public List<Test> getSortedTests(TestDatabase testDatabase) {

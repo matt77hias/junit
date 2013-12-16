@@ -19,7 +19,7 @@ import com.google.common.collect.Iterables;
  * @version 17 November 2013
  * 
  */
-public class DistinctFailureFirst implements TestSortingPolicy {
+public class DistinctFailureFirst extends SingleTestSortingPolicy {
 
 	/**
 	 * The default depth of the level of history that's still taken into account

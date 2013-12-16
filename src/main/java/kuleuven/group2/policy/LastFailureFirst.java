@@ -45,7 +45,7 @@ public class LastFailureFirst extends ComparingTestSortingPolicy implements Comp
 	}
 
 	@Override
-	protected Comparator<? super Test> getComparator() {
+	protected Comparator<Test> getComparator() {
 		return this;
 	}
 
