@@ -42,5 +42,12 @@ public interface TestSortingPolicy {
 	 */
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
 	
-	
+	/**
+	 * Checks if this test sorting policy contains the given
+	 * test sorting policy.
+	 * 
+	 * @return	True if and only if this test sorting policy
+	 * 			contains the given test sorting policy.
+	 */
+	public boolean contains(TestSortingPolicy policy);
 }

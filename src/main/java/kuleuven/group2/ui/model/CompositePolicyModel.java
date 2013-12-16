@@ -47,19 +47,19 @@ public class CompositePolicyModel extends PolicyModel {
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
 						int newIndex = c.getPermutation(i);
 						WeightedPolicyModel permutedModel = c.getList().get(newIndex);
-						policy.setWeightedPolicyAt(newIndex, permutedModel.getWeightedPolicy());
+						policy.setWeightedTestSortingPolicyAt(newIndex, permutedModel.getWeightedPolicy());
 					}
 				} else if (c.wasUpdated()) {
 					// Update, ignore
 				} else {
 					// Remove
 					for (WeightedPolicyModel removedModel : c.getRemoved()) {
-						policy.removeWeightedPolicy(removedModel.getWeightedPolicy());
+						policy.removeWeightedTestSortingPolicy(removedModel.getWeightedPolicy());
 					}
 					// Add
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
 						WeightedPolicyModel addedModel = c.getList().get(i);
-						policy.addWeightedPolicyAt(i, addedModel.getWeightedPolicy());
+						policy.addWeightedTestSortingPolicyAt(i, addedModel.getWeightedPolicy());
 					}
 				}
 			}

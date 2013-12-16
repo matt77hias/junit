@@ -5,7 +5,7 @@ import java.util.List;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
-public abstract class SingleTestSortingPolicy implements TestSortingPolicy {
+public abstract class SingleTestSortingPolicy implements NonWeightedTestSortingPolicy {
 	
 	/**
 	 * Sorts the tests of the given test database according to this last failure policy.
@@ -19,5 +19,18 @@ public abstract class SingleTestSortingPolicy implements TestSortingPolicy {
 	public final List<Test> getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
-
+	
+	/**
+	 * Checks if this test sorting policy contains the given
+	 * test sorting policy.
+	 * 
+	 * @return	True if and only if this test sorting policy
+	 * 			contains the given test sorting policy. This
+	 * 			means the given test sorting policy refers to
+	 * 			this single test sorting policy.
+	 */
+	@Override
+	public boolean contains(TestSortingPolicy policy) {
+		return (this == policy);
+	}
 }

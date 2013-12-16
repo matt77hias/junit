@@ -2,14 +2,14 @@ package kuleuven.group2.ui.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import kuleuven.group2.policy.TestSortingPolicy;
+import kuleuven.group2.policy.NonWeightedTestSortingPolicy;
 
 public class PolicyModel {
 
 	private final StringProperty name = new SimpleStringProperty();
-	private final TestSortingPolicy policy;
+	private final NonWeightedTestSortingPolicy policy;
 
-	public PolicyModel(String name, TestSortingPolicy policy) {
+	public PolicyModel(String name, NonWeightedTestSortingPolicy policy) {
 		this.name.set(name);
 		this.policy = policy;
 	}
@@ -26,7 +26,7 @@ public class PolicyModel {
 		return name;
 	}
 
-	public TestSortingPolicy getPolicy() {
+	public NonWeightedTestSortingPolicy getPolicy() {
 		return policy;
 	}
 

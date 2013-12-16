@@ -28,8 +28,8 @@ public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 		List<Test> result = new ArrayList<>(tests.size());
 
 		// Collect sorted tests from weighted policies
-		for (WeightedPolicy wp : this.policies) {
-			List<Test> sorted = wp.getTestSortingPolicy().getSortedTests(testDatabase, tests);
+		for (WeightedTestSortingPolicy wp : this.policies) {
+			List<Test> sorted = wp.getNonWeightedTestSortingPolicy().getSortedTests(testDatabase, tests);
 			LinkedHashSet<Test> sortedSet = new LinkedHashSet<Test>(sorted);
 			sets.add(sortedSet);
 			weightedSets.add(Collections.nCopies(wp.getWeight(), sortedSet));
