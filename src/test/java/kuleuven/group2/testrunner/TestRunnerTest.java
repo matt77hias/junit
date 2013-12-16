@@ -71,8 +71,8 @@ public class TestRunnerTest {
 	
     @Test
 	public void testFailedSimple() throws Exception {
-		Result[] result = testRunner.runTestMethods(testMethodFail);
-		Result testMethodFailResult = result[0];
+		List<Result> result = testRunner.runTestMethods(testMethodFail);
+		Result testMethodFailResult = result.get(0);
 		
 		assertFalse(testMethodFailResult.wasSuccessful());
 		assertEquals(1, testMethodFailResult.getRunCount());
@@ -81,17 +81,17 @@ public class TestRunnerTest {
 	
     @Test
 	public void testFailedClassNotFound() throws Exception {
-		Result[] result = testRunner.runTestMethods(testMethodNonExisting);
+		List<Result> result = testRunner.runTestMethods(testMethodNonExisting);
 		
-		assertNull(result[0]);
+		assertNull(result.get(0));
 	}
     
     @Test
 	public void testMultiple() throws Exception {
-		Result[] result = testRunner.runTestMethods(testMethodNonExisting, testMethod2Arg, testMethodFail);
-		Result testMethodResult1 = result[0];
-		Result testMethodResult2 = result[1];
-		Result testMethodResult3 = result[2];
+		List<Result> result = testRunner.runTestMethods(testMethodNonExisting, testMethod2Arg, testMethodFail);
+		Result testMethodResult1 = result.get(0);
+		Result testMethodResult2 = result.get(1);
+		Result testMethodResult3 = result.get(2);
 	
 		assertNull(testMethodResult1);
 
