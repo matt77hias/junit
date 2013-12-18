@@ -67,7 +67,7 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	 * 			doesn't contain that composite test sorting policy.
 	 */
 	public boolean canHaveAsTestSortingPolicy(TestSortingPolicy policy) {
-		return !contains(policy);
+		return !contains(policy) && !policy.contains(this);
 	}
 	
 	/**
