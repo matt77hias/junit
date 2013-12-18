@@ -132,8 +132,8 @@ public class TestRunner {
 				// Store the result.
 				results.add(result);
 			} catch (ClassNotFoundException e) {
-				// If class cannot be found, a null reference is stored.
-				// results[i] == null;
+				// Class not found, store null result
+				results.add(null);
 			}
 		}
 		// Total result collected
