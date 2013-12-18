@@ -15,7 +15,7 @@ import kuleuven.group2.data.TestDatabase;
  * @author	Group 2
  * @version	4 December 2013
  */
-public class WeightedTestSortingPolicy implements TestSortingPolicy {
+public class WeightedTestSortingPolicy {
 	
 	/**
 	 * The default weight for weighted policies.
@@ -35,7 +35,7 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * @param	policy
 	 * 			The test sorting policy.
 	 */
-	public WeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy) {
+	public WeightedTestSortingPolicy(TestSortingPolicy policy) {
 		this(policy, DEFAULT_WEIGHT);
 	}
 	
@@ -48,25 +48,25 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * @param	weight
 	 * 			The weight.
 	 */
-	public WeightedTestSortingPolicy(NonWeightedTestSortingPolicy policy, int weight) {
+	public WeightedTestSortingPolicy(TestSortingPolicy policy, int weight) {
 		checkNotNull(policy);
 		this.policy = policy;
 		setWeight(weight);
 	}
 	
 	/**
-	 * Returns the non-weighted test sorting policy of this weighted policy.
+	 * Returns the test sorting policy of this weighted policy.
 	 * 
-	 * @return	The non-weighted test sorting policy of this weighted policy.
+	 * @return	The test sorting policy of this weighted policy.
 	 */
-	public NonWeightedTestSortingPolicy getNonWeightedTestSortingPolicy() {
+	public TestSortingPolicy getTestSortingPolicy() {
 		return this.policy;
 	}
 	
 	/**
-	 * The non-weighted test sorting policy of this weighted policy.
+	 * The test sorting policy of this weighted policy.
 	 */
-	private final NonWeightedTestSortingPolicy policy;
+	private final TestSortingPolicy policy;
 	
 	/**
 	 * Returns the weight of this weighted policy.
@@ -101,7 +101,7 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * @return	The tests of the given test database according to this
 	 * 			weighted policy its test sorting policy.
 	 */
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
+	public WeightedSortResult getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 		
@@ -117,8 +117,9 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * @return	The tests of the given test database according to this
 	 * 			weighted policy its test sorting policy.
 	 */
-	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
-		return getNonWeightedTestSortingPolicy().getSortedTests(testDatabase, tests);
+	public WeightedSortResult getSortedTests(TestDatabase testDatabase, Collection<Test> tests) {
+		List<Test> sortedTests = getTestSortingPolicy().getSortedTests(testDatabase, tests);
+		return new WeightedSortResult(sortedTests, getWeight());
 	}
 
 	/**
@@ -131,6 +132,6 @@ public class WeightedTestSortingPolicy implements TestSortingPolicy {
 	 * 			contains the given test sorting policy.
 	 */
 	public boolean contains(TestSortingPolicy policy) {
-		return (this == policy) || (getNonWeightedTestSortingPolicy().contains(policy));
+		return (this == policy) || (getTestSortingPolicy().contains(policy));
 	}
 }
