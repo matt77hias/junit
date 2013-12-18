@@ -121,20 +121,23 @@ public class TestRunner {
 		// Collect individual results
 		List<Result> results = new ArrayList<Result>(tests.size());
 		for (Test test : tests) {
+			Result result = null;
 			try {
-				// Obtain the class with the specified binary name in the test
-				// object.
+				// Load the test class
 				Class<?> klass = classLoader.loadClass(test.getTestClassName());
 				// Create a request for a single test method
 				Request request = requestTestMethod(klass, test.getTestMethodName());
-				// Run the request and obtain the result.
-				Result result = runTestMethod(request);
-				// Store the result.
-				results.add(result);
+				// Run the request and obtain the result
+				result = runTestMethod(request);
 			} catch (ClassNotFoundException e) {
-				// Class not found, store null result
-				results.add(null);
+				// Class not found, run failure instead
+				Description description = Description.createTestDescription(test.getTestClassName(),
+						test.getTestMethodName());
+				Failure failure = new Failure(description, e);
+				result = runFailure(failure);
 			}
+			// Store the result
+			results.add(result);
 		}
 		// Total result collected
 		removeRunListener(totalResultListener);
@@ -168,6 +171,17 @@ public class TestRunner {
 	 */
 	public Result runTestMethod(Request request) {
 		return getJUnitCore().run(request);
+	}
+
+	/**
+	 * Runs a single test failure.
+	 * 
+	 * @param failure
+	 *            The failure to run.
+	 * @return A {@link Result} describing the details of the test failure.
+	 */
+	public Result runFailure(Failure failure) {
+		return getJUnitCore().run(new FailureRunner(failure));
 	}
 
 	/**

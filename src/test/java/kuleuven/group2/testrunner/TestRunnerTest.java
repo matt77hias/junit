@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class TestRunnerTest {
@@ -79,22 +80,30 @@ public class TestRunnerTest {
 		assertEquals(1, testMethodFailResult.getFailureCount());
 	}
 	
-    @Test
+	@Test
 	public void testFailedClassNotFound() throws Exception {
-		List<Result> result = testRunner.runTestMethods(testMethodNonExisting);
-		
-		assertNull(result.get(0));
+		List<Result> results = testRunner.runTestMethods(testMethodNonExisting);
+
+		assertEquals(1, results.size());
+		Result result = results.get(0);
+
+		assertFalse(result.wasSuccessful());
+		assertEquals(1, result.getFailureCount());
+		Failure failure = result.getFailures().get(0);
+
+		assertEquals(ClassNotFoundException.class, failure.getException().getClass());
 	}
-    
-    @Test
+
+	@Test
 	public void testMultiple() throws Exception {
 		List<Result> result = testRunner.runTestMethods(testMethodNonExisting, testMethod2Arg, testMethodFail);
 		Result testMethodResult1 = result.get(0);
 		Result testMethodResult2 = result.get(1);
 		Result testMethodResult3 = result.get(2);
-	
-		assertNull(testMethodResult1);
-
+		
+		assertFalse(testMethodResult1.wasSuccessful());
+		assertEquals(1, testMethodResult1.getFailureCount());
+		
 		assertTrue(testMethodResult2.wasSuccessful());
 		assertEquals(1, testMethodResult2.getRunCount());
 		
@@ -102,7 +111,7 @@ public class TestRunnerTest {
 		assertEquals(1, testMethodResult3.getRunCount());
 		assertEquals(1, testMethodResult3.getFailureCount());
 	}
-   
+	
 	@Test
 	public void testRunListener() throws Exception {
 		testRunner.addRunListener(new RunListener() {
