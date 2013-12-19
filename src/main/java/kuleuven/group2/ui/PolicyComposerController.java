@@ -116,10 +116,16 @@ public class PolicyComposerController {
 			protected ObservableList<PolicyModel> computeValue() {
 				ObservableList<PolicyModel> policies = allPoliciesProperty().get();
 				if (policies == null) return null;
-				policies = FXCollections.observableArrayList(policies);
-				// TODO Also remove recursively dependent policies?
-				policies.remove(selectedPolicyProperty().get());
-				return policies;
+				CompositePolicyModel selected = selectedPolicyProperty().get();
+				if (selected == null) return policies;
+				// Add allowed policies
+				ObservableList<PolicyModel> filtered = FXCollections.observableArrayList();
+				for (PolicyModel policyModel : policies) {
+					if (selected.getPolicy().canHaveAsTestSortingPolicy(policyModel.getPolicy())) {
+						filtered.add(policyModel);
+					}
+				}
+				return filtered;
 			}
 		};
 	}
