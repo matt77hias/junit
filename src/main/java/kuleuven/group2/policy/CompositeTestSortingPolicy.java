@@ -63,11 +63,11 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	 * 			can have the given test sorting policy as one of its
 	 * 			test sorting policies. This is always the case for non
 	 * 			composite test sorting policies. A composite test sorting
-	 * 			policy is allowed if this composite test sorting policy
-	 * 			doesn't contain that composite test sorting policy.
+	 * 			policy is allowed if the given test sorting policy
+	 * 			doesn't contain this composite test sorting policy.
 	 */
 	public boolean canHaveAsTestSortingPolicy(TestSortingPolicy policy) {
-		return !contains(policy) && !policy.contains(this);
+		return !policy.contains(this);
 	}
 	
 	/**
