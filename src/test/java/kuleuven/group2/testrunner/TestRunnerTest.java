@@ -1,13 +1,12 @@
 package kuleuven.group2.testrunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -24,14 +23,6 @@ public class TestRunnerTest {
 	protected JUnitCore junitCore;
 	
 	protected boolean listenerVisited;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,10 +46,6 @@ public class TestRunnerTest {
 				);
 		
 		listenerVisited = false;
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 	
 	@Test
