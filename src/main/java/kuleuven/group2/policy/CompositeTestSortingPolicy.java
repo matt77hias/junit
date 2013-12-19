@@ -107,7 +107,7 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	 *         	policy.
 	 */
 	@Override
-	public final List<Test> getSortedTests(TestDatabase testDatabase) {
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	
@@ -173,7 +173,7 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 	/**
 	 * The weighted test sorting policies of this composite test sorting policy.
 	 */
-	protected LinkedList<WeightedTestSortingPolicy> policies = new LinkedList<WeightedTestSortingPolicy>();
+	protected List<WeightedTestSortingPolicy> policies = new LinkedList<WeightedTestSortingPolicy>();
 	
 	/**
 	 * Appends the given test sorting policy to the
@@ -203,7 +203,7 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 			throws IllegalArgumentException {
 		checkNotNull(policy);
 		checkCanHaveAsTestSortingPolicy(policy.getTestSortingPolicy());
-		this.policies.addLast(policy);
+		this.policies.add(policy);
 	}
 	
 	/**
@@ -235,7 +235,7 @@ public abstract class CompositeTestSortingPolicy implements TestSortingPolicy {
 			throws IllegalArgumentException {
 		checkNotNull(policy);
 		checkCanHaveAsTestSortingPolicy(policy.getTestSortingPolicy());
-		this.policies.addFirst(policy);
+		this.policies.add(0, policy);
 	}
 	
 	/**

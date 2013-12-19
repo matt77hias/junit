@@ -9,8 +9,8 @@ import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
 /**
- * A class of weighted test sorting policies containing additional
- * policy information (e.g.: weight).
+ * A test sorting policy with a weight,
+ * to be used by a {@link CompositeTestSortingPolicy}.
  * 
  * @author	Group 2
  * @version	4 December 2013

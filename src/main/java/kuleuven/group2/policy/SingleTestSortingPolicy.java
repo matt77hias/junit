@@ -16,7 +16,7 @@ public abstract class SingleTestSortingPolicy implements TestSortingPolicy {
 	 * 			last failure policy.
 	 */
 	@Override
-	public final List<Test> getSortedTests(TestDatabase testDatabase) {
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	

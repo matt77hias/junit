@@ -4,6 +4,13 @@ import java.util.List;
 
 import kuleuven.group2.data.Test;
 
+/**
+ * A result from a {@link WeightedTestSortingPolicy}, containing a sorted list
+ * of tests and a weight.
+ * 
+ * @author Group 2
+ * @version 18 December 2013
+ */
 public class WeightedSortResult {
 
 	private final List<Test> sortedTests;
