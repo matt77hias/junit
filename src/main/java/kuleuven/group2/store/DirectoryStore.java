@@ -98,7 +98,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 			Files.write(getPath(resourceName), contents);
 		} catch (IOException e) {
 			// File not writable
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -109,7 +109,7 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 			Files.delete(getPath(resourceName));
 		} catch (IOException e) {
 			// File not writable
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -135,7 +135,6 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 			try {
 				watcher.startWatching();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -148,7 +147,6 @@ public class DirectoryStore extends AbstractStore implements DirectoryWatchListe
 			try {
 				watcher.stopWatching();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
