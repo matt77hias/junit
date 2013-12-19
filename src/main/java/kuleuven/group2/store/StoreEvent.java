@@ -8,9 +8,9 @@ package kuleuven.group2.store;
  */
 public class StoreEvent {
 
-	public final Store store;
-	public final String resourceName;
-	public final Type eventType;
+	private final Store store;
+	private final String resourceName;
+	private final Type eventType;
 
 	public StoreEvent(Store store, String resourceName, Type eventType) {
 		this.store = store;
