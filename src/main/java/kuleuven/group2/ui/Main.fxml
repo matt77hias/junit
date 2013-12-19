@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import kuleuven.group2.ui.Configuration?>
+<?import kuleuven.group2.ui.PolicyComposer?>
 <?import kuleuven.group2.ui.TestResults?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="kuleuven.group2.ui.MainController">
@@ -25,6 +26,15 @@
 								<Insets top="5" bottom="5" left="5" right="5"/> 
 							</padding>
 						</Configuration>
+					</content>
+				</Tab>
+				<Tab text="Policy composer"> 
+					<content>
+						<PolicyComposer fx:id="policyComposer"> 
+							<padding>
+								<Insets top="5" bottom="5" left="5" right="5"/> 
+							</padding>
+						</PolicyComposer>
 					</content>
 				</Tab>
 				<Tab text="Test results"> 

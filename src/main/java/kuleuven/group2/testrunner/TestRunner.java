@@ -1,6 +1,7 @@
 package kuleuven.group2.testrunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import kuleuven.group2.data.Test;
@@ -82,8 +83,8 @@ public class TestRunner {
 	 * @param tests
 	 *            The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(List<Test> tests) throws Exception {
-		return runTestMethods(getClassLoader(), tests.toArray(new Test[tests.size()]));
+	public List<Result> runTestMethods(List<Test> tests) throws Exception {
+		return runTestMethods(getClassLoader(), tests);
 	}
 
 	/**
@@ -95,8 +96,8 @@ public class TestRunner {
 	 * @param tests
 	 *            The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(Test... tests) throws Exception {
-		return runTestMethods(getClassLoader(), tests);
+	public List<Result> runTestMethods(Test... tests) throws Exception {
+		return runTestMethods(getClassLoader(), Arrays.asList(tests));
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class TestRunner {
 	 * @param tests
 	 *            The tests that has to be ran.
 	 */
-	public Result[] runTestMethods(ClassLoader classLoader, Test[] tests) throws Exception {
+	public List<Result> runTestMethods(ClassLoader classLoader, List<Test> tests) throws Exception {
 		// Test run started
 		fireTestRunStarted(createDescription(getClass().getSimpleName(), tests));
 		// Collect total result
@@ -118,22 +119,25 @@ public class TestRunner {
 		RunListener totalResultListener = totalResult.createListener();
 		addRunListener(totalResultListener);
 		// Collect individual results
-		Result[] results = new Result[tests.length];
-		for (int i = 0; i < tests.length; i++) {
+		List<Result> results = new ArrayList<Result>(tests.size());
+		for (Test test : tests) {
+			Result result = null;
 			try {
-				// Obtain the class with the specified binary name in the test
-				// object.
-				Class<?> klass = classLoader.loadClass(tests[i].getTestClassName());
+				// Load the test class
+				Class<?> klass = classLoader.loadClass(test.getTestClassName());
 				// Create a request for a single test method
-				Request request = requestTestMethod(klass, tests[i].getTestMethodName());
-				// Run the request and obtain the result.
-				Result result = runTestMethod(request);
-				// Store the result.
-				results[i] = result;
+				Request request = requestTestMethod(klass, test.getTestMethodName());
+				// Run the request and obtain the result
+				result = runTestMethod(request);
 			} catch (ClassNotFoundException e) {
-				// If class cannot be found, a null reference is stored.
-				// results[i] == null;
+				// Class not found, run failure instead
+				Description description = Description.createTestDescription(test.getTestClassName(),
+						test.getTestMethodName());
+				Failure failure = new Failure(description, e);
+				result = runFailure(failure);
 			}
+			// Store the result
+			results.add(result);
 		}
 		// Total result collected
 		removeRunListener(totalResultListener);
@@ -170,6 +174,17 @@ public class TestRunner {
 	}
 
 	/**
+	 * Runs a single test failure.
+	 * 
+	 * @param failure
+	 *            The failure to run.
+	 * @return A {@link Result} describing the details of the test failure.
+	 */
+	public Result runFailure(Failure failure) {
+		return getJUnitCore().run(new FailureRunner(failure));
+	}
+
+	/**
 	 * Adds a listener to be notified as the tests run.
 	 * 
 	 * @param runListener
@@ -198,7 +213,7 @@ public class TestRunner {
 	 *            The tests to describe.
 	 * @return A description describing all given tests.
 	 */
-	protected Description createDescription(String name, Test[] tests) {
+	protected Description createDescription(String name, List<Test> tests) {
 		Description description = Description.createSuiteDescription(name);
 		for (Test test : tests) {
 			Description testDescription = Description.createTestDescription(test.getTestClassName(),

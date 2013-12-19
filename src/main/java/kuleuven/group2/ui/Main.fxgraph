@@ -8,6 +8,7 @@ import javafx.scene.control.Button
 import javafx.geometry.Insets
 import kuleuven.group2.ui.MainController
 import kuleuven.group2.ui.Configuration
+import kuleuven.group2.ui.PolicyComposer
 import kuleuven.group2.ui.TestResults
 
 component Main controlledby MainController {
@@ -18,6 +19,17 @@ component Main controlledby MainController {
 				Tab {
 					text : "Configuration",
 					content : Configuration id configuration {
+						padding : Insets {
+							top : 5,
+							bottom : 5,
+							left : 5,
+							right : 5
+						}
+					}
+				},
+				Tab {
+					text : "Policy composer",
+					content : PolicyComposer id policyComposer {
 						padding : Insets {
 							top : 5,
 							bottom : 5,

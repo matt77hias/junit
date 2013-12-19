@@ -4,13 +4,11 @@ import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
 import javafx.scene.layout.HBox
 import javafx.scene.layout.ColumnConstraints
-import javafx.scene.control.SplitPane
 import javafx.scene.control.TableView
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.geometry.Insets
 import kuleuven.group2.ui.TestResultsController
-import kuleuven.group2.ui.TestRunsController
 import kuleuven.group2.ui.model.TestBatchModel
 import kuleuven.group2.ui.model.TestRunModel
 
