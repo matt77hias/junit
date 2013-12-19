@@ -29,22 +29,22 @@ public class Project {
 	/**
 	 * The class source store of this project.
 	 */
-	protected final Store classSourceStore;
+	private final Store classSourceStore;
 	
 	/**
 	 * The class test source store of this project.
 	 */
-	protected final Store testSourceStore;
+	private final Store testSourceStore;
 	
 	/**
 	 * The class binary store of this project.
 	 */
-	protected final Store binaryStore;
+	private final Store binaryStore;
 
 	/**
 	 * The reloading class store loader of this project.
 	 */
-	protected final ReloadingStoreClassLoader testClassLoader;
+	private final ReloadingStoreClassLoader testClassLoader;
 
 	/**
 	 * The store watcher of the class source store
