@@ -1,9 +1,13 @@
 package kuleuven.group2.sourcehandler;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kuleuven.group2.Project;
+import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 import kuleuven.group2.util.UnsafeConsumer;
@@ -17,6 +21,23 @@ import com.google.common.collect.Sets;
  * @version 18 November 2013
  */
 public abstract class SourceEventHandler implements UnsafeConsumer<List<StoreEvent>> {
+	
+	private final Project project;
+	private final TestDatabase testDatabase;
+	
+	protected SourceEventHandler(Project project, TestDatabase testDatabase) {
+		this.project = checkNotNull(project);
+		this.testDatabase = checkNotNull(testDatabase);
+	}
+	
+	protected Project getProject() {
+		return this.project;
+	}
+	
+	protected TestDatabase getTestDatabase() {
+		return this.testDatabase;
+	}
+	
 
 	public abstract void setup() throws Exception;
 

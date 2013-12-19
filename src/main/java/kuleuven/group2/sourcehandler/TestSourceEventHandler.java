@@ -2,13 +2,12 @@ package kuleuven.group2.sourcehandler;
 
 import java.util.List;
 
+import kuleuven.group2.Project;
 import kuleuven.group2.compile.CompilationResult;
-import kuleuven.group2.compile.EclipseCompiler;
 import kuleuven.group2.compile.JavaCompiler;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.TestChangeUpdater;
-import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 
 /**
@@ -19,27 +18,17 @@ import kuleuven.group2.store.StoreEvent;
  */
 public class TestSourceEventHandler extends SourceEventHandler {
 
-	protected final Store testSourceStore;
-	protected final Store binaryStore;
-	protected final TestDatabase testDatabase;
-	protected final ClassLoader testClassLoader;
-
 	protected final TestChangeUpdater testChangeUpdater;
-
-	public TestSourceEventHandler(Store testSourceStore, Store binaryStore, TestDatabase testDatabase,
-			ClassLoader testClassLoader) {
-		this.testSourceStore = testSourceStore;
-		this.binaryStore = binaryStore;
-		this.testDatabase = testDatabase;
-		this.testClassLoader = testClassLoader;
-
-		this.testChangeUpdater = new TestChangeUpdater(testDatabase, testClassLoader);
+	
+	public TestSourceEventHandler(Project project, TestDatabase testDatabase) {
+		super(project, testDatabase);
+		this.testChangeUpdater = new TestChangeUpdater(testDatabase, getProject().getClassLoader());
 	}
 
 	@Override
 	public void setup() throws Exception {
 		// Compile all test sources
-		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
+		JavaCompiler classCompiler = getProject().createTestCompiler();
 		CompilationResult result = classCompiler.compileAll();
 
 		handleCompilation(result);
@@ -48,13 +37,13 @@ public class TestSourceEventHandler extends SourceEventHandler {
 	@Override
 	public void consume(List<StoreEvent> events) throws Exception{
 		// Collect changes in test sources
-		Changes changes = collectChanges(events, testSourceStore);
+		Changes changes = collectChanges(events, getProject().getTestSourceStore());
 
 		// Remove test methods in old test classes
 		testChangeUpdater.removeTests(NameUtils.toClassNames(changes.getRemovedResources()));
 
 		// Compile changed test sources
-		JavaCompiler classCompiler = new EclipseCompiler(testSourceStore, binaryStore, testClassLoader);
+		JavaCompiler classCompiler = getProject().createTestCompiler();
 		CompilationResult result = classCompiler.compile(changes.getAddedOrChangedResources());
 
 		handleCompilation(result);
@@ -69,5 +58,4 @@ public class TestSourceEventHandler extends SourceEventHandler {
 			throw new Exception("Compilation of test sources failed: " + result.getErrors());
 		}
 	}
-
 }

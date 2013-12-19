@@ -6,24 +6,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import kuleuven.group2.classloader.ReloadingStoreClassLoader;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.updating.MethodTestLinkUpdater;
 import kuleuven.group2.data.updating.TestResultUpdater;
 import kuleuven.group2.defer.DeferredConsumer;
 import kuleuven.group2.policy.TestSortingPolicy;
-import kuleuven.group2.rewrite.BinaryStoreTransformFilter;
 import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
 import kuleuven.group2.sourcehandler.TestSourceEventHandler;
 import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
-import kuleuven.group2.store.StoreFilter;
 import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.testrunner.TestRunner;
 import kuleuven.group2.util.Consumer;
+
+import com.google.common.base.Predicate;
 
 /**
  * Controls the execution of the complete pipeline.
@@ -59,54 +58,57 @@ import kuleuven.group2.util.Consumer;
  * @version 19 November 2013
  */
 public class Pipeline {
+	
+	protected final Project project;
 
-	protected final Store classSourceStore;
-	protected final Store testSourceStore;
-	protected final Store binaryStore;
 	protected TestSortingPolicy sortPolicy;
 
 	protected final TestDatabase testDatabase;
-	protected final ReloadingStoreClassLoader testClassLoader;
 
 	protected final TestRunner testRunner;
 	protected final OssRewriterLoader rewriterLoader;
 	protected final MethodTestLinkUpdater methodTestLinkUpdater;
 	protected final TestResultUpdater testResultUpdater;
 
-	protected final StoreWatcher classSourceWatcher;
-	protected final StoreWatcher testSourceWatcher;
 	protected final Collection<SourceEventHandler> storeEventConsumers = new HashSet<SourceEventHandler>();
 
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
-
+	
 	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, TestSortingPolicy sortPolicy) {
-		this.classSourceStore = checkNotNull(classSourceStore);
-		this.testSourceStore = checkNotNull(testSourceStore);
-		this.binaryStore = checkNotNull(binaryStore);
+		this(new Project(classSourceStore, testSourceStore, binaryStore), sortPolicy);
+	}
+
+	public Pipeline(Project project, TestSortingPolicy sortPolicy) {
+		this.project = checkNotNull(project);
 		this.sortPolicy = checkNotNull(sortPolicy);
 
 		this.testDatabase = new TestDatabase();
-		this.testClassLoader = new ReloadingStoreClassLoader(binaryStore, getClass().getClassLoader());
-		this.testRunner = new TestRunner(testClassLoader);
+		
+		this.testRunner = new TestRunner(getProject().getClassLoader());
 		this.rewriterLoader = OssRewriterLoader.getInstance();
-		rewriterLoader.setClassTransformFilter(new BinaryStoreTransformFilter(binaryStore));
+		rewriterLoader.setClassTransformFilter(new Predicate<String>() {
+			@Override
+			public boolean apply(String className) {
+				return getProject().isBinaryClass(className);
+			}
+		});
 		this.methodTestLinkUpdater = new MethodTestLinkUpdater(testDatabase, rewriterLoader);
 		methodTestLinkUpdater.registerTestHolder(testRunner);
 		this.testResultUpdater = new TestResultUpdater(testDatabase);
 		testRunner.addRunListener(testResultUpdater);
 
-		this.classSourceWatcher = new StoreWatcher(classSourceStore, StoreFilter.SOURCE);
-		this.testSourceWatcher = new StoreWatcher(testSourceStore, StoreFilter.SOURCE);
-		SourceEventHandler classSourceEventHandler = new ClassSourceEventHandler(classSourceStore, binaryStore, testDatabase,
-				testClassLoader);
-		SourceEventHandler testSourceEventHandler = new TestSourceEventHandler(testSourceStore, binaryStore, testDatabase,
-				testClassLoader);
+		SourceEventHandler classSourceEventHandler = new ClassSourceEventHandler(getProject(), testDatabase);
+		SourceEventHandler testSourceEventHandler = new TestSourceEventHandler(getProject(), testDatabase);
 		storeEventConsumers.add(classSourceEventHandler);
 		storeEventConsumers.add(testSourceEventHandler);
 
 		this.task = new PipelineTask();
 		this.deferredTask = new DeferredConsumer<>(task);
+	}
+	
+	public Project getProject() {
+		return this.project;
 	}
 
 	public TestDatabase getTestDatabase() {
@@ -123,12 +125,7 @@ public class Pipeline {
 
 	public void start() {
 		// Start listening
-		classSourceWatcher.registerConsumer(deferredTask);
-		testSourceWatcher.registerConsumer(deferredTask);
-		classSourceStore.addStoreListener(classSourceWatcher);
-		testSourceStore.addStoreListener(testSourceWatcher);
-		classSourceStore.startListening();
-		testSourceStore.startListening();
+		this.project.startListening(this.deferredTask);
 		// Start rewriting
 		rewriterLoader.enable();
 		// First setup
@@ -136,7 +133,7 @@ public class Pipeline {
 	}
 
 	private void firstRun() {
-		reloadClasses();
+		this.project.reloadClasses();
 
 		setupSourceEventHandlers();
 
@@ -146,17 +143,13 @@ public class Pipeline {
 	}
 
 	private void run(List<StoreEvent> events) {
-		reloadClasses();
+		this.project.reloadClasses();
 
 		handleSourceEvents(events);
 
 		List<Test> sortedTests = sortTests();
 
 		runTests(sortedTests);
-	}
-
-	private void reloadClasses() {
-		testClassLoader.reload();
 	}
 	
 	private void setupSourceEventHandlers() {
@@ -197,12 +190,7 @@ public class Pipeline {
 
 	public void stop() {
 		// Stop listening
-		classSourceWatcher.unregisterConsumer(deferredTask);
-		testSourceWatcher.unregisterConsumer(deferredTask);
-		classSourceStore.removeStoreListener(classSourceWatcher);
-		testSourceStore.removeStoreListener(testSourceWatcher);
-		classSourceStore.stopListening();
-		testSourceStore.stopListening();
+		this.project.stopListening(this.deferredTask);
 		// Stop rewriting
 		rewriterLoader.disable();
 		// TODO Stop current test run as well?

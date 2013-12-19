@@ -18,8 +18,7 @@ import kuleuven.group2.defer.DeferredTests;
 import kuleuven.group2.filewatch.FolderWatcherTest;
 import kuleuven.group2.policy.PolicyTests;
 import kuleuven.group2.rewrite.OssRewriterLoaderTest;
-import kuleuven.group2.sourcehandler.ClassSourceEventHandlerTest;
-import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest;
+import kuleuven.group2.sourcehandler.SourceEventHandlerTests;
 import kuleuven.group2.store.DirectoryStoreTest;
 import kuleuven.group2.store.MemoryStoreTest;
 import kuleuven.group2.testrunner.TestRunnerTest;
@@ -59,8 +58,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		OssRewriterLoaderTest.class,
 
-		ClassSourceEventHandlerTest.class,
-		TestSourceEventHandlerTest.class,
+		SourceEventHandlerTests.class,
 
 		DirectoryStoreTest.class,
 		MemoryStoreTest.class,
