@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import kuleuven.group2.store.MemoryStoreTest.TestMemoryStoreListener;
 import kuleuven.group2.util.FileUtils;
 
 import org.junit.After;
