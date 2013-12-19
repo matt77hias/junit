@@ -16,7 +16,6 @@ import kuleuven.group2.rewrite.OssRewriterLoader;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandler;
 import kuleuven.group2.sourcehandler.SourceEventHandler;
 import kuleuven.group2.sourcehandler.TestSourceEventHandler;
-import kuleuven.group2.store.Store;
 import kuleuven.group2.store.StoreEvent;
 import kuleuven.group2.store.StoreWatcher;
 import kuleuven.group2.testrunner.TestRunner;
@@ -74,10 +73,6 @@ public class Pipeline {
 
 	protected final PipelineTask task;
 	protected final DeferredConsumer<StoreEvent> deferredTask;
-	
-	public Pipeline(Store classSourceStore, Store testSourceStore, Store binaryStore, TestSortingPolicy sortPolicy) {
-		this(new Project(classSourceStore, testSourceStore, binaryStore), sortPolicy);
-	}
 
 	public Pipeline(Project project, TestSortingPolicy sortPolicy) {
 		this.project = checkNotNull(project);
@@ -125,7 +120,7 @@ public class Pipeline {
 
 	public void start() {
 		// Start listening
-		this.project.startListening(this.deferredTask);
+		getProject().startListening(this.deferredTask);
 		// Start rewriting
 		rewriterLoader.enable();
 		// First setup
@@ -133,7 +128,7 @@ public class Pipeline {
 	}
 
 	private void firstRun() {
-		this.project.reloadClasses();
+		getProject().reloadClasses();
 
 		setupSourceEventHandlers();
 
@@ -143,7 +138,7 @@ public class Pipeline {
 	}
 
 	private void run(List<StoreEvent> events) {
-		this.project.reloadClasses();
+		getProject().reloadClasses();
 
 		handleSourceEvents(events);
 
@@ -190,7 +185,7 @@ public class Pipeline {
 
 	public void stop() {
 		// Stop listening
-		this.project.stopListening(this.deferredTask);
+		getProject().stopListening(this.deferredTask);
 		// Stop rewriting
 		rewriterLoader.disable();
 		// TODO Stop current test run as well?
