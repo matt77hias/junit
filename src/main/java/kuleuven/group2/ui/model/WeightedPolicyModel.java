@@ -16,6 +16,10 @@ public class WeightedPolicyModel {
 	private final ObjectProperty<PolicyModel> policy = new SimpleObjectProperty<>();
 	private final IntegerProperty weight = new SimpleIntegerProperty();
 
+	public WeightedPolicyModel(PolicyModel policy) {
+		this(policy, WeightedTestSortingPolicy.DEFAULT_WEIGHT);
+	}
+
 	public WeightedPolicyModel(PolicyModel policy, int weight) {
 		this.weightedPolicy = new WeightedTestSortingPolicy(policy.getPolicy(), weight);
 		this.policy.set(policy);

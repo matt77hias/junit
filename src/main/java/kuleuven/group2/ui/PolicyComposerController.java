@@ -227,7 +227,7 @@ public class PolicyComposerController {
 	@FXML
 	public void addWeightedPolicy() {
 		PolicyModel policy = newWeightedPolicy_policyProperty().get();
-		weightedPoliciesProperty().add(new WeightedPolicyModel(policy, 5));
+		weightedPoliciesProperty().add(new WeightedPolicyModel(policy));
 	}
 
 	@FXML
