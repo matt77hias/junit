@@ -5,7 +5,7 @@ import java.util.List;
 import kuleuven.group2.data.Test;
 import kuleuven.group2.data.TestDatabase;
 
-public abstract class SingleTestSortingPolicy implements NonWeightedTestSortingPolicy {
+public abstract class SingleTestSortingPolicy implements TestSortingPolicy {
 	
 	/**
 	 * Sorts the tests of the given test database according to this last failure policy.
@@ -16,7 +16,7 @@ public abstract class SingleTestSortingPolicy implements NonWeightedTestSortingP
 	 * 			last failure policy.
 	 */
 	@Override
-	public final List<Test> getSortedTests(TestDatabase testDatabase) {
+	public List<Test> getSortedTests(TestDatabase testDatabase) {
 		return getSortedTests(testDatabase, testDatabase.getAllTests());
 	}
 	

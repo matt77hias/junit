@@ -1,6 +1,7 @@
 package kuleuven.group2.policy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,32 +19,18 @@ import com.google.common.collect.Iterators;
  */
 public class RoundRobinTestSortingPolicy extends CompositeTestSortingPolicy {
 
-	/**
-	 * Combines the given sorted tests and returns the resulting tests
-	 * according to this round robin test sorting policy.
-	 * 
-	 * @pre		This round robin test sorting policy must have at
-	 * 			least one weighted test sorting policy.
-	 * 			| getNbOfWeightedTestSortingPolicies() != 0
-	 * @param 	sets
-	 * 			A list containing all the sorted tests from
-	 * 			this round robin test sorting policies direct weighted
-	 * 			test sorting policies' non-weighted test sorting policy
-	 * 			in the order of the appearance of the direct weighted
-	 * 			test sorting policies of this round robin test sorting
-	 * 			policy.
-	 * @param 	weightedSets
-	 * 			A list containing an iterable collection for this
-	 * 			round robin test sorting policies direct weighted
-	 * 			test sorting policies' non-weighted test sorting policy
-	 * 			in the order of the appearance of the direct weighted
-	 * 			test sorting policies of this round robin test sorting
-	 * 			policy and as many times as the weighted test sorting
-	 * 			policies weight.
-	 * @return	The tests that needs to be sorted.
-	 */
 	@Override
-	protected List<Test> combineSortedTests(List<LinkedHashSet<Test>> sets, List<Iterable<LinkedHashSet<Test>>> weightedSets) {
+	protected List<Test> combineSortedTests(List<WeightedSortResult> weightedResults) {
+		// Create lists of sets and weighted repetitions of sets 
+		List<LinkedHashSet<Test>> sets = new ArrayList<LinkedHashSet<Test>>(weightedResults.size());
+		List<Iterable<LinkedHashSet<Test>>> weightedSets = new ArrayList<Iterable<LinkedHashSet<Test>>>(weightedResults.size());
+		for (WeightedSortResult subResult : weightedResults) {
+			LinkedHashSet<Test> sortedSet = new LinkedHashSet<Test>(subResult.getSortedTests());
+			sets.add(sortedSet);
+			weightedSets.add(Collections.nCopies(subResult.getWeight(), sortedSet));
+		}
+
+		// Prepare result
 		int size = sets.get(0).size();
 		List<Test> result = new ArrayList<Test>(size);
 

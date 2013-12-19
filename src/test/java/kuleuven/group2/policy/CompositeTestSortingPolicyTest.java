@@ -1,6 +1,8 @@
 package kuleuven.group2.policy;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -12,15 +14,15 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addLastPolicy_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
-		rrp.addLastNonWeightedTestSortingPolicy(p1);
-		rrp.addLastNonWeightedTestSortingPolicy(p2);
-		rrp.addLastNonWeightedTestSortingPolicy(p3);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getNonWeightedTestSortingPolicy() == p1);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getNonWeightedTestSortingPolicy() == p2);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getNonWeightedTestSortingPolicy() == p3);
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
+		rrp.addLastTestSortingPolicy(p1);
+		rrp.addLastTestSortingPolicy(p2);
+		rrp.addLastTestSortingPolicy(p3);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getTestSortingPolicy() == p1);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getTestSortingPolicy() == p2);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getTestSortingPolicy() == p3);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(0).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(1).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(2).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
@@ -30,9 +32,9 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addLastWeightedTestSortingPolicy_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -49,15 +51,15 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addFirstPolicy_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
-		rrp.addFirstNonWeightedTestSortingPolicy(p1);
-		rrp.addFirstNonWeightedTestSortingPolicy(p2);
-		rrp.addFirstNonWeightedTestSortingPolicy(p3);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getNonWeightedTestSortingPolicy() == p3);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getNonWeightedTestSortingPolicy() == p2);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getNonWeightedTestSortingPolicy() == p1);
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
+		rrp.addFirstTestSortingPolicy(p1);
+		rrp.addFirstTestSortingPolicy(p2);
+		rrp.addFirstTestSortingPolicy(p3);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getTestSortingPolicy() == p3);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getTestSortingPolicy() == p2);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getTestSortingPolicy() == p1);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(0).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(1).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(2).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
@@ -67,9 +69,9 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addFirstWeightedTestSortingPolicy_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -86,15 +88,15 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addPolicyAt_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
-		rrp.addNonWeightedTestSortingPolicyAt(0, p1);
-		rrp.addNonWeightedTestSortingPolicyAt(0, p2);
-		rrp.addNonWeightedTestSortingPolicyAt(0, p3);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getNonWeightedTestSortingPolicy() == p3);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getNonWeightedTestSortingPolicy() == p2);
-		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getNonWeightedTestSortingPolicy() == p1);
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
+		rrp.addTestSortingPolicyAt(0, p1);
+		rrp.addTestSortingPolicyAt(0, p2);
+		rrp.addTestSortingPolicyAt(0, p3);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(0).getTestSortingPolicy() == p3);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(1).getTestSortingPolicy() == p2);
+		assertTrue(rrp.getWeightedTestSortingPolicyAt(2).getTestSortingPolicy() == p1);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(0).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(1).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
 		assertEquals(rrp.getWeightedTestSortingPolicyAt(2).getWeight(), WeightedTestSortingPolicy.DEFAULT_WEIGHT);
@@ -104,9 +106,9 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void addWeightedTestSortingPolicyAt_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -123,9 +125,9 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void setWeightedTestSortingPolicyAt_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -142,9 +144,9 @@ public class CompositeTestSortingPolicyTest {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedTestSortingPolicies(), 0);
 		
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -169,9 +171,9 @@ public class CompositeTestSortingPolicyTest {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedTestSortingPolicies(), 0);
 		
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -198,9 +200,9 @@ public class CompositeTestSortingPolicyTest {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedTestSortingPolicies(), 0);
 		
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -237,9 +239,9 @@ public class CompositeTestSortingPolicyTest {
 	@Test
 	public void getWeightedTestSortingPolicyAt_test() {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -256,9 +258,9 @@ public class CompositeTestSortingPolicyTest {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedTestSortingPolicies(), 0);
 		
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
@@ -282,9 +284,9 @@ public class CompositeTestSortingPolicyTest {
 		RoundRobinTestSortingPolicy rrp = new RoundRobinTestSortingPolicy();
 		assertEquals(rrp.getNbOfWeightedTestSortingPolicies(), 0);
 		
-		NonWeightedTestSortingPolicy p1 = new LastFailureFirst();
-		NonWeightedTestSortingPolicy p2 = new FrequentFailureFirst();
-		NonWeightedTestSortingPolicy p3 = new DistinctFailureFirst();
+		TestSortingPolicy p1 = new LastFailureFirst();
+		TestSortingPolicy p2 = new FrequentFailureFirst();
+		TestSortingPolicy p3 = new DistinctFailureFirst();
 		WeightedTestSortingPolicy wp1 = new WeightedTestSortingPolicy(p1);
 		WeightedTestSortingPolicy wp2 = new WeightedTestSortingPolicy(p2);
 		WeightedTestSortingPolicy wp3 = new WeightedTestSortingPolicy(p3);
