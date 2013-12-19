@@ -19,6 +19,7 @@ import kuleuven.group2.filewatch.FolderWatcherTest;
 import kuleuven.group2.policy.PolicyTests;
 import kuleuven.group2.rewrite.OssRewriterLoaderTest;
 import kuleuven.group2.sourcehandler.ClassSourceEventHandlerTest;
+import kuleuven.group2.sourcehandler.SourceEventHandlerTest;
 import kuleuven.group2.sourcehandler.TestSourceEventHandlerTest;
 import kuleuven.group2.store.DirectoryStoreTest;
 import kuleuven.group2.store.MemoryStoreTest;
@@ -60,6 +61,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		OssRewriterLoaderTest.class,
 
 		ClassSourceEventHandlerTest.class,
+		SourceEventHandlerTest.class,
 		TestSourceEventHandlerTest.class,
 
 		DirectoryStoreTest.class,
