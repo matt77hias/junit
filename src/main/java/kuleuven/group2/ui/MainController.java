@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.WindowEvent;
 import kuleuven.group2.Pipeline;
+import kuleuven.group2.Project;
 import kuleuven.group2.policy.TestSortingPolicy;
 import kuleuven.group2.store.DirectoryStore;
 import kuleuven.group2.store.Store;
@@ -109,7 +110,9 @@ public class MainController implements EventHandler<WindowEvent> {
 		Store testSourceStore = new DirectoryStore(configuration.testSourceDirProperty().get());
 		Store binaryStore = new DirectoryStore(configuration.binaryDirProperty().get());
 		TestSortingPolicy sortPolicy = configuration.selectedPolicyProperty().get().getPolicy();
-		pipeline = new Pipeline(classSourceStore, testSourceStore, binaryStore, sortPolicy);
+		
+		Project project = new Project(classSourceStore, testSourceStore, binaryStore);
+		pipeline = new Pipeline(project, sortPolicy);
 		pipeline.getTestDatabase().addListener(testBatchesModel);
 	}
 

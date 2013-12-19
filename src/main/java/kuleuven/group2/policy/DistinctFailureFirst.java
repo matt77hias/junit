@@ -19,7 +19,7 @@ import com.google.common.collect.Iterables;
  * @version 17 November 2013
  * 
  */
-public class DistinctFailureFirst implements TestSortingPolicy {
+public class DistinctFailureFirst extends SingleTestSortingPolicy {
 
 	/**
 	 * The default depth of the level of history that's still taken into account
@@ -82,20 +82,6 @@ public class DistinctFailureFirst implements TestSortingPolicy {
 	 * into account.
 	 */
 	private int depth;
-
-	/**
-	 * Sorts the tests of the given test database according to this distinct
-	 * failure first policy.
-	 * 
-	 * @param testDatabase
-	 *            The test database which contains the given tests.
-	 * @return The tests of the given test database according to this distinct
-	 *         failure first policy.
-	 */
-	@Override
-	public List<Test> getSortedTests(TestDatabase testDatabase) {
-		return getSortedTests(testDatabase, testDatabase.getAllTests());
-	}
 
 	/**
 	 * Sorts the given tests according to this changed code first policy.

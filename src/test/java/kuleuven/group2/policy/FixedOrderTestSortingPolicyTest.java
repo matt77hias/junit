@@ -10,14 +10,14 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-public class FixedOrderPolicyTest extends TestSortingPolicyTest {
+public class FixedOrderTestSortingPolicyTest extends TestSortingPolicyTest {
 
 	@Test
 	public void correct_order_test() {
 		List<kuleuven.group2.data.Test> list = ImmutableList.of(test4, test2, test3, test1);
 		List<kuleuven.group2.data.Test> expected = list;
 
-		TestSortingPolicy policy = new FixedOrderPolicy(list);
+		TestSortingPolicy policy = new FixedOrderTestSortingPolicy(list);
 		List<kuleuven.group2.data.Test> result = policy.getSortedTests(testDatabase, list);
 		assertEquals(expected, result);
 
@@ -34,7 +34,7 @@ public class FixedOrderPolicyTest extends TestSortingPolicyTest {
 		list.add(test3);
 		list.add(test4);
 
-		TestSortingPolicy policy = new FixedOrderPolicy(list);
+		TestSortingPolicy policy = new FixedOrderTestSortingPolicy(list);
 		policy.getSortedTests(testDatabase, list);
 
 		assertTrue(list.get(0) == test2);

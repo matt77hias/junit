@@ -15,13 +15,12 @@ import com.google.common.primitives.Longs;
  * @version 17 November 2013
  * 
  */
-public class ChangedCodeFirst extends ComparingPolicy {
+public class ChangedCodeFirst extends ComparingTestSortingPolicy {
 
 	/**
 	 * Creates a new changed code first policy.
 	 */
 	public ChangedCodeFirst() {
-
 	}
 
 	/**

@@ -1,11 +1,12 @@
 package kuleuven.group2.sourcehandler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.Project;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.sourcehandler.SourceEventHandler.Changes;
 import kuleuven.group2.store.MemoryStore;
@@ -21,10 +22,9 @@ import org.junit.Test;
 
 public class SourceEventHandlerTest {
 	
-	protected Store classSourceStore;
-	protected Store binaryStore;
-	protected ClassLoader testClassLoader;
+	protected Project project;
 	protected TestDatabase testDatabase;
+	protected Store classSourceStore;
 	
 	protected TestStoreListener testStoreListener;
 	protected List<StoreEvent> events;
@@ -40,20 +40,15 @@ public class SourceEventHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		classSourceStore = new MemoryStore();
-		binaryStore = new MemoryStore();
-		testClassLoader = new StoreClassLoader(binaryStore);
-		testDatabase = new TestDatabase();
+		this.project = new Project(new MemoryStore(), new MemoryStore(), new MemoryStore());
+		this.testDatabase = new TestDatabase();
+		this.classSourceStore = this.project.getClassSourceStore();
+		
 		testStoreListener = new TestStoreListener();
+        classSourceStore.addStoreListener(testStoreListener);
 		
-		classSourceStore.addStoreListener(testStoreListener);
-		
-		events = new ArrayList<StoreEvent>();
-		sourceEventHandler = new ClassSourceEventHandler(
-				classSourceStore,
-				binaryStore,
-				testDatabase,
-				testClassLoader);
+		this.events = new ArrayList<StoreEvent>();
+		this.sourceEventHandler = new ClassSourceEventHandler(this.project, this.testDatabase);
 	}
 
 	@After

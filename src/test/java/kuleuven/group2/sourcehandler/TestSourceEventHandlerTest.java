@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.Project;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.store.MemoryStore;
@@ -22,10 +22,9 @@ import org.junit.Test;
 
 public class TestSourceEventHandlerTest {
 
-	protected Store classSourceStore;
-	protected Store binaryStore;
-	protected ClassLoader testClassLoader;
+	protected Project project;
 	protected TestDatabase testDatabase;
+	protected Store testSourceStore;
 	
 	protected TestConsumer testConsumer;
 	protected StoreWatcher storeWatcher;
@@ -42,23 +41,17 @@ public class TestSourceEventHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		classSourceStore = new MemoryStore();
-		binaryStore = new MemoryStore();
-		testClassLoader = new StoreClassLoader(binaryStore);
-		testDatabase = new TestDatabase();
+		this.project = new Project(new MemoryStore(), new MemoryStore(), new MemoryStore());
+		this.testDatabase = new TestDatabase();
+		this.testSourceStore = this.project.getTestSourceStore();
 		
-		storeWatcher = new StoreWatcher(classSourceStore);
-		classSourceStore.addStoreListener(storeWatcher);
+		storeWatcher = new StoreWatcher(testSourceStore);
+		testSourceStore.addStoreListener(storeWatcher);
+        testConsumer = new TestConsumer();
+        storeWatcher.registerConsumer(testConsumer);
 		
-		testConsumer = new TestConsumer();
-		storeWatcher.registerConsumer(testConsumer);
-		
-		events = new ArrayList<StoreEvent>();
-		sourceEventHandler = new TestSourceEventHandler(
-				classSourceStore,
-				binaryStore,
-				testDatabase,
-				testClassLoader);
+		this.events = new ArrayList<StoreEvent>();
+		this.sourceEventHandler = new TestSourceEventHandler(this.project, this.testDatabase);
 	}
 
 	@After
@@ -86,11 +79,11 @@ public class TestSourceEventHandlerTest {
 						"public void foo() { int i = 0; }\n" +
 						"}";
 
-		classSourceStore.startListening();
+		testSourceStore.startListening();
 		
-		classSourceStore.write(sourceName, source.getBytes());
+		testSourceStore.write(sourceName, source.getBytes());
 		
-		classSourceStore.stopListening();
+		testSourceStore.stopListening();
 		
 		sourceEventHandler.consume(events);
 
@@ -106,16 +99,38 @@ public class TestSourceEventHandlerTest {
 						"public void foo() { int i = 0; }\n" +
 						"}";
 
-		classSourceStore.startListening();
+		testSourceStore.startListening();
 		
-		classSourceStore.write(sourceName, source.getBytes());
+		testSourceStore.write(sourceName, source.getBytes());
 		
-		classSourceStore.stopListening();
+		testSourceStore.stopListening();
 		
 		sourceEventHandler.consume(events);
 
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "initializationError")));
 		assertFalse(testDatabase.getAllTests().contains(new kuleuven.group2.data.Test("A", "foo")));
+	}
+	
+	@Test
+	public void testSetup() throws Exception {
+		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
+		String source =
+				"import org.junit.Test; \n" + 
+						"public class " + className + " {\n" +
+						"@Test\n" +
+						"public void foo() { int i = 0; }\n" +
+						"}";
+
+		testSourceStore.write(sourceName, source.getBytes());
+		
+		sourceEventHandler.setup();
+		
+		assertTrue(this.project.getBinaryStore().contains(NameUtils.toBinaryName(className)));
+		/*
+		 * constructor + foo
+		 */
+		assertEquals(1, testDatabase.getTestsIn(className).size());
 	}
 
 }

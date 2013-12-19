@@ -26,6 +26,7 @@
 	</rowConstraints>
 	<children>
 		<TableView fx:id="policiesTable" editable="true" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+			<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
 			<placeholder>
 				<Label text="No composed policies"/> 
 			</placeholder>

@@ -8,22 +8,26 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import kuleuven.group2.policy.WeightedPolicy;
+import kuleuven.group2.policy.WeightedTestSortingPolicy;
 
 public class WeightedPolicyModel {
 
-	private final WeightedPolicy weightedPolicy;
+	private final WeightedTestSortingPolicy weightedPolicy;
 	private final ObjectProperty<PolicyModel> policy = new SimpleObjectProperty<>();
 	private final IntegerProperty weight = new SimpleIntegerProperty();
 
+	public WeightedPolicyModel(PolicyModel policy) {
+		this(policy, WeightedTestSortingPolicy.DEFAULT_WEIGHT);
+	}
+
 	public WeightedPolicyModel(PolicyModel policy, int weight) {
-		this.weightedPolicy = new WeightedPolicy(policy.getPolicy(), weight);
+		this.weightedPolicy = new WeightedTestSortingPolicy(policy.getPolicy(), weight);
 		this.policy.set(policy);
 		this.weight.set(weightedPolicy.getWeight());
 		this.weight.addListener(new WeightChangeListener());
 	}
 
-	public WeightedPolicy getWeightedPolicy() {
+	public WeightedTestSortingPolicy getWeightedPolicy() {
 		return weightedPolicy;
 	}
 

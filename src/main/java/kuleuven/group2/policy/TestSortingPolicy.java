@@ -41,4 +41,15 @@ public interface TestSortingPolicy {
 	 * @return	The tests of the given test database according to this policy.
 	 */
 	public List<Test> getSortedTests(TestDatabase testDatabase, Collection<Test> tests);
+	
+	/**
+	 * Checks if this test sorting policy contains the given
+	 * test sorting policy.
+	 * 
+	 * @param	policy
+	 * 			The test sorting policy that has to be checked.
+	 * @return	True if and only if this test sorting policy
+	 * 			contains the given test sorting policy.
+	 */
+	public boolean contains(TestSortingPolicy policy);
 }

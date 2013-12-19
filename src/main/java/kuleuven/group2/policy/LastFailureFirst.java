@@ -12,7 +12,7 @@ import kuleuven.group2.data.TestDatabase;
  * @version	17 November 2013
  * 
  */
-public class LastFailureFirst extends ComparingPolicy implements Comparator<Test> {
+public class LastFailureFirst extends ComparingTestSortingPolicy implements Comparator<Test> {
 	
 	/**
 	 * Creates a new last failure first policy.

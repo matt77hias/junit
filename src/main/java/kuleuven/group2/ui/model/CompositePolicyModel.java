@@ -5,21 +5,21 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import kuleuven.group2.policy.CompositePolicy;
+import kuleuven.group2.policy.CompositeTestSortingPolicy;
 
 public class CompositePolicyModel extends PolicyModel {
 
 	private final SimpleListProperty<WeightedPolicyModel> weightedPolicies = new SimpleListProperty<>(
 			FXCollections.<WeightedPolicyModel> observableArrayList());
 
-	public CompositePolicyModel(String name, CompositePolicy policy) {
+	public CompositePolicyModel(String name, CompositeTestSortingPolicy policy) {
 		super(name, policy);
 		weightedPolicies.addListener(new PoliciesChangeListener());
 	}
 
 	@Override
-	public CompositePolicy getPolicy() {
-		return (CompositePolicy) super.getPolicy();
+	public CompositeTestSortingPolicy getPolicy() {
+		return (CompositeTestSortingPolicy) super.getPolicy();
 	}
 
 	public ObservableList<WeightedPolicyModel> getWeightedPolicies() {
@@ -40,26 +40,26 @@ public class CompositePolicyModel extends PolicyModel {
 
 		@Override
 		public void onChanged(ListChangeListener.Change<? extends WeightedPolicyModel> c) {
-			CompositePolicy policy = getPolicy();
+			CompositeTestSortingPolicy policy = getPolicy();
 			while (c.next()) {
 				if (c.wasPermutated()) {
 					// Permute
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
 						int newIndex = c.getPermutation(i);
 						WeightedPolicyModel permutedModel = c.getList().get(newIndex);
-						policy.setWeightedPolicyAt(newIndex, permutedModel.getWeightedPolicy());
+						policy.setWeightedTestSortingPolicyAt(newIndex, permutedModel.getWeightedPolicy());
 					}
 				} else if (c.wasUpdated()) {
 					// Update, ignore
 				} else {
 					// Remove
 					for (WeightedPolicyModel removedModel : c.getRemoved()) {
-						policy.removeWeightedPolicy(removedModel.getWeightedPolicy());
+						policy.removeWeightedTestSortingPolicy(removedModel.getWeightedPolicy());
 					}
 					// Add
 					for (int i = c.getFrom(); i < c.getTo(); ++i) {
 						WeightedPolicyModel addedModel = c.getList().get(i);
-						policy.addWeightedPolicyAt(i, addedModel.getWeightedPolicy());
+						policy.addWeightedTestSortingPolicyAt(i, addedModel.getWeightedPolicy());
 					}
 				}
 			}

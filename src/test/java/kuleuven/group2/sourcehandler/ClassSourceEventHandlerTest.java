@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import kuleuven.group2.classloader.StoreClassLoader;
+import kuleuven.group2.Project;
 import kuleuven.group2.compile.NameUtils;
 import kuleuven.group2.data.TestDatabase;
 import kuleuven.group2.data.signature.JavaSignatureParser;
@@ -23,15 +23,14 @@ import org.junit.Test;
 
 public class ClassSourceEventHandlerTest {
 	
-	protected Store classSourceStore;
-	protected Store binaryStore;
-	protected ClassLoader testClassLoader;
+	protected Project project;
 	protected TestDatabase testDatabase;
+	protected Store classSourceStore;
 	
 	protected TestConsumer testConsumer;
-	protected StoreWatcher storeWatcher;
 	protected List<StoreEvent> events;
 	protected SourceEventHandler sourceEventHandler;
+	private StoreWatcher storeWatcher;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -43,23 +42,17 @@ public class ClassSourceEventHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		classSourceStore = new MemoryStore();
-		binaryStore = new MemoryStore();
-		testClassLoader = new StoreClassLoader(binaryStore);
-		testDatabase = new TestDatabase();
+		this.project = new Project(new MemoryStore(), new MemoryStore(), new MemoryStore());
+		this.testDatabase = new TestDatabase();
+		this.classSourceStore = this.project.getClassSourceStore();
 		
 		storeWatcher = new StoreWatcher(classSourceStore);
 		classSourceStore.addStoreListener(storeWatcher);
+        testConsumer = new TestConsumer();
+        storeWatcher.registerConsumer(testConsumer);
 		
-		testConsumer = new TestConsumer();
-		storeWatcher.registerConsumer(testConsumer);
-		
-		events = new ArrayList<StoreEvent>();
-		sourceEventHandler = new ClassSourceEventHandler(
-				classSourceStore,
-				binaryStore,
-				testDatabase,
-				testClassLoader);
+		this.events = new ArrayList<StoreEvent>();
+		this.sourceEventHandler = new ClassSourceEventHandler(this.project, this.testDatabase);
 	}
 
 	@After
@@ -85,9 +78,7 @@ public class ClassSourceEventHandlerTest {
 						"}";
 
 		classSourceStore.startListening();
-		
 		classSourceStore.write(sourceName, source.getBytes());
-		
 		classSourceStore.stopListening();
 		
 		sourceEventHandler.consume(events);
@@ -169,4 +160,24 @@ public class ClassSourceEventHandlerTest {
 		assertEquals(0, testDatabase.getMethodsIn(className).size());
 	}
 
+	@Test
+	public void testSetup() throws Exception {
+		String className = "A";
+		String sourceName = NameUtils.toSourceName(className);
+		String source =
+				"public class " + className + " {\n" +
+						"public boolean foo() { return true; }\n" +
+						"}";
+
+		classSourceStore.write(sourceName, source.getBytes());
+		
+		sourceEventHandler.setup();
+		
+		assertTrue(this.project.getBinaryStore().contains(NameUtils.toBinaryName(className)));
+		/*
+		 * constructor + foo
+		 */
+		assertEquals(2, testDatabase.getMethodsIn(className).size());
+	}
+	
 }
