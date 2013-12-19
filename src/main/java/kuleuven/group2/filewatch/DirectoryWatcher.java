@@ -82,12 +82,12 @@ public class DirectoryWatcher {
 	public void stopWatching() throws IOException {
 		if (isWatching()) {
 			watchService.close();
-			watchService = null;
 			try {
 				watchThread.join();
 			} catch (InterruptedException e) {
 				// We got interrupted ourselves...
 			} finally {
+				watchService = null;
 				watchThread = null;
 			}
 		}
