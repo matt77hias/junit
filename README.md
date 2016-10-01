@@ -1,5 +1,16 @@
-JUnit Test Daemon
-=================
+# JUnit Test Daemon
+
+Course Design of Software Systems: JUnit Test Daemon
+
+**Team**:
+* [Mattias Buelens](http://github.com/MattiasBuelens) (Computer Science)
+* [Matthias Moulin](https://github.com/matt77hias) (Computer Science)
+* [Ruben Pieters](https://github.com/rubenpieters) (Computer Science)
+* [Vital D'haveloose](http://github.com/vital-dhaveloose) (Computer Science)
+
+**Academic Year**: 2013-2014 (1st semester - 1st Master of Science in Engineering: Computer Science)
+
+## Use
 
 ### Running
 
