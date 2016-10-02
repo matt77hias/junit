@@ -3,8 +3,8 @@
 Course Design of Software Systems: JUnit Test Daemon
 
 **Team**:
-* [Mattias Buelens](http://github.com/MattiasBuelens) (Computer Science)
 * [Matthias Moulin](https://github.com/matt77hias) (Computer Science)
+* [Mattias Buelens](http://github.com/MattiasBuelens) (Computer Science)
 * [Ruben Pieters](https://github.com/rubenpieters) (Computer Science)
 * [Vital D'haveloose](http://github.com/vital-dhaveloose) (Computer Science)
 
