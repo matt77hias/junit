@@ -10,6 +10,9 @@ Course Design of Software Systems: JUnit Test Daemon
 
 **Academic Year**: 2013-2014 (1st semester - 1st Master of Science in Engineering: Computer Science)
 
+## About
+Automatic test deamon that executes the JUnit tests associated with the part of the codebase that changes during development, in the background. Furthermore, the test deamon notifies the developer of the results of the JUnit tests. Consequently, the developer is informed quickly about the correctness of his code. The project is situated in the context of *continuous integration* which states that a software project should be (re)compiled and tested for each change to its source code repository.
+
 ## Use
 
 ### Running
