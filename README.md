@@ -40,4 +40,4 @@ Eclipse users should right-click the project and choose Configure > Configure as
 
 ### Original README
 
-See README.html for the original JUnit README.
+See [README.html](https://github.com/matt77hias/junit/blob/master/README.html) for the original JUnit README.
